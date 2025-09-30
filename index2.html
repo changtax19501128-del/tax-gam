@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>稅籍異動即時通 - 互動式宣導</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .video-container {
+            margin: 30px 0;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .question-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin: 10px 0;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            width: 100%;
+            text-align: left;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .form-container {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .segment-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #1565c0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .page {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            iframe {
+                height: 250px;
+            }
+        }
+
+        .celebration {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 歡迎頁面 -->
+        <div id="welcome-page" class="page">
+            <h1>🏛️ 稅籍異動即時通</h1>
+            <p class="subtitle">
+                歡迎參與彰化縣地方稅務局「稅籍異動即時通」服務宣導活動！<br>
+                透過觀看影片並回答問題，您將深入了解這項重要的服務，<br>
+                完成挑戰後還有機會參與抽獎！
+            </p>
+            <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #ffc107;">
+                <strong>📋 挑戰規則：</strong><br>
+                • 觀看影片分段內容<br>
+                • 回答每個片段的相關問題<br>
+                • 答對所有問題即可參與抽獎<br>
+                • 答錯可以重新嘗試
+            </div>
+            <button class="btn" onclick="startChallenge()">🚀 開始挑戰</button>
+        </div>
+
+        <!-- 遊戲頁面 -->
+        <div id="game-page" class="page hidden">
+            <div class="progress-bar">
+                <div class="progress" id="progress" style="width: 0%;"></div>
+            </div>
+            
+            <div class="segment-info" id="segment-info">
+                第 1 段：認識稅籍異動即時通服務
+            </div>
+
+            <div class="video-container">
+                <div id="video-info" style="background: #e3f2fd; padding: 15px; border-radius: 10px; border-left: 5px solid #2196f3; margin-bottom: 20px;">
+                    <strong>📺 請觀看影片：</strong><br>
+                    稅籍異動即時通服務介紹影片
+                </div>
+                
+                <!-- Google Drive 影片嵌入 -->
+                <iframe id="video-frame" 
+                        width="100%" 
+                        height="400"
+                        src="https://drive.google.com/file/d/19CGNwclGqO_v9X9F_2UaMYQE2VgopOfC/preview" 
+                        frameborder="0" 
+                        allow="autoplay"
+                        allowfullscreen>
+                </iframe>
+                
+                <!-- 備用方案：直接連結 -->
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://drive.google.com/file/d/19CGNwclGqO_v9X9F_2UaMYQE2VgopOfC/view?usp=sharing" target="_blank" class="btn" style="display: inline-block; text-decoration: none;">
+                        🎬 在新分頁觀看影片
+                    </a>
+                </div>
+            </div>
+
+            <div class="question-container" id="question-container">
+                <div class="question" id="question-text"></div>
+                <ul class="options" id="options-list"></ul>
+                <div class="feedback hidden" id="feedback"></div>
+                <button class="btn hidden" id="next-btn" onclick="nextQuestion()">下一題 ➡️</button>
+            </div>
+        </div>
+
+        <!-- 結局頁面 -->
+        <div id="final-page" class="page hidden">
+            <div class="celebration">
+                <h1>🎉 恭喜完成挑戰！</h1>
+            </div>
+            <p class="subtitle">
+                您已經成功了解「稅籍異動即時通」服務的重要性！<br>
+                請觀看完整影片後，點擊下方按鈕填寫抽獎資料：
+            </p>
+
+            <div class="form-container">
+                <p style="margin-bottom: 20px; color: #666;">
+                    請點擊下方按鈕前往 Google 表單填寫您的抽獎資料：
+                </p>
+                <a href="https://docs.google.com/forms/d/194c8gA-6Kldb3OunEu0m8gqunAHuhaRlkBcNIj5gkVQ/viewform" 
+                   target="_blank" 
+                   class="btn" 
+                   style="display: inline-block; text-decoration: none;">
+                   🎁 前往填寫抽獎表單
+                </a>
+            </div>
+        </div>
+
+        <!-- 成功頁面 -->
+        <div id="success-page" class="page hidden">
+            <div class="celebration">
+                <h1>✅ 提交成功！</h1>
+            </div>
+            <p class="subtitle">
+                感謝您參與「稅籍異動即時通」宣導活動！<br>
+                我們已收到您的抽獎資料，請留意後續通知。<br><br>
+                記得要善用「稅籍異動即時通」服務，<br>
+                保護您的不動產權益！
+            </p>
+            <div style="background: #d1ecf1; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #17a2b8;">
+                <strong>📞 服務諮詢：</strong><br>
+                彰化縣地方稅務局<br>
+                電話: (04) 722-1131
+            </div>
+            <button class="btn" onclick="restartChallenge()">🔄 重新開始</button>
+        </div>
+    </div>
+
+    <script>
+        // 問題和答案資料
+        const questionsData = [
+            {
+                segment: 1,
+                title: "第 1 段：認識稅籍異動即時通服務",
+                videoStart: 0,
+                videoEnd: 14,
+                question: "「稅籍異動即時通」服務的主要目的是什麼？",
+                options: [
+                    "A. 幫助民眾節省稅金",
+                    "B. 即時掌握不動產異動訊息",
+                    "C. 查詢房屋市價資訊"
+                ],
+                correct: 1,
+                explanation: "正確！稅籍異動即時通的主要目的是讓民眾能即時掌握自己名下不動產的異動訊息。"
+            },
+            {
+                segment: 2,
+                title: "第 2 段：服務效益與詐騙防範",
+                videoStart: 15,
+                videoEnd: 34,
+                question: "如果有人想要偷偷過戶您的不動產，透過此服務您會如何得知？",
+                options: [
+                    "A. 稅務局會主動電話通知",
+                    "B. 會收到即時異動通知訊息",
+                    "C. 需要自己主動查詢才會知道"
+                ],
+                correct: 1,
+                explanation: "正確！透過稅籍異動即時通服務，當您的不動產有任何異動時，系統會立即發送通知給您。"
+            },
+            {
+                segment: 3,
+                title: "第 3 段：申請方式與身份認證",
+                videoStart: 35,
+                videoEnd: 58,
+                question: "申請「稅籍異動即時通」服務時，線上申請可以使用哪種方式確認身份？",
+                options: [
+                    "A. 僅需身分證號碼即可",
+                    "B. 自然人憑證或健保卡加密碼",
+                    "C. 透過電話認證即可"
+                ],
+                correct: 1,
+                explanation: "正確！線上申請需要使用自然人憑證或健保卡搭配密碼來進行身份認證，確保申請安全。"
+            },
+            {
+                segment: 4,
+                title: "第 4 段：驗證步驟與服務範圍",
+                videoStart: 59,
+                videoEnd: 77,
+                question: "線上申請後，系統會如何驗證？若未在期限內回覆會如何？",
+                options: [
+                    "A. 簡訊通知，三天內回覆",
+                    "B. Email 驗證信，七天內回覆",
+                    "C. 電話確認，兩天內回覆"
+                ],
+                correct: 1,
+                explanation: "正確！系統會發送Email驗證信，您需要在七天內完成驗證，否則申請就會失效。"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = [];
+
+        function startChallenge() {
+            document.getElementById('welcome-page').classList.add('hidden');
+            document.getElementById('game-page').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= questionsData.length) {
+                showFinalPage();
+                return;
+            }
+
+            const q = questionsData[currentQuestion];
+            
+            // 更新進度條
+            const progress = ((currentQuestion) / questionsData.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            
+            // 更新段落資訊
+            document.getElementById('segment-info').textContent = q.title;
+            
+            // 顯示問題（移除自動播放邏輯，因為無法控制分段）
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questionsData[currentQuestion];
+            
+            document.getElementById('question-text').textContent = q.question;
+            
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                li.appendChild(button);
+                optionsList.appendChild(li);
+            });
+
+            // 隱藏反饋和下一題按鈕
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        function selectAnswer(selectedIndex) {
+            const q = questionsData[currentQuestion];
+            const options = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            const nextBtn = document.getElementById('next-btn');
+
+            // 禁用所有選項
+            options.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === q.correct) {
+                // 正確答案
+                options[selectedIndex].classList.add('correct');
+                feedback.textContent = q.explanation;
+                feedback.className = 'feedback correct';
+                feedback.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                userAnswers.push(true);
+            } else {
+                // 錯誤答案
+                options[selectedIndex].classList.add('incorrect');
+                options[q.correct].classList.add('correct');
+                feedback.textContent = "答錯了！" + q.explanation + " 請點擊「重新嘗試」。";
+                feedback.className = 'feedback incorrect';
+                feedback.classList.remove('hidden');
+                
+                // 顯示重新嘗試按鈕
+                nextBtn.textContent = '🔄 重新嘗試';
+                nextBtn.onclick = retryQuestion;
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        function retryQuestion() {
+            // 重新啟用選項
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('correct', 'incorrect');
+            });
+
+            // 隱藏反饋和按鈕
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            // 重設按鈕
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.textContent = '下一題 ➡️';
+            nextBtn.onclick = nextQuestion;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showFinalPage() {
+            document.getElementById('game-page').classList.add('hidden');
+            document.getElementById('final-page').classList.remove('hidden');
+            
+            // 更新進度條為100%
+            document.getElementById('progress').style.width = '100%';
+        }
+
+        function submitForm(event) {
+            // 直接導向成功頁面（因為現在使用外部表單）
+            document.getElementById('final-page').classList.add('hidden');
+            document.getElementById('success-page').classList.remove('hidden');
+        }
+
+        function restartChallenge() {
+            currentQuestion = 0;
+            userAnswers = [];
+            
+            document.getElementById('success-page').classList.add('hidden');
+            document.getElementById('welcome-page').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
