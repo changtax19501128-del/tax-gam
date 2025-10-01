@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 呼叫系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            margin-bottom: 30px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status {
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 API 呼叫系統</h1>
+        <p class="subtitle">點擊按鈕發送請求</p>
+        
+        <button class="btn" id="callApiBtn" onclick="callApi()">
+            發送請求
+        </button>
+
+        <div class="result" id="result">
+            <div class="result-title">📊 回應結果：</div>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+
+        <div class="status" id="status" style="display: none;"></div>
+    </div>
+
+    <script>
+        function callApi() {
+            const btn = document.getElementById('callApiBtn');
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            const statusDiv = document.getElementById('status');
+            
+            // 禁用按鈕並顯示載入狀態
+            btn.disabled = true;
+            btn.innerHTML = '發送中<span class="loading"></span>';
+            resultDiv.classList.remove('show');
+            statusDiv.style.display = 'none';
+            
+            fetch("https://script.google.com/macros/s/AKfycbzhCrmQs7ZafBtdOjE7BaR8XotwupViCNNyzVEAm9oHbIRswCqvySQPih4wOrek5ZaZ/exec", {
+                method: "POST",
+                body: JSON.stringify({player: "Amy"}),
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                
+                // 顯示結果
+                resultContent.textContent = JSON.stringify(data, null, 2);
+                resultDiv.classList.add('show');
+                
+                // 顯示成功狀態
+                statusDiv.textContent = '✅ 請求成功！';
+                statusDiv.className = 'status success';
+                statusDiv.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+                
+                // 顯示錯誤
+                resultContent.textContent = '錯誤: ' + error.message;
+                resultDiv.classList.add('show');
+                
+                // 顯示錯誤狀態
+                statusDiv.textContent = '❌ 請求失敗，請稍後再試';
+                statusDiv.className = 'status error';
+                statusDiv.style.display = 'block';
+            })
+            .finally(() => {
+                // 恢復按鈕
+                btn.disabled = false;
+                btn.innerHTML = '發送請求';
+            });
+        }
+    </script>
+</body>
+</html>
