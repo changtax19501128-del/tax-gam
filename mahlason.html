@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>彰稅馬拉松</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'DFKai-SB', '標楷體', 'Microsoft JhengHei', Arial, sans-serif;
+            overflow: hidden;
+            background: #87CEEB;
+            touch-action: none;
+        }
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+        .modal p {
+            color: #34495e;
+            margin-bottom: 15px;
+            font-size: 20px;
+            line-height: 1.6;
+        }
+        .modal ul {
+            color: #34495e;
+            margin: 15px 0 15px 0;
+            font-size: 18px;
+            line-height: 1.8;
+            list-style: none;
+            padding-left: 0;
+        }
+        .modal li {
+            margin: 15px 0;
+        }
+        .start-btn {
+            width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .start-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+        .completion-modal input {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+        .score-display {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: none;
+        }
+        .question-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 18px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            display: none;
+            max-width: 95%;
+            min-width: 80%;
+            text-align: center;
+            transition: all 0.5s ease-in-out;
+            line-height: 1.6;
+        }
+        .question-display.move-bottom {
+            bottom: 40px;
+            top: auto;
+            transform: translate(-50%, 0);
+        }
+        .success-message {
+            color: #27ae60;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-size: 18px;
+            margin-top: 10px;
+            display: none;
+        }
+        .answer-effect {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            animation: answerSlide 1.2s ease-out;
+            padding: 15px 30px;
+            border-radius: 10px;
+        }
+        @keyframes answerSlide {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            20% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            80% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+        }
+        .correct-effect {
+            background: #27ae60;
+            color: white;
+        }
+        .wrong-effect {
+            background: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="score-display" id="scoreDisplay">🏅 獲得金牌: <span id="score">0</span> / 5</div>
+    <div class="question-display" id="questionDisplay"></div>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- 開始畫面 -->
+    <div id="startModal" class="modal" style="display: block;">
+        <div class="modal-content">
+            <h2>歡迎來到彰稅馬拉松</h2>
+            <ul>
+                <li>🎮 <strong>遊玩方式：</strong>閱讀稅務知識題目，找出正確答案吧！</li>
+                <li>🕹️ <strong>操作說明：</strong>點選正確答案</li>
+                <li>🏆 <strong>過關條件：</strong>答對1題可獲1枚金牌🏅，集滿 <span style="color: #e74c3c; font-weight: bold;">5 枚金牌</span> 即成功過關！持過關畫面至<span style="color: #e74c3c; font-weight: bold;">彰化縣地方稅務局攤位</span>即可兌換精美好禮1份</li>
+            </ul>
+            <button class="start-btn" onclick="startGame()">🎮 開始遊戲</button>
+        </div>
+    </div>
+
+    <!-- 通關視窗 -->
+    <div id="completionModal" class="modal completion-modal">
+        <div class="modal-content">
+            <h2>🎉 恭喜完成挑戰!</h2>
+            <p>請至<span style="color: #e74c3c; font-weight: bold;">彰化縣地方稅務局攤位</span>領取宣導品</p>
+            <input type="password" id="passCode" placeholder="工作人員輸入" maxlength="3">
+            <button class="submit-btn" onclick="checkPassCode()">確認</button>
+            <p class="error-message" id="errorMsg">通行碼錯誤,請重新輸入</p>
+            <p class="success-message" id="successMsg">✅ 完成兌換！</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let gameState = {
+            started: false,
+            score: 0,
+            playerX: 0,
+            playerY: 0,
+            targetX: 0,
+            targetY: 0,
+            options: [],
+            trackOffset: 0,
+            currentQuestion: null,
+            questionIndex: 0,
+            isMoving: false,
+            canClick: true
+        };
+
+        const questions = [
+            {
+                question: "申辦稅籍異動即時通的好處？",
+                options: [
+                    { text: "繳稅", correct: false },
+                    { text: "即時掌握不動產移轉異動狀況", correct: true, smallText: true }
+                ]
+            },
+            {
+                question: "地價稅每年幾月開徵？",
+                options: [
+                    { text: "10月", correct: false },
+                    { text: "11月", correct: true }
+                ]
+            },
+            {
+                question: "收到地價稅稅單要如何繳納？",
+                options: [
+                    { text: "拿現金去郵局繳", correct: false },
+                    { text: "利用信用卡或掃稅單QR-Code繳納", correct: true, smallText: true }
+                ]
+            },
+            {
+                question: "小彰在全國只有1筆供自住使用房屋(且房屋現值在一定金額以下)，稅率會調降至__%?",
+                options: [
+                    { text: "1%", correct: true },
+                    { text: "4%", correct: false }
+                ]
+            },
+            {
+                question: "發票中獎獎金可利用＿APP進行領獎、查詢發票明細？",
+                options: [
+                    { text: "統一發票兌獎", correct: true },
+                    { text: "Google Map", correct: false }
+                ]
+            }
+        ];
+
+        let usedQuestions = [];
+
+        canvas.addEventListener('click', (e) => {
+            if (gameState.started && !gameState.isMoving && gameState.canClick) {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+                
+                checkOptionClick(clickX, clickY);
+            }
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (gameState.started && !gameState.isMoving && gameState.canClick) {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const clickX = touch.clientX - rect.left;
+                const clickY = touch.clientY - rect.top;
+                
+                checkOptionClick(clickX, clickY);
+            }
+        });
+
+        function checkOptionClick(clickX, clickY) {
+            gameState.options.forEach(option => {
+                const baseFontSize = Math.min(canvas.width * 0.045, 26);
+                const fontSize = option.smallText ? baseFontSize * 0.85 : baseFontSize;
+                ctx.font = `bold ${fontSize}px Arial`;
+                
+                const padding = 20;
+                const lines = option.text.split('\n');
+                const textWidth = Math.max(...lines.map(line => {
+                    return ctx.measureText(line).width;
+                }));
+                const bgWidth = textWidth + padding * 2;
+                const bgHeight = lines.length > 1 ? fontSize * 3.5 : fontSize * 2.5;
+                
+                const optionRect = {
+                    x: option.x - bgWidth/2,
+                    y: option.y - bgHeight / 2,
+                    w: bgWidth,
+                    h: bgHeight
+                };
+                
+                if (clickX >= optionRect.x && clickX <= optionRect.x + optionRect.w &&
+                    clickY >= optionRect.y && clickY <= optionRect.y + optionRect.h) {
+                    
+                    gameState.canClick = false;
+                    movePlayerToOption(option);
+                }
+            });
+        }
+
+        function movePlayerToOption(option) {
+            gameState.isMoving = true;
+            gameState.targetX = option.x;
+            gameState.targetY = option.y;
+            
+            const moveInterval = setInterval(() => {
+                const dx = gameState.targetX - gameState.playerX;
+                const dy = gameState.targetY - gameState.playerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 10) {
+                    clearInterval(moveInterval);
+                    gameState.playerX = gameState.targetX;
+                    gameState.playerY = gameState.targetY;
+                    gameState.isMoving = false;
+                    handleAnswer(option.correct);
+                } else {
+                    const speed = 0.15;
+                    gameState.playerX += dx * speed;
+                    gameState.playerY += dy * speed;
+                }
+            }, 16);
+        }
+
+        function startGame() {
+            document.getElementById('startModal').style.display = 'none';
+            document.getElementById('scoreDisplay').style.display = 'block';
+            document.getElementById('questionDisplay').style.display = 'block';
+            gameState.started = true;
+            
+            const trackTop = canvas.height * 0.15;
+            const trackHeight = canvas.height * 0.7;
+            const laneHeight = trackHeight / 6;
+            gameState.playerX = canvas.width * 0.85;
+            gameState.playerY = trackTop + laneHeight * 3.5;
+            gameState.targetX = gameState.playerX;
+            gameState.targetY = gameState.playerY;
+            
+            loadNewQuestion();
+        }
+
+        function loadNewQuestion() {
+            if (usedQuestions.length === questions.length) {
+                usedQuestions = [];
+            }
+            
+            let question;
+            do {
+                question = questions[Math.floor(Math.random() * questions.length)];
+            } while (usedQuestions.includes(question));
+            
+            usedQuestions.push(question);
+            gameState.currentQuestion = question;
+            gameState.options = [];
+            gameState.canClick = false;
+            
+            const trackTop = canvas.height * 0.15;
+            const trackHeight = canvas.height * 0.7;
+            const laneHeight = trackHeight / 6;
+            gameState.playerX = canvas.width * 0.85;
+            gameState.playerY = trackTop + laneHeight * 3.5;
+            gameState.targetX = gameState.playerX;
+            gameState.targetY = gameState.playerY;
+            
+            const questionDisplay = document.getElementById('questionDisplay');
+            questionDisplay.textContent = question.question;
+            questionDisplay.classList.remove('move-bottom');
+            
+            setTimeout(() => {
+                questionDisplay.classList.add('move-bottom');
+                setTimeout(() => {
+                    spawnOptions();
+                    gameState.canClick = true;
+                }, 500);
+            }, 1000);
+        }
+        
+        function spawnOptions() {
+            const trackTop = canvas.height * 0.15;
+            const trackHeight = canvas.height * 0.7;
+            const laneHeight = trackHeight / 6;
+            
+            const option1Y = trackTop + laneHeight * 2.5;
+            const option2Y = trackTop + laneHeight * 4.5;
+            const optionX = canvas.width * 0.35;
+            
+            gameState.options = [
+                {
+                    x: optionX,
+                    y: option1Y,
+                    text: gameState.currentQuestion.options[0].text,
+                    correct: gameState.currentQuestion.options[0].correct,
+                    smallText: gameState.currentQuestion.options[0].smallText || false
+                },
+                {
+                    x: gameState.currentQuestion.options[1].smallText ? optionX + 10 : optionX,
+                    y: option2Y,
+                    text: gameState.currentQuestion.options[1].text,
+                    correct: gameState.currentQuestion.options[1].correct,
+                    smallText: gameState.currentQuestion.options[1].smallText || false
+                }
+            ];
+        }
+
+        function drawPlayer() {
+            const size = canvas.width * 0.12;
+            
+            ctx.font = `${size}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🏃', gameState.playerX, gameState.playerY);
+        }
+
+        function drawOptions() {
+            const baseFontSize = Math.min(canvas.width * 0.045, 26);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            gameState.options.forEach(option => {
+                const fontSize = option.smallText ? baseFontSize * 0.85 : baseFontSize;
+                ctx.font = `bold ${fontSize}px Arial`;
+                
+                const padding = 20;
+                const lines = option.text.split('\n');
+                const textWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
+                const bgWidth = textWidth + padding * 2;
+                const bgHeight = lines.length > 1 ? fontSize * 3.5 : fontSize * 2.5;
+                
+                ctx.fillStyle = '#3498db';
+                ctx.strokeStyle = '#2980b9';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(option.x - bgWidth/2, option.y - bgHeight/2, bgWidth, bgHeight, 12);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.fillStyle = 'white';
+                
+                if (lines.length > 1) {
+                    lines.forEach((line, index) => {
+                        const lineY = option.y - fontSize * 0.7 + (index * fontSize * 1.4);
+                        ctx.fillText(line, option.x, lineY);
+                    });
+                } else {
+                    ctx.fillText(option.text, option.x, option.y);
+                }
+            });
+        }
+
+        function drawBackground() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#5599CC');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const trackTop = canvas.height * 0.15;
+            const trackHeight = canvas.height * 0.7;
+            
+            ctx.fillStyle = '#E67E22';
+            ctx.fillRect(0, trackTop, canvas.width, trackHeight);
+
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = canvas.width * 0.003;
+            for (let i = 1; i < 6; i++) {
+                const y = trackTop + (trackHeight / 6) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            ctx.setLineDash([canvas.width * 0.04, canvas.width * 0.03]);
+            ctx.lineWidth = canvas.width * 0.005;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            
+            for (let i = 0; i < 6; i++) {
+                const y = trackTop + (trackHeight / 6) * i + (trackHeight / 12);
+                ctx.beginPath();
+                ctx.moveTo(gameState.trackOffset, y);
+                ctx.lineTo(canvas.width + gameState.trackOffset, y);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#2ECC71';
+            ctx.fillRect(0, 0, canvas.width, trackTop);
+            ctx.fillRect(0, trackTop + trackHeight, canvas.width, canvas.height - trackTop - trackHeight);
+
+            ctx.fillStyle = '#27AE60';
+            for (let i = 0; i < 20; i++) {
+                const x = (i * canvas.width / 20 + gameState.trackOffset * 0.5) % canvas.width;
+                const y1 = trackTop * 0.5;
+                const y2 = trackTop + trackHeight + (canvas.height - trackTop - trackHeight) * 0.5;
+                
+                ctx.beginPath();
+                ctx.arc(x, y1, canvas.width * 0.01, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(x, y2, canvas.width * 0.01, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function handleAnswer(correct) {
+            if (correct) {
+                showAnswerEffect('✓ 答對了!獲得金牌 🏅', 'correct-effect');
+                
+                gameState.score++;
+                document.getElementById('score').textContent = gameState.score;
+                
+                if (gameState.score >= 5) {
+                    setTimeout(() => {
+                        gameState.started = false;
+                        document.getElementById('completionModal').style.display = 'block';
+                    }, 1200);
+                } else {
+                    setTimeout(() => {
+                        loadNewQuestion();
+                    }, 1200);
+                }
+            } else {
+                showAnswerEffect('✗ 答錯了!再試試看', 'wrong-effect');
+                
+                setTimeout(() => {
+                    const trackTop = canvas.height * 0.15;
+                    const trackHeight = canvas.height * 0.7;
+                    const laneHeight = trackHeight / 6;
+                    gameState.playerX = canvas.width * 0.85;
+                    gameState.playerY = trackTop + laneHeight * 3.5;
+                    gameState.targetX = gameState.playerX;
+                    gameState.targetY = gameState.playerY;
+                    gameState.canClick = true;
+                }, 1000);
+            }
+        }
+        
+        function showAnswerEffect(text, className) {
+            const effect = document.createElement('div');
+            effect.className = `answer-effect ${className}`;
+            effect.textContent = text;
+            document.body.appendChild(effect);
+            
+            setTimeout(() => {
+                document.body.removeChild(effect);
+            }, 1200);
+        }
+
+        function checkPassCode() {
+            const input = document.getElementById('passCode').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            
+            if (input === '123') {
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'block';
+                
+                fetch("https://script.google.com/macros/s/AKfycbwX2aIBc-P5Y1xMsz4ugdTA51RUxHWZtK4drrNHx6y-QyJObWpNJzV0lKldy110qxWAJg/exec", {
+                    method: "POST",
+                    body: JSON.stringify({player: "Amy"}),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('API 錯誤:', error);
+                });
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            } else {
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            }
+        }
+
+        function update() {
+            if (gameState.started) {
+                gameState.trackOffset += 8;
+                if (gameState.trackOffset >= canvas.width * 0.07) {
+                    gameState.trackOffset = 0;
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+            if (gameState.started) {
+                drawOptions();
+                drawPlayer();
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
