@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025年好好拾光節 電子稅單達人測驗</title>
+    <style>
+        /* 全局設定 - 綠色系環保風 */
+        body {
+            font-family: "Roboto", "Microsoft JhengHei", sans-serif;
+            background-color: #f0f7f0;
+            margin: 0;
+            padding: 0;
+            color: #202124;
+        }
+
+        .container {
+            max-width: 770px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        /* Banner */
+        .banner-container {
+            width: 100%;
+            margin-top: 12px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            border-top: 10px solid #2e7d32;
+        }
+
+        .banner-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 卡片樣式 */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            margin-bottom: 12px;
+            border-left: 5px solid transparent;
+            transition: border-left 0.3s;
+        }
+
+        /* 錯誤時的卡片樣式 */
+        .card.error {
+            border-left: 5px solid #d93025;
+            background-color: #fff8f8;
+        }
+
+        .error-msg {
+            color: #d93025;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+            font-weight: bold;
+        }
+
+        /* 標題與文字 */
+        .form-title {
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            font-weight: 400;
+            color: #2e7d32;
+        }
+
+        .form-desc {
+            font-size: 14px;
+            color: #5f6368;
+            line-height: 1.5;
+        }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* 選項 */
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f1f8e9;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #2e7d32;
+        }
+
+        /* 圖片 */
+        .q-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        /* 輸入框 */
+        .text-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #dadce0;
+            padding: 8px 0;
+            font-size: 16px;
+            outline: none;
+            transition: border-bottom 0.3s;
+            background: transparent;
+        }
+
+        .text-input:focus {
+            border-bottom: 2px solid #2e7d32;
+        }
+
+        /* 按鈕區 */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 5px;
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-next, .btn-submit {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .btn-next:hover, .btn-submit:hover {
+            background-color: #1b5e20;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .btn-back {
+            background-color: transparent;
+            color: #2e7d32;
+            border: 1px solid transparent;
+        }
+
+        .btn-back:hover {
+            background-color: #e8f5e9;
+        }
+
+        /* 步驟切換動畫 */
+        .step-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 最後一步驟的左右並排佈局 */
+        .final-step-layout {
+            display: flex;
+            align-items: flex-start; /* 頂對齊 */
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .final-left {
+            flex: 1; /* 左側填滿剩餘空間 */
+        }
+
+        .final-right {
+            width: 140px; /* 右側固定寬度放 QR Code */
+            text-align: center;
+            border-left: 1px dashed #ddd;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code-img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* 連結樣式 */
+        .apply-link {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 2px solid #2e7d32;
+            padding-bottom: 2px;
+            word-break: break-all; /* 防止連結太長撐開 */
+        }
+
+        /* 成功畫面 */
+        .success-screen {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .required-star { color: #d93025; }
+
+        /* 手機版適配：螢幕太小時變成上下排 */
+        @media (max-width: 600px) {
+            .final-step-layout {
+                flex-direction: column;
+            }
+            .final-right {
+                width: 100%;
+                border-left: none;
+                border-top: 1px dashed #ddd;
+                padding-left: 0;
+                padding-top: 20px;
+                margin-top: 20px;
+            }
+            .qr-code-img {
+                max-width: 150px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainForm">
+    
+    <div class="banner-container">
+        <img src="googletxt.jpg" alt="Banner" class="banner-img">
+    </div>
+
+    <form id="taxForm" onsubmit="return false;">
+        
+        <div id="step1" class="step-section active">
+            <div class="card" style="border-top: none;">
+                <h1 class="form-title">2025年好好拾光節 電子稅單達人測驗</h1>
+                <p class="form-desc">為了解民眾對電子稅單服務的認知情形，作為後續宣導活動規劃與服務精進的參考依據。請您依個人了解情形填答，感謝您的協助！<br><span class="required-star">* 必填</span></p>
+            </div>
+
+            <div class="card" id="card-q1">
+                <div class="question-title">1. 申辦電子稅單的好處為 <span class="required-star">*</span></div>
+                <img src="unnamed.jpg" alt="宣傳圖" class="q-image">
+                <div style="color: #666; font-size: 12px; margin-bottom: 10px;">(請參考上圖回答)</div>
+                
+                <label class="option"><input type="radio" name="q1" value="省時超便利"><span class="option-text">省時超便利-系統自動email電子稅單 即時掌握稅單訊息</span></label>
+                <label class="option"><input type="radio" name="q1" value="點擊電子稅單QR-Code"><span class="option-text">點擊電子稅單QR-Code  線上繳稅超easy</span></label>
+                <label class="option"><input type="radio" name="q1" value="輕鬆好管理"><span class="option-text">輕鬆好管理-不擔心稅單遺失 隨時查看不費力</span></label>
+                <label class="option"><input type="radio" name="q1" value="環保好省碳"><span class="option-text">電子稅單無紙化 節能減碳愛地球</span></label>
+                <label class="option"><input type="radio" name="q1" value="以上皆是"><span class="option-text">以上皆是</span></label>
+                <div class="error-msg">⚠️ 請選擇一個選項</div>
+            </div>
+
+            <div class="nav-buttons">
+                <div></div>
+                <button type="button" class="btn btn-next" onclick="nextStep(1)">下一頁</button>
+            </div>
+        </div>
+
+        <div id="step2" class="step-section">
+            <div class="card" id="card-q2">
+                <div class="question-title">2. 透過這次活動，我已瞭解電子稅單服務內容 <span class="required-star">*</span></div>
+                <label class="option"><input type="radio" name="q2" value="是"><span class="option-text">是</span></label>
+                <label class="option"><input type="radio" name="q2" value="不太清楚"><span class="option-text">不太清楚</span></label>
+                <div class="error-msg">⚠️ 請選擇一個選項</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-back" onclick="prevStep(2)">上一頁</button>
+                <button type="button" class="btn btn-next" onclick="nextStep(2)">下一頁</button>
+            </div>
+        </div>
+
+        <div id="step3" class="step-section">
+            <div class="card" id="card-q3">
+                <div class="question-title">3. 您是否已申辦電子稅單？ <span class="required-star">*</span></div>
+                <label class="option"><input type="radio" name="q3" value="是"><span class="option-text">是</span></label>
+                <label class="option"><input type="radio" name="q3" value="否"><span class="option-text">否</span></label>
+                <div class="error-msg">⚠️ 請選擇一個選項</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-back" onclick="prevStep(3)">上一頁</button>
+                <button type="button" class="btn btn-next" onclick="handleStep3()">下一頁</button>
+            </div>
+        </div>
+
+        <div id="step4" class="step-section">
+            <div class="card" id="card-q4">
+                <div class="question-title">4. 您至今尚未申辦電子稅單的原因？</div>
+                <input type="text" class="text-input" placeholder="請輸入原因 (選填)" name="q4" id="input-q4">
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-back" onclick="prevStep(4)">上一頁</button>
+                <button type="button" class="btn btn-next" onclick="nextStep(4)">下一頁</button>
+            </div>
+        </div>
+
+        <div id="step5" class="step-section">
+            <div class="card">
+                <div class="question-title">歡迎點選連結申辦電子稅單或留下您的寶貴建議</div>
+                
+                <div class="final-step-layout">
+                    <div class="final-left">
+                        <div style="margin-bottom: 25px;">
+                            <p style="margin-bottom: 10px; font-weight: bold;">👇 點擊下方連結立即申辦 👇</p>
+                            <a href="https://gov.tw/TgR" target="_blank" class="apply-link">
+                                https://gov.tw/TgR
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <p style="font-size: 16px; margin-bottom: 10px;">您的寶貴建議：</p>
+                            <input type="text" class="text-input" placeholder="您的回答" name="suggestion">
+                        </div>
+                    </div>
+
+                    <div class="final-right">
+                        <img src="qrcode.png" alt="申辦 QR Code" class="qr-code-img">
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">掃描 QR Code<br>也能申辦</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-back" onclick="prevStep(5)">上一頁</button>
+                <button type="button" class="btn btn-submit" onclick="submitSurvey()">提交表單</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="container success-screen" id="successScreen">
+    <div style="color: #2e7d32; margin-bottom: 20px;">
+        <svg style="width: 80px; height: 80px;" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+    </div>
+    <h2 style="color: #2e7d32;">提交成功！</h2>
+    <p>我們已收到您的回覆。</p>
+    <p style="color: #666;">別忘了申辦電子稅單，一起節能減碳愛地球。</p>
+    <br>
+    <a href="https://gov.tw/TgR" target="_blank" class="btn btn-next" style="text-decoration: none; display: inline-block;">前往申辦網站</a>
+</div>
+
+<script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-7MM2rSX2Ja-0JJoMSSTtu2E6m-2jO8ALvLb-e9s_SNArCpYVvDVbDczbkEMAH8wVhg/exec";
+
+    // 顯示指定步驟
+    function showStep(stepId) {
+        const steps = document.querySelectorAll('.step-section');
+        steps.forEach(step => step.classList.remove('active'));
+        document.getElementById('step' + stepId).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 驗證輸入內容
+    function validateInput(stepId) {
+        let isValid = true;
+
+        if (stepId === 4) return true; // Q4 非必填
+
+        const cardId = 'card-q' + stepId;
+        const card = document.getElementById(cardId);
+        if (!card) return true;
+
+        const errorMsg = card.querySelector('.error-msg');
+
+        if (stepId <= 3) {
+            const radios = card.querySelectorAll('input[type="radio"]');
+            const isChecked = Array.from(radios).some(r => r.checked);
+            if (!isChecked) isValid = false;
+        }
+
+        if (!isValid) {
+            card.classList.add('error');
+            if (errorMsg) errorMsg.style.display = 'block';
+            card.animate([
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(-5px)' },
+                { transform: 'translateX(5px)' },
+                { transform: 'translateX(0)' }
+            ], { duration: 300 });
+        } else {
+            card.classList.remove('error');
+            if (errorMsg) errorMsg.style.display = 'none';
+        }
+
+        return isValid;
+    }
+
+    function nextStep(currentStepId) {
+        if (!validateInput(currentStepId)) return;
+        showStep(currentStepId + 1);
+    }
+
+    function prevStep(currentStepId) {
+        showStep(currentStepId - 1);
+    }
+
+    // Step3 特殊流程
+    function handleStep3() {
+        if (!validateInput(3)) return;
+
+        const q3Value = document.querySelector('input[name="q3"]:checked').value;
+
+        if (q3Value === "yes") {
+            submitSurvey(); // 直接送出
+        } else {
+            showStep(4); // 去 Q4
+        }
+    }
+
+    // 🚀 送出資料
+    function submitSurvey() {
+        // 取所有答案
+        const q1 = document.querySelector('input[name="q1"]:checked')?.value || "";
+        const q2 = document.querySelector('input[name="q2"]:checked')?.value || "";
+        const q3 = document.querySelector('input[name="q3"]:checked')?.value || "";
+        const q4 = document.getElementById('input-q4').value || "";
+        const suggestion = document.querySelector('input[name="suggestion"]').value || "";
+
+        // 組資料
+        const payload = {
+            q1,
+            q2,
+            q3,
+            q4,
+            suggestion
+        };
+
+        // 發送到 Google Script
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).catch(err => {
+            console.error("送出失敗", err);
+        });
+
+        // 顯示成功畫面
+        document.getElementById('mainForm').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
