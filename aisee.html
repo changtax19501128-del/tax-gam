@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube 截圖審核系統 (AI 判斷)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+        }
+        /* Custom scrollbar for result history */
+        .history-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .history-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="min-h-screen p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-800">
+                AI 抽獎截圖審核系統
+            </h1>
+            <p class="text-gray-500 mt-2">
+                上傳 YouTube 截圖，AI 將自動判斷「按讚」與「訂閱」狀態。
+            </p>
+        </header>
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 1. 審核區塊 (左側) -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">圖片上傳與 AI 審核</h2>
+                
+                <!-- 檔案上傳 -->
+                <input type="file" id="imageUpload" accept="image/*" class="w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100"
+                    onchange="handleFileUpload(event)">
+                
+                <button id="validateBtn" onclick="triggerValidation()" disabled
+                    class="mt-4 w-full py-3 px-4 bg-green-500 text-white font-bold rounded-xl shadow-md transition duration-300 hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    <span id="buttonText">載入圖片後開始 AI 審核</span>
+                </button>
+
+                <!-- 審核結果顯示 -->
+                <div id="validationResult" class="mt-6 p-4 rounded-xl text-center transition-all duration-500 min-h-[100px] flex flex-col justify-center items-center bg-gray-50 border-dashed border-2 border-gray-300">
+                    <p class="text-gray-500">審核結果將顯示於此</p>
+                </div>
+
+                <!-- 圖片預覽 -->
+                <div class="mt-6 border-2 border-gray-200 rounded-lg overflow-hidden">
+                    <h3 class="p-3 bg-gray-100 font-medium text-gray-700">截圖預覽</h3>
+                    <div class="p-4 bg-gray-50 flex justify-center items-center">
+                        <img id="imagePreview" src="https://placehold.co/400x250/e0e7ff/6366f1?text=等待上傳圖片" alt="截圖預覽" class="max-w-full h-auto rounded-lg shadow-md max-h-96 object-contain">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 歷史紀錄區塊 (右側) -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">審核歷史記錄</h2>
+                <div id="historyList" class="history-container space-y-3 overflow-y-auto max-h-[70vh]">
+                    <div class="text-center text-gray-500">載入中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, addDoc, onSnapshot, collection, query, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase and API
+        let db;
+        let auth;
+        let userId;
+        let uploadedBase64 = null;
+        let isAuthReady = false;
+
+        const MODEL_NAME = 'gemini-2.5-flash-preview-09-2025';
+        const API_KEY = ""; // Canvas provides this
+
+        // 1. Firebase 初始化
+        function firebaseSetup() {
+            try {
+                // Mandatory Global Variables
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                // setLogLevel('Debug'); // Uncomment for debugging
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+                        console.log("Firebase Auth Ready. User ID:", userId);
+                        // Start loading history once authenticated
+                        loadHistory();
+                    } else {
+                        // Sign in anonymously if no token is provided or user logs out
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            const anonUser = await signInAnonymously(auth);
+                            userId = anonUser.user.uid;
+                            isAuthReady = true;
+                            console.log("Signed in anonymously. User ID:", userId);
+                            loadHistory();
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase setup failed:", error);
+                document.getElementById('historyList').innerHTML = `<div class="text-red-500">Firebase 初始化失敗：${error.message}</div>`;
+            }
+        }
+
+        // 2. 處理檔案上傳
+        window.handleFileUpload = (event) => {
+            const file = event.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            const validateBtn = document.getElementById('validateBtn');
+            const buttonText = document.getElementById('buttonText');
+            
+            uploadedBase64 = null;
+            preview.src = 'https://placehold.co/400x250/e0e7ff/6366f1?text=載入中...';
+            validateBtn.disabled = true;
+            buttonText.textContent = "圖片處理中...";
+            document.getElementById('validationResult').innerHTML = `<p class="text-gray-500">審核結果將顯示於此</p>`;
+
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const base64String = e.target.result;
+                    // Extract only the base64 part (remove "data:image/jpeg;base64,")
+                    uploadedBase64 = base64String.split(',')[1];
+                    preview.src = base64String;
+                    validateBtn.disabled = false;
+                    buttonText.textContent = "開始 AI 審核 (需等待約 5-10 秒)";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = 'https://placehold.co/400x250/e0e7ff/6366f1?text=等待上傳圖片';
+                buttonText.textContent = "載入圖片後開始 AI 審核";
+            }
+        };
+
+        // 3. 觸發 AI 驗證
+        window.triggerValidation = async () => {
+            if (!uploadedBase64) {
+                alertUser("請先上傳圖片！", "red");
+                return;
+            }
+            if (!isAuthReady) {
+                alertUser("系統初始化中，請稍候！", "red");
+                return;
+            }
+
+            const validateBtn = document.getElementById('validateBtn');
+            const buttonText = document.getElementById('buttonText');
+            const resultDiv = document.getElementById('validationResult');
+            
+            validateBtn.disabled = true;
+            buttonText.textContent = "AI 審核中... 請耐心等候 (約 5-10 秒)";
+            resultDiv.innerHTML = `<div class="flex items-center justify-center space-x-2 text-blue-500">
+                                     <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                     <p>AI 正在分析截圖...</p>
+                                   </div>`;
+
+            try {
+                const result = await validateImage(uploadedBase64);
+                
+                // Determine final status
+                const isPass = result.isLiked && result.isSubscribed;
+                const status = isPass ? '通過' : '未通過';
+
+                // Create a small thumbnail before saving to Firestore to avoid the 1MB document size limit
+                const thumbnailBase64 = await createThumbnail(uploadedBase64);
+
+                // Save to Firestore
+                const dataToSave = {
+                    userId: userId,
+                    timestamp: serverTimestamp(),
+                    isPass: isPass,
+                    isLiked: result.isLiked,
+                    isSubscribed: result.isSubscribed,
+                    reason: result.passFailReason,
+                    imageUrl: thumbnailBase64, // Now stores the compressed thumbnail
+                };
+
+                await saveResultToFirestore(dataToSave);
+
+                // Update UI
+                displayResult(status, dataToSave);
+
+            } catch (error) {
+                console.error("AI 審核失敗:", error);
+                displayResult('Error', {reason: `API 錯誤: ${error.message}`});
+                alertUser(`AI 審核發生錯誤: ${error.message}`, "red");
+            } finally {
+                validateBtn.disabled = false;
+                buttonText.textContent = "開始 AI 審核 (需等待約 5-10 秒)";
+            }
+        };
+
+        // 4. Gemini API 呼叫
+        async function validateImage(base64Data) {
+            const systemPrompt = `你是一個專業的抽獎截圖審核員。你的任務是分析用戶上傳的 YouTube 影片截圖，判斷其是否符合以下兩個標準：1. 影片是否處於「已按讚」(Like) 狀態 (例如，讚的圖標為藍色或已填滿)。2. 頻道是否處於「已訂閱」(Subscribed) 狀態 (例如，按鈕顯示「已訂閱」或類似狀態)。你必須嚴格遵守結構化 JSON 輸出。`;
+            const userQuery = "請根據圖片判斷：影片是否已按讚？頻道是否已訂閱？";
+
+            const payload = {
+                contents: [
+                    {
+                        role: "user",
+                        parts: [
+                            { text: userQuery },
+                            {
+                                inlineData: {
+                                    mimeType: "image/jpeg", // Assume jpeg for simplicity
+                                    data: base64Data
+                                }
+                            }
+                        ]
+                    }
+                ],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "isLiked": { "type": "BOOLEAN", "description": "Is the Like button active (e.g., blue or filled)? True if liked." },
+                            "isSubscribed": { "type": "BOOLEAN", "description": "Is the channel subscription active (e.g., button says '已訂閱')? True if subscribed." },
+                            "passFailReason": { "type": "STRING", "description": "A concise reason why the image passes or fails, listing missing elements if any." }
+                        },
+                        required: ["isLiked", "isSubscribed", "passFailReason"]
+                    }
+                }
+            };
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+            
+            // Implement exponential backoff for retries
+            for (let i = 0; i < 3; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorBody = await response.json();
+                        throw new Error(`API returned status ${response.status}: ${errorBody.error?.message || 'Unknown error'}`);
+                    }
+
+                    const result = await response.json();
+                    const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!jsonText) {
+                        throw new Error("API response was empty or malformed.");
+                    }
+                    return JSON.parse(jsonText);
+
+                } catch (error) {
+                    if (i < 2) { // Retry logic
+                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                        continue;
+                    }
+                    throw error;
+                }
+            }
+        }
+
+        // 5. 儲存結果到 Firestore
+        async function saveResultToFirestore(data) {
+            const collectionPath = `/artifacts/default-app-id/users/${userId}/validation_results`;
+            try {
+                // Ensure the path uses the actual __app_id if available
+                const finalAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const finalCollectionPath = `/artifacts/${finalAppId}/users/${userId}/validation_results`;
+                
+                await addDoc(collection(db, finalCollectionPath), data);
+                console.log("Result successfully saved to Firestore.");
+            } catch (e) {
+                console.error("Error saving document: ", e);
+                alertUser(`結果儲存失敗: ${e.message}`, "red");
+            }
+        }
+
+        // 6. 載入並監聽歷史紀錄
+        function loadHistory() {
+            if (!db || !isAuthReady) return;
+
+            const finalAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const collectionPath = `/artifacts/${finalAppId}/users/${userId}/validation_results`;
+            const historyRef = collection(db, collectionPath);
+            const historyListDiv = document.getElementById('historyList');
+
+            // Use onSnapshot for real-time updates
+            onSnapshot(historyRef, (snapshot) => {
+                let historyHTML = '';
+                const results = [];
+                snapshot.forEach(doc => {
+                    results.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp descending
+                results.sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
+
+                if (results.length === 0) {
+                    historyListDiv.innerHTML = `<div class="text-center text-gray-500 p-4 border rounded-lg">尚無審核紀錄</div>`;
+                    return;
+                }
+
+                results.forEach((data, index) => {
+                    const statusClass = data.isPass ? 'bg-green-100 border-green-400' : 'bg-red-100 border-red-400';
+                    const statusText = data.isPass ? '✅ 通過' : '❌ 未通過';
+                    const time = data.timestamp ? new Date(data.timestamp.toMillis()).toLocaleString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '時間未知';
+                    
+                    historyHTML += `
+                        <div class="p-3 border rounded-lg ${statusClass} shadow-sm">
+                            <div class="flex items-center justify-between text-sm font-semibold">
+                                <span>${statusText} (No.${results.length - index})</span>
+                                <span class="text-gray-600 font-normal text-xs">${time}</span>
+                            </div>
+                            <div class="mt-1 text-xs text-gray-700">
+                                <p>原因: ${data.reason}</p>
+                                <p>細節: 讚: ${data.isLiked ? '✅' : '❌'}, 訂閱: ${data.isSubscribed ? '✅' : '❌'}</p>
+                                <button onclick="showImageModal('${data.imageUrl}')" class="mt-1 text-blue-600 hover:underline">查看截圖</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                historyListDiv.innerHTML = historyHTML;
+            }, (error) => {
+                console.error("Error fetching history: ", error);
+                historyListDiv.innerHTML = `<div class="text-red-500">載入歷史紀錄失敗: ${error.message}</div>`;
+            });
+        }
+
+        // 7. 顯示單次審核結果
+        function displayResult(status, data) {
+            const resultDiv = document.getElementById('validationResult');
+            let content = '';
+            let classes = '';
+
+            if (status === '通過') {
+                classes = 'bg-green-50 border-green-500 text-green-700';
+                content = `
+                    <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-xl font-bold">✅ 審核結果：通過！</p>
+                    <p class="text-sm mt-1">${data.reason}</p>
+                    <p class="text-xs mt-1">按讚: ${data.isLiked ? '✅' : '❌'} / 訂閱: ${data.isSubscribed ? '✅' : '❌'}</p>
+                `;
+            } else if (status === '未通過') {
+                classes = 'bg-red-50 border-red-500 text-red-700';
+                content = `
+                    <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-xl font-bold">❌ 審核結果：未通過</p>
+                    <p class="text-sm mt-1">${data.reason || '未達標準。'}</p>
+                    <p class="text-xs mt-1">按讚: ${data.isLiked ? '✅' : '❌'} / 訂閱: ${data.isSubscribed ? '✅' : '❌'}</p>
+                `;
+            } else { // Error case
+                classes = 'bg-yellow-50 border-yellow-500 text-yellow-700';
+                 content = `
+                    <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <p class="text-xl font-bold">⚠️ 系統錯誤</p>
+                    <p class="text-sm mt-1">${data.reason || '未知錯誤'}</p>
+                `;
+            }
+
+            resultDiv.className = `mt-6 p-4 rounded-xl text-center transition-all duration-500 flex flex-col justify-center items-center border-4 ${classes}`;
+            resultDiv.innerHTML = content;
+        }
+
+        // 8. 彈窗提示 (取代 alert)
+        function alertUser(message, type = 'blue') {
+            const resultDiv = document.getElementById('validationResult');
+            const classes = type === 'red' ? 'bg-red-50 border-red-500 text-red-700' : 'bg-blue-50 border-blue-500 text-blue-700';
+            
+            resultDiv.className = `mt-6 p-4 rounded-xl text-center transition-all duration-500 flex flex-col justify-center items-center border-4 ${classes}`;
+            resultDiv.innerHTML = `<p class="text-base font-medium">${message}</p>`;
+
+            // Optional: revert after 5 seconds
+            setTimeout(() => {
+                document.getElementById('validationResult').innerHTML = `<p class="text-gray-500">審核結果將顯示於此</p>`;
+                document.getElementById('validationResult').className = `mt-6 p-4 rounded-xl text-center transition-all duration-500 min-h-[100px] flex flex-col justify-center items-center bg-gray-50 border-dashed border-2 border-gray-300`;
+            }, 5000);
+        }
+
+        // 9. 圖片顯示彈窗
+        window.showImageModal = (base64) => {
+            const modalHtml = `
+                <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50" onclick="closeImageModal()">
+                    <div class="bg-white rounded-lg p-6 max-w-4xl max-h-full overflow-auto" onclick="event.stopPropagation()">
+                        <h3 class="text-xl font-bold mb-4">歷史截圖</h3>
+                        <!-- Note: The stored Base64 is a compressed JPEG thumbnail -->
+                        <img src="data:image/jpeg;base64,${base64}" alt="歷史截圖" class="max-w-full h-auto rounded-lg shadow-xl" />
+                        <button onclick="closeImageModal()" class="mt-4 py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700">關閉</button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        };
+
+        window.closeImageModal = () => {
+            document.getElementById('imageModal')?.remove();
+        };
+
+        // 10. 圖片壓縮與生成縮圖
+        function createThumbnail(base64, maxWidth = 150, maxHeight = 150) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Calculate the new dimensions to fit within maxWidth/maxHeight while maintaining aspect ratio
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    // Draw image scaled down
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Convert canvas content back to base64 string (compressing it)
+                    // Use 'image/jpeg' and a lower quality (e.g., 0.7) for better compression
+                    const thumbnailBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+                    resolve(thumbnailBase64);
+                };
+                img.onerror = () => {
+                    // Fallback: If image fails to load for thumbnail creation, store an empty string.
+                    resolve(""); 
+                };
+                img.src = `data:image/jpeg;base64,${base64}`;
+            });
+        }
+
+
+        // Initialize on load
+        firebaseSetup();
+    </script>
+
+</body>
+</html>
