@@ -5,30 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>115年彰化縣慶祝中華民國元旦升旗典禮活動問卷</title>
     <style>
-        /* 全局設定 - 黃色系強烈風 */
+        /* --- 全局設定 --- */
         body {
-            font-family: "Roboto", "Microsoft JhengHei", sans-serif;
-            background-color: #ffeeb0;
+            font-family: "Roboto", "Microsoft JhengHei", "Heiti TC", sans-serif;
+            background-color: #ffeeb0; /* 黃色背景 */
             margin: 0;
             padding: 0;
-            color: 1a045c4;
+            color: #333;
+            line-height: 1.6; /* 增加行距，讓文字不擁擠 */
         }
 
         .container {
-            max-width: 770px;
+            max-width: 700px; /*稍微縮窄一點，讓電腦版更好看*/
             margin: 0 auto;
-            padding-bottom: 60px;
+            padding: 0 16px 60px 16px; /* 左右增加 16px 間距，避免貼邊 */
         }
 
         /* Banner */
         .banner-container {
             width: 100%;
-            margin-top: 12px;
+            margin-top: 16px;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            border-top: 10px solid ##004aad;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-top: 10px solid #004aad; /* 主色條 */
         }
 
         .banner-img {
@@ -37,73 +38,87 @@
             display: block;
         }
 
-        /* 卡片樣式 */
+        /* 卡片通用樣式 */
         .card {
             background-color: #fff;
-            border-radius: 8px;
-            padding: 24px;
-            margin-top: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            margin-bottom: 12px;
-            border-left: 5px solid transparent;
-            transition: border-left 0.3s;
+            border-radius: 12px; /* 圓角加大 */
+            padding: 24px 28px; /* 內距加大，讓內容呼吸 */
+            margin-top: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+            border-left: 6px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        /* 錯誤時的卡片樣式 */
+        /* 錯誤狀態 */
         .card.error {
-            border-left: 5px solid #d93025;
+            border-left: 6px solid #d93025;
             background-color: #fff8f8;
         }
 
         .error-msg {
             color: #d93025;
-            font-size: 14px;
-            margin-top: 10px;
+            font-size: 15px;
+            margin-top: 12px;
             display: none;
             font-weight: bold;
+            display: flex;
+            align-items: center;
         }
 
-        /* 標題與文字 */
+        /* 標題文字 */
         .form-title {
-            font-size: 32px;
-            margin: 0 0 10px 0;
-            font-weight: 400;
+            font-size: 28px;
+            margin: 0 0 12px 0;
+            font-weight: 700;
             color: #004aad;
+            line-height: 1.4;
         }
 
         .form-desc {
-            font-size: 14px;
-            color: #5f6368;
-            line-height: 1.5;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.7; /* 說明文字行距加大 */
         }
 
         .question-title {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 16px;
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #222;
             line-height: 1.5;
         }
 
-        /* 選項 */
+        /* 選項樣式優化 */
         .option {
             display: flex;
-            align-items: center;
-            padding: 10px 0;
+            align-items: flex-start; /* 對齊頂部，避免多行文字跑版 */
+            padding: 12px 10px; /* 增加點擊範圍 */
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 8px;
             transition: background 0.2s;
+            margin-bottom: 6px;
+            border: 1px solid transparent;
         }
         
         .option:hover {
-            background-color: #f8f6e9;
+            background-color: #f0f7ff;
+            border-color: #cce0ff;
         }
 
         .option input[type="radio"] {
-            margin-right: 12px;
+            margin-top: 5px; /* 對齊微調 */
+            margin-right: 14px;
+            min-width: 20px;
             width: 20px;
             height: 20px;
             cursor: pointer;
-            accent-color: #00509d;
+            accent-color: #004aad;
+        }
+
+        .option-text {
+            font-size: 17px; /* 選項文字加大 */
+            color: #444;
         }
 
         /* 圖片 */
@@ -111,65 +126,70 @@
             max-width: 100%;
             height: auto;
             margin-bottom: 16px;
-            border-radius: 4px;
+            border-radius: 8px;
             border: 1px solid #eee;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         /* 輸入框 */
         .text-input {
             width: 100%;
             border: none;
-            border-bottom: 1px solid #dadce0;
-            padding: 8px 0;
-            font-size: 16px;
+            border-bottom: 2px solid #ddd;
+            padding: 10px 0;
+            font-size: 17px;
             outline: none;
             transition: border-bottom 0.3s;
             background: transparent;
+            border-radius: 0;
         }
 
         .text-input:focus {
             border-bottom: 2px solid #004aad;
+            background-color: rgba(0, 74, 173, 0.03);
         }
 
-        /* 按鈕區 */
+        /* 按鈕 */
         .nav-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            padding: 0 5px;
+            margin-top: 24px;
+            padding: 0 4px;
         }
 
         .btn {
             border: none;
-            padding: 10px 24px;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
         }
 
         .btn-next, .btn-submit {
             background-color: #004aad;
             color: white;
+            box-shadow: 0 2px 5px rgba(0, 74, 173, 0.3);
         }
 
         .btn-next:hover, .btn-submit:hover {
-            background-color: #004aad;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            background-color: #003080;
+            transform: translateY(-1px);
         }
 
         .btn-back {
             background-color: transparent;
-            color: #004aad;
-            border: 1px solid transparent;
+            color: #666;
         }
 
         .btn-back:hover {
-            background-color: #f5f4e8;
+            background-color: rgba(0,0,0,0.05);
+            color: #333;
         }
 
-        /* 步驟切換動畫 */
+        /* 動畫 */
         .step-section {
             display: none;
             animation: fadeIn 0.4s ease;
@@ -184,156 +204,119 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 最後一步驟的左右並排佈局 */
+        /* 最後一步 Layout */
         .final-step-layout {
             display: flex;
-            align-items: flex-start; /* 頂對齊 */
-            gap: 20px;
+            align-items: flex-start;
+            gap: 24px;
             margin-top: 20px;
         }
 
-        .final-left {
-            flex: 1; /* 左側填滿剩餘空間 */
-        }
-
+        .final-left { flex: 1; }
         .final-right {
-            width: 140px; /* 右側固定寬度放 QR Code */
+            width: 130px;
             text-align: center;
-            border-left: 1px dashed #ddd;
+            border-left: 1px dashed #ccc;
             padding-left: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        .qr-code-img {
-            width: 100%;
-            height: auto;
-        }
+        .qr-code-img { width: 100%; height: auto; }
+        .inline-link { color: #004aad; font-weight: bold; text-decoration: underline; }
+        .required-star { color: #d93025; margin-left: 4px; }
 
-        /* 連結樣式 */
-        .apply-link {
-            color: #004aad;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-            border-bottom: 2px solid #004aad;
-            padding-bottom: 2px;
-            word-break: break-all; /* 防止連結太長撐開 */
-        }
-
-        /* 成功畫面 */
-        .success-screen {
-            display: none;
-            text-align: center;
-            background: white;
+        /* --- 成功畫面 (樣式修正) --- */
+        .success-card {
+            display: none; /* 預設隱藏 */
+            background-color: #fff;
+            border-radius: 12px;
             padding: 40px 30px;
-            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 10px solid #2e7d32; /* 綠色頂部代表成功 */
             margin-top: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
             animation: fadeIn 0.5s ease;
         }
 
-        .required-star { color: #d93025; }
-
-        /* --- 新增：工作人員兌換區樣式 --- */
+        /* 工作人員區域 */
         .staff-zone {
-            margin-top: 30px;
-            border: 2px dashed #ccc;
-            background-color: #fafafa;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
+            margin-top: 35px;
+            border: 2px dashed #bbb;
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
         }
-
-        .staff-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #555;
-        }
-
+        
         .staff-input {
-            padding: 8px;
-            font-size: 16px;
-            width: 120px;
+            padding: 10px;
+            font-size: 18px;
+            width: 140px;
             text-align: center;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-right: 5px;
+            border-radius: 6px;
+            margin-right: 8px;
         }
 
         .btn-redeem {
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-size: 16px;
             background-color: #555;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
         }
-        
-        .btn-redeem:hover {
-            background-color: #333;
-        }
 
-        /* 兌換完成樣式 */
         .redeemed-success {
             display: none;
-            background-color: #f5f5e8;
-            color: #004aad;
-            padding: 15px;
-            border-radius: 4px;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 20px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 18px;
-            border: 2px solid #004aad;
+            font-size: 20px;
+            border: 2px solid #2e7d32;
+            margin-top: 20px;
         }
 
-        /* 手機版適配 */
+        /* RWD */
         @media (max-width: 600px) {
-            .final-step-layout {
-                flex-direction: column;
-            }
+            .final-step-layout { flex-direction: column; }
             .final-right {
                 width: 100%;
                 border-left: none;
-                border-top: 1px dashed #ddd;
+                border-top: 1px dashed #ccc;
                 padding-left: 0;
-                padding-top: 20px;
+                padding-top: 24px;
                 margin-top: 20px;
             }
-            .qr-code-img {
-                max-width: 150px;
-            }
+            .qr-code-img { max-width: 140px; }
+            .card { padding: 20px 18px; } /* 手機版內距微調 */
         }
-
     </style>
 </head>
 <body>
 
-<div class="container" id="mainForm">
+<div class="container">
     
     <div class="banner-container">
         <img src="googletxt.jpg" alt="Banner" class="banner-img">
     </div>
 
-    <form id="taxForm" onsubmit="return false;">
+    <form id="taxForm" onsubmit="return false;" style="display: block;">
         
         <div id="step1" class="step-section active">
-            <div class="card" style="border-top: none;">
+            <div class="card" style="border-top: none; margin-top: 10px;">
                 <h1 class="form-title">115年彰化縣慶祝中華民國元旦升旗典禮活動</h1>
                 <p class="form-desc">為了解民眾對「稅籍異動即時通」服務的認知情形，作為後續宣導活動規劃與服務精進的參考依據。請您依個人了解情形填答，感謝您的協助！<br><span class="required-star">* 必填</span></p>
             </div>
 
-            <div class="card" id="card-q1">
-                <div class="question-title">1. 申辦「稅籍異動即時通」服務的好處為何 <span class="required-star">*</span></div>
-                <img src="簡單版.png" alt="宣傳圖" class="q-image">
-                <div style="color: #666; font-size: 12px; margin-bottom: 10px;">(請參考上圖回答)</div>
-                
-                <label class="option"><input type="radio" name="q1" value="即時掌握不動產移轉狀況"><span class="option-text">即時掌握不動產移轉異動狀況 避免因詐騙等因素致不動產遭盜賣、移轉</span></label>
-                <label class="option"><input type="radio" name="q1" value="查詢並繳納"><span class="option-text">查詢並繳稅</span></label>
-                <label class="option"><input type="radio" name="q1" value="繳停車費"><span class="option-text">繳停車費</span></label>
+            <div class="card" id="card-q_new">
+                <div class="question-title">1. 請問您聽過「稅籍異動即時通」嗎？ <span class="required-star">*</span></div>
+                <label class="option"><input type="radio" name="q_heard" value="聽過"><span class="option-text">聽過</span></label>
+                <label class="option"><input type="radio" name="q_heard" value="沒聽過"><span class="option-text">沒聽過</span></label>
                 <div class="error-msg">⚠️ 請選擇一個選項</div>
             </div>
 
@@ -344,11 +327,10 @@
         </div>
 
         <div id="step2" class="step-section">
-            <div class="card" id="card-q2">
-                <div class="question-title">2. 透過這次活動，我已瞭解「稅籍異動即時通」服務的內容 <span class="required-star">*</span></div>
-                <label class="option"><input type="radio" name="q2" value="是"><span class="option-text">是</span></label>
-                <label class="option"><input type="radio" name="q2" value="不太清楚"><span class="option-text">不太清楚</span></label>
-                <div class="error-msg">⚠️ 請選擇一個選項</div>
+            <div class="card" id="card-img-only">
+                <div class="question-title" style="text-align: center; color: #004aad;">👇 請閱讀以下服務資訊 👇</div>
+                <img src="簡單版.png" alt="宣傳圖" class="q-image">
+                <div style="color: #666; font-size: 15px; text-align: center; margin-top: 10px;">看完請按「下一頁」繼續作答</div>
             </div>
 
             <div class="nav-buttons">
@@ -358,23 +340,48 @@
         </div>
 
         <div id="step3" class="step-section">
-            <div class="card" id="card-q3">
-                <div class="question-title">3. 您是否已申辦「稅籍異動即時通」服務？ <span class="required-star">*</span></div>
-                <label class="option"><input type="radio" name="q3" value="是"><span class="option-text">是</span></label>
-                <label class="option"><input type="radio" name="q3" value="否"><span class="option-text">否</span></label>
+            <div class="card" id="card-q1">
+                <div class="question-title">3. 申辦「稅籍異動即時通」服務的好處為何 <span class="required-star">*</span></div>
+                
+                <label class="option">
+                    <input type="radio" name="q1" value="免費服務">
+                    <span class="option-text">屬完全免費服務</span>
+                </label>
+                
+                <label class="option">
+                    <input type="radio" name="q1" value="多元通報">
+                    <span class="option-text">結合電子郵件、手機簡訊及LINE推播等多元通報方式 保障財產權益</span>
+                </label>
+                
+                <label class="option">
+                    <input type="radio" name="q1" value="即時掌握">
+                    <span class="option-text">即時掌握不動產移轉異動狀況</span>
+                </label>
+                
+                <label class="option">
+                    <input type="radio" name="q1" value="防詐騙">
+                    <span class="option-text">避免因詐騙等因素致不動產遭盜賣、移轉</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="以上皆是">
+                    <span class="option-text">以上皆是</span>
+                </label>
                 <div class="error-msg">⚠️ 請選擇一個選項</div>
             </div>
 
             <div class="nav-buttons">
                 <button type="button" class="btn btn-back" onclick="prevStep(3)">上一頁</button>
-                <button type="button" class="btn btn-next" onclick="handleStep3()">下一頁</button>
+                <button type="button" class="btn btn-next" onclick="nextStep(3)">下一頁</button>
             </div>
         </div>
 
         <div id="step4" class="step-section">
-            <div class="card" id="card-q4">
-                <div class="question-title">4. 您至今尚未申辦「稅籍異動即時通」服務的原因？</div>
-                <input type="text" class="text-input" placeholder="請輸入原因 (選填)" name="q4" id="input-q4">
+            <div class="card" id="card-q2">
+                <div class="question-title">4. 透過這次活動，我已瞭解「稅籍異動即時通」服務的內容 <span class="required-star">*</span></div>
+                <label class="option"><input type="radio" name="q2" value="是"><span class="option-text">是</span></label>
+                <label class="option"><input type="radio" name="q2" value="不太清楚"><span class="option-text">不太清楚</span></label>
+                <div class="error-msg">⚠️ 請選擇一個選項</div>
             </div>
 
             <div class="nav-buttons">
@@ -384,71 +391,96 @@
         </div>
 
         <div id="step5" class="step-section">
+            <div class="card" id="card-q3">
+                <div class="question-title">5. 您是否已申辦「稅籍異動即時通」服務？ <span class="required-star">*</span></div>
+                <label class="option"><input type="radio" name="q3" value="是"><span class="option-text">是</span></label>
+                <label class="option"><input type="radio" name="q3" value="否"><span class="option-text">否</span></label>
+                <div class="error-msg">⚠️ 請選擇一個選項</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-back" onclick="prevStep(5)">上一頁</button>
+                <button type="button" class="btn btn-next" onclick="handleStep5()">下一頁</button>
+            </div>
+        </div>
+
+        <div id="step6" class="step-section">
+            <div class="card" id="card-q4">
+                <div class="question-title">6. 您至今尚未申辦「稅籍異動即時通」服務的原因？ <span class="required-star">*</span></div>
+                <input type="text" class="text-input" placeholder="請輸入原因 (必填)" name="q4" id="input-q4">
+                <div class="error-msg">⚠️ 請填寫原因才能繼續</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-back" onclick="prevStep(6)">上一頁</button>
+                <button type="button" class="btn btn-next" onclick="nextStep(6)">下一頁</button>
+            </div>
+        </div>
+
+        <div id="step7" class="step-section">
             <div class="card">
-                <div class="question-title">歡迎點選連結申辦「稅籍異動即時通」服務或留下您的寶貴建議</div>
+                <div class="question-title">
+                    歡迎點選連結申辦「稅籍異動即時通」服務
+                    (連結: <a href="https://reurl.cc/gnlZm4" target="_blank" class="inline-link">https://reurl.cc/gnlZm4</a>) 
+                    或留下您的寶貴建議
+                </div>
                 
                 <div class="final-step-layout">
                     <div class="final-left">
-                        <div style="margin-bottom: 25px;">
-                            <p style="margin-bottom: 10px; font-weight: bold;">👇 點擊下方連結立即申辦 👇</p>
-                            <a href="https://reurl.cc/gnlZm4" target="_blank" class="apply-link">
-                                https://reurl.cc/gnlZm4
-                            </a>
-                        </div>
-                        
                         <div>
-                            <p style="font-size: 16px; margin-bottom: 10px;">您的寶貴建議：</p>
+                            <p style="font-size: 17px; margin-bottom: 12px; font-weight: 500;">您的寶貴建議：</p>
                             <input type="text" class="text-input" placeholder="您的回答" name="suggestion">
+                            <p style="color: #666; font-size: 14px; margin-top: 20px;">如無建議 可直接提交表單</p>
                         </div>
                     </div>
 
                     <div class="final-right">
                         <img src="qrcode.png" alt="申辦 QR Code" class="qr-code-img">
-                        <p style="font-size: 12px; color: #666; margin-top: 5px;">掃描 QR Code<br>也能申辦</p>
+                        <p style="font-size: 13px; color: #555; margin-top: 8px;">掃描 QR Code<br>也能申辦</p>
                     </div>
                 </div>
             </div>
 
             <div class="nav-buttons">
-                <button type="button" class="btn btn-back" onclick="prevStep(5)">上一頁</button>
+                <button type="button" class="btn btn-back" onclick="prevStep(7)">上一頁</button>
                 <button type="button" class="btn btn-submit" onclick="submitSurvey()">提交表單</button>
             </div>
         </div>
-
     </form>
-</div>
 
-<div class="container success-screen" id="successScreen">
-    <div style="color: #2e7d32; margin-bottom: 20px;">
-        <svg style="width: 80px; height: 80px;" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
+    <div id="successScreen" class="success-card">
+        <div style="color: #2e7d32; margin-bottom: 20px;">
+            <svg style="width: 80px; height: 80px;" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+        </div>
+        <h2 style="color: #2e7d32; margin-top: 0; font-size: 28px;">提交成功！</h2>
+        <p style="font-size: 16px; color: #444;">我們已收到您的回覆。</p>
+        <p style="font-size: 20px; font-weight: bold; color: #d93025; margin: 25px 0; line-height: 1.5;">
+            請至彰化縣地方稅務局攤位<br>領取宣導品
+        </p>
+
+        <div class="staff-zone" id="staffZone">
+            <label style="display: block; margin-bottom: 15px; font-weight: bold; color: #555;">--- 工作人員輸入 ---</label>
+            <input type="tel" id="staffCodeInput" class="staff-input" placeholder="輸入通行碼" maxlength="6">
+            <button type="button" class="btn-redeem" onclick="verifyStaffCode()">確認兌換</button>
+        </div>
+
+        <div id="redeemSuccessMsg" class="redeemed-success">
+            ✅ 已完成兌換宣導品
+        </div>
+
+        <br><br>
+        <a href="https://reurl.cc/gnlZm4" target="_blank" class="btn btn-next" style="text-decoration: none; display: inline-block;">前往申辦網站</a>
     </div>
-    <h2 style="color: #2e7d32; margin-top: 0;">提交成功！</h2>
-    <p>我們已收到您的回覆。</p>
-    <p style="font-size: 1.1em; font-weight: bold; color: #d93025; margin: 15px 0;">
-        請至彰化縣地方稅務局攤位領取宣導品
-    </p>
 
-    <div class="staff-zone" id="staffZone">
-        <label class="staff-label">--- 工作人員輸入 ---</label>
-        <input type="tel" id="staffCodeInput" class="staff-input" placeholder="輸入通行碼" maxlength="6">
-        <button type="button" class="btn-redeem" onclick="verifyStaffCode()">確認兌換</button>
-    </div>
-
-    <div id="redeemSuccessMsg" class="redeemed-success" style="margin-top: 20px;">
-        ✅ 已完成兌換宣導品
-    </div>
-
-    <br><br>
-    <a href="https://reurl.cc/gnlZm4" target="_blank" class="btn btn-next" style="text-decoration: none; display: inline-block;">前往申辦網站</a>
 </div>
 
 <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUPaKu1W8N4jlXfC9_R3i9SIJo31UtG6VfQw7qU5IniVKFnbHJSjccHP7aAWZ3rMD3/exec";
 
     // --- 設定通行碼 ---
-    const STAFF_PASSCODE = "123"; // ★ 請在這裡修改您想要的密碼
+    const STAFF_PASSCODE = "123"; 
 
     function showStep(stepId) {
         const steps = document.querySelectorAll('.step-section');
@@ -457,57 +489,52 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-// 驗證輸入內容 (已新增：答錯阻擋功能)
     function validateInput(stepId) {
         let isValid = true;
-        let customErrorText = "⚠️ 請選擇一個選項"; // 預設錯誤訊息
+        let customErrorText = "⚠️ 請選擇一個選項";
 
-        // 第 4 題非必填，直接通過
-        if (stepId === 4) return true; 
+        if (stepId === 2 || stepId === 7) return true;
 
-        const cardId = 'card-q' + stepId;
+        let cardId = '';
+        if (stepId === 1) cardId = 'card-q_new';
+        else if (stepId === 3) cardId = 'card-q1';
+        else if (stepId === 4) cardId = 'card-q2';
+        else if (stepId === 5) cardId = 'card-q3';
+        else if (stepId === 6) cardId = 'card-q4';
+
         const card = document.getElementById(cardId);
         if (!card) return true;
 
         const errorMsg = card.querySelector('.error-msg');
         
-        // 取得該題目前被選中的選項
-        const checkedOption = card.querySelector('input[type="radio"]:checked');
-
-        // --- 1. 檢查是否有選擇 (基本檢查) ---
-        if (stepId <= 3) {
+        // 檢查單選題
+        if (stepId === 1 || stepId === 3 || stepId === 4 || stepId === 5) {
+            const checkedOption = card.querySelector('input[type="radio"]:checked');
             if (!checkedOption) {
                 isValid = false;
                 customErrorText = "⚠️ 請選擇一個選項";
             }
         }
 
-        // --- 2. 檢查答案是否正確 (進階檢查) ---
-        if (isValid) { // 只有在「有選擇」的情況下才檢查對錯
-            
-            // 【題目 1】 設定正確答案為 "即時掌握不動產移轉異動狀況 避免不動產遭詐騙、盜賣"
-            if (stepId === 1) {
-                if (checkedOption.value !== "即時掌握不動產移轉狀況") {
-                    isValid = false;
-                    customErrorText = "❌ 答錯囉！";
-                }
-}
-            // 【題目 3】 是分流題，沒有對錯之分，所以不需要檢查
+        // 檢查文字題
+        if (stepId === 6) {
+            const input = document.getElementById('input-q4');
+            if (!input || input.value.trim() === "") {
+                isValid = false;
+                customErrorText = "⚠️ 請填寫原因才能繼續";
+            }
         }
 
-        // --- 3. 顯示結果與動畫 ---
         if (!isValid) {
             card.classList.add('error');
             if(errorMsg) {
-                errorMsg.innerText = customErrorText; // 更新錯誤文字
-                errorMsg.style.display = 'block';
+                errorMsg.innerText = customErrorText;
+                errorMsg.style.display = 'flex';
             }
-            
-            // 搖晃動畫
             card.animate([
                 { transform: 'translateX(0)' },
-                { transform: 'translateX(-5px)' },
-                { transform: 'translateX(5px)' },
+                { transform: 'translateX(-6px)' },
+                { transform: 'translateX(6px)' },
                 { transform: 'translateX(0)' }
             ], { duration: 300 });
         } else {
@@ -517,6 +544,7 @@
 
         return isValid;
     }
+
     function nextStep(currentStepId) {
         if (!validateInput(currentStepId)) return;
         showStep(currentStepId + 1);
@@ -526,25 +554,35 @@
         showStep(currentStepId - 1);
     }
 
-    function handleStep3() {
-        if (!validateInput(3)) return;
+    function handleStep5() {
+        if (!validateInput(5)) return;
         const q3Value = document.querySelector('input[name="q3"]:checked').value;
         if (q3Value === "是") {
             submitSurvey();
         } else {
-            showStep(4);
+            showStep(6);
         }
     }
 
     function submitSurvey() {
+        const q_heard = document.querySelector('input[name="q_heard"]:checked')?.value || "";
         const q1 = document.querySelector('input[name="q1"]:checked')?.value || "";
         const q2 = document.querySelector('input[name="q2"]:checked')?.value || "";
         const q3 = document.querySelector('input[name="q3"]:checked')?.value || "";
-        const q4 = document.getElementById('input-q4').value || "";
-        const suggestion = document.querySelector('input[name="suggestion"]').value || "";
+        const q4 = document.getElementById('input-q4')?.value || "";
+        const suggestion = document.querySelector('input[name="suggestion"]')?.value || "";
 
-        const payload = { q1, q2, q3, q4, suggestion };
+        // 建立資料物件
+        const payload = { 
+            q0_heard: q_heard,
+            q1: q1, 
+            q2: q2, 
+            q3: q3, 
+            q4: q4, 
+            suggestion: suggestion 
+        };
 
+        // 送出資料
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
@@ -554,26 +592,22 @@
             console.error("送出失敗", err);
         });
 
-        document.getElementById('mainForm').style.display = 'none';
+        // 隱藏表單，顯示成功卡片
+        document.getElementById('taxForm').style.display = 'none';
         document.getElementById('successScreen').style.display = 'block';
         window.scrollTo(0, 0);
     }
 
-    // --- 新增：驗證工作人員通行碼的函數 ---
     function verifyStaffCode() {
         const input = document.getElementById('staffCodeInput');
         const code = input.value;
 
         if (code === STAFF_PASSCODE) {
-            // 密碼正確
-            // 隱藏輸入框區域
             document.getElementById('staffZone').style.display = 'none';
-            // 顯示成功訊息
             document.getElementById('redeemSuccessMsg').style.display = 'block';
         } else {
-            // 密碼錯誤
             alert("❌ 通行碼錯誤，請重新輸入");
-            input.value = ""; // 清空輸入框
+            input.value = "";
             input.focus();
         }
     }
