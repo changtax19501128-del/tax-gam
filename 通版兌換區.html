@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宣導品兌換專區 - 通用版</title>
+    <style>
+        /* 全局設定 - 延續綠色系環保風 */
+        body {
+            font-family: "Roboto", "Microsoft JhengHei", sans-serif;
+            background-color: #f0f7f0;
+            margin: 0;
+            padding: 20px;
+            color: #202124;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 10px solid #2e7d32;
+        }
+
+        .title {
+            color: #2e7d32;
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .desc {
+            color: #5f6368;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* 工作人員兌換區樣式 */
+        .staff-zone {
+            border: 2px dashed #ccc;
+            background-color: #fafafa;
+            padding: 30px 20px;
+            border-radius: 8px;
+        }
+
+        .staff-label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #d93025;
+            font-size: 18px;
+        }
+
+        .staff-input {
+            padding: 12px;
+            font-size: 20px;
+            width: 150px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .staff-input:focus {
+            border-color: #2e7d32;
+        }
+
+        .btn-redeem {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-redeem:hover {
+            background-color: #333;
+        }
+
+        /* 兌換完成樣式 */
+        .redeemed-success {
+            display: none;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 30px 20px;
+            border-radius: 8px;
+            border: 2px solid #2e7d32;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .success-text {
+            font-weight: bold;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .success-time {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="title">🎁 宣導品兌換專區</h1>
+    <p class="desc">請將畫面交由現場工作人員進行確認</p>
+
+    <div class="staff-zone" id="staffZone">
+        <label class="staff-label">⚠️ 工作人員專用</label>
+        <input type="tel" id="staffCodeInput" class="staff-input" placeholder="輸入通行碼" maxlength="4" autocomplete="off">
+        <button type="button" class="btn-redeem" onclick="verifyStaffCode()">確認兌換</button>
+    </div>
+
+    <div id="redeemSuccessMsg" class="redeemed-success">
+        <span class="success-icon">✅</span>
+        <p class="success-text">已完成兌換</p>
+        <div class="success-time" id="redeemTime"></div>
+    </div>
+</div>
+
+<script>
+    // 依您要求保留的 Google Script URL 
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-7MM2rSX2Ja-0JJoMSSTtu2E6m-2jO8ALvLb-e9s_SNArCpYVvDVbDczbkEMAH8wVhg/exec";
+
+    // --- 通用版設定 ---
+    const STAFF_PASSCODE = "1234"; // 工作人員通行碼設定為 1234
+
+    function verifyStaffCode() {
+        const input = document.getElementById('staffCodeInput');
+        const code = input.value;
+
+        if (code === STAFF_PASSCODE) {
+            // 密碼正確：隱藏輸入區，顯示成功畫面
+            document.getElementById('staffZone').style.display = 'none';
+            document.getElementById('redeemSuccessMsg').style.display = 'block';
+            
+            // 抓取當下兌換時間 (防偽機制，讓工作人員確認是剛剛兌換的)
+            const now = new Date();
+            const timeString = `${now.getFullYear()}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            document.getElementById('redeemTime').innerText = `兌換時間：${timeString}`;
+
+            /* * 💡 備註：
+             * 如果您未來希望「兌換成功」的當下，也能傳送紀錄到 Google 試算表，
+             * 可以解除下面這段 fetch 的註解，並在您的 Google Apps Script 裡新增對應的接收邏輯。
+             */
+            /*
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "redeem", time: timeString })
+            }).catch(err => console.error("紀錄失敗", err));
+            */
+
+        } else {
+            // 密碼錯誤
+            alert("❌ 通行碼錯誤，請重新輸入");
+            input.value = ""; // 清空輸入框
+            input.focus();
+        }
+    }
+
+    // 支援按下 Enter 鍵也能觸發兌換
+    document.getElementById('staffCodeInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            verifyStaffCode();
+        }
+    });
+</script>
+
+</body>
+</html>
