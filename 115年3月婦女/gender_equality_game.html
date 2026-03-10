@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>租稅平權知識GO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Dela+Gothic+One&display=swap');
+
+:root {
+  --pink:#FF6B9D; --blue:#4ECDC4; --yellow:#FFE66D;
+  --dark:#0F1923; --green:#6BCB77; --orange:#FF8C42;
+  --circle:#4ECDC4; --cross:#FF6B9D;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--dark);color:#fff;min-height:100vh;overflow-x:hidden;}
+
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.particle{position:absolute;border-radius:50%;opacity:.12;animation:floatUp linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:.12;}90%{opacity:.12;}100%{transform:translateY(-120px) rotate(720deg);opacity:0;}}
+
+.screen{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;}
+.hidden{display:none!important;}
+
+/* TITLE */
+#titleScreen{background:radial-gradient(ellipse at 50% 40%,#1a2e44 0%,#0a0f18 100%);}
+.badge{background:linear-gradient(135deg,var(--pink),var(--blue));font-size:.7rem;font-weight:900;letter-spacing:4px;padding:6px 22px;border-radius:20px;margin-bottom:18px;animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(78,205,196,.4);}50%{box-shadow:0 0 0 16px rgba(78,205,196,0);}}
+.game-title{font-family:'Dela Gothic One',cursive;font-size:clamp(2rem,7vw,3.4rem);line-height:1.15;text-align:center;background:linear-gradient(135deg,var(--yellow) 0%,var(--pink) 50%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 28px rgba(255,230,109,.4));margin-bottom:6px;}
+.game-subtitle{font-size:1rem;color:rgba(255,255,255,.55);letter-spacing:3px;margin-bottom:32px;text-align:center;}
+.sport-icons{display:flex;gap:18px;margin-bottom:34px;flex-wrap:wrap;justify-content:center;}
+.sport-icon{font-size:2.4rem;animation:iconBounce 1.6s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(255,255,255,.25));}
+.sport-icon:nth-child(2){animation-delay:.18s}.sport-icon:nth-child(3){animation-delay:.36s}.sport-icon:nth-child(4){animation-delay:.54s}.sport-icon:nth-child(5){animation-delay:.72s}
+@keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+.btn-start{background:linear-gradient(135deg,var(--pink),#ff2d6f);color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:3px;padding:17px 58px;border-radius:50px;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 10px 36px rgba(255,107,157,.45);}
+.btn-start:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 48px rgba(255,107,157,.6);}
+.btn-start:active{transform:scale(.97);}
+.rules-text{margin-top:26px;text-align:center;color:rgba(255,255,255,.38);font-size:.82rem;line-height:1.9;max-width:340px;}
+
+/* SPORT SCREEN */
+#sportScreen{background:radial-gradient(ellipse at top,#12293d 0%,#080f18 100%);}
+.level-header{text-align:center;margin-bottom:22px;}
+.level-num{font-family:'Dela Gothic One',cursive;font-size:.88rem;letter-spacing:5px;color:var(--yellow);margin-bottom:5px;}
+.level-title{font-size:1.5rem;font-weight:900;}
+.progress-wrap{width:min(380px,88vw);height:7px;background:rgba(255,255,255,.1);border-radius:10px;margin:0 auto 26px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--blue));border-radius:10px;transition:width .4s ease;}
+.sport-arena{width:min(430px,94vw);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:26px 22px;backdrop-filter:blur(12px);}
+.sport-title{font-size:1.2rem;font-weight:900;text-align:center;margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:8px;}
+
+.game-canvas{width:100%;height:140px;border-radius:14px;overflow:hidden;position:relative;margin-bottom:16px;}
+
+/* Archery */
+.archery-bg{background:linear-gradient(180deg,#0a1f10 0%,#071510 100%);border:2px solid rgba(107,203,119,.3);}
+.target{position:absolute;right:22px;top:50%;transform:translateY(-50%);width:70px;height:70px;border-radius:50%;background:conic-gradient(#e53935 0 20%,#fff 20% 40%,#1565c0 40% 60%,#fff 60% 80%,#e53935 80% 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(229,57,53,.5);}
+.target-inner{width:22px;height:22px;border-radius:50%;background:#FFE66D;}
+.arrow-char{position:absolute;bottom:12px;left:12px;font-size:2rem;transition:left .08s linear;filter:drop-shadow(0 0 6px rgba(107,203,119,.8));}
+
+/* Basketball */
+.basketball-bg{background:linear-gradient(180deg,#1a0e05 0%,#100a03 100%);border:2px solid rgba(255,140,66,.35);}
+.bball-floor{position:absolute;bottom:0;width:100%;height:18px;background:#5D2E0C;border-top:2px solid rgba(255,140,66,.4);}
+.bball-hoop{position:absolute;right:18px;top:16px;font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,140,66,.7));}
+.bball{position:absolute;bottom:22px;left:14px;font-size:2rem;transition:left .08s,bottom .08s;filter:drop-shadow(0 0 7px rgba(255,140,66,.6));}
+
+/* Baseball 9-grid */
+.baseball-bg{background:linear-gradient(180deg,#0a1a2a 0%,#060f1a 100%);border:2px solid rgba(78,205,196,.3);}
+.nine-grid{position:absolute;right:14px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:84px;}
+.grid-cell{width:26px;height:26px;border-radius:4px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.68rem;color:rgba(255,255,255,.4);transition:all .3s;}
+.grid-cell.hit{background:rgba(255,230,109,.3);border-color:var(--yellow);color:var(--yellow);}
+.baseball-char{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 8px rgba(78,205,196,.8));}
+
+/* Tennis */
+.tennis-bg{background:linear-gradient(180deg,#1a2a0a 0%,#0f1a06 100%);border:2px solid rgba(174,213,129,.4);}
+.tennis-net{position:absolute;left:50%;top:0;transform:translateX(-50%);width:4px;height:100%;background:repeating-linear-gradient(180deg,rgba(255,255,255,.5) 0 8px,transparent 8px 14px);}
+.tennis-ball{position:absolute;top:50%;left:10px;transform:translateY(-50%);font-size:2rem;transition:left .08s;filter:drop-shadow(0 0 7px rgba(174,213,129,.9));}
+.racket{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 8px rgba(174,213,129,.5));}
+
+/* Ping-pong */
+.pingpong-bg{background:linear-gradient(180deg,#1a0a2a 0%,#100618 100%);border:2px solid rgba(168,139,250,.4);}
+.pp-table{position:absolute;bottom:0;width:100%;height:30px;background:linear-gradient(180deg,#1565C0 0%,#0D47A1 100%);border-top:3px solid #fff;}
+.pp-net{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);width:4px;height:22px;background:white;border-radius:2px;}
+.pp-ball{position:absolute;bottom:34px;left:14px;font-size:1.6rem;transition:left .08s,bottom .08s;filter:drop-shadow(0 0 6px rgba(168,139,250,.9));}
+.pp-paddle{position:absolute;right:12px;bottom:28px;font-size:2rem;filter:drop-shadow(0 0 8px rgba(168,139,250,.5));}
+
+.tap-btn{width:100%;padding:13px;border:none;border-radius:14px;font-family:'Noto Sans TC',sans-serif;font-size:1rem;font-weight:900;letter-spacing:2px;cursor:pointer;transition:transform .12s,box-shadow .12s;color:#fff;}
+.tap-btn:active{transform:scale(.95);}
+.tap-btn:disabled{background:rgba(255,255,255,.2)!important;box-shadow:none!important;cursor:default;}
+.btn-archery{background:linear-gradient(135deg,#6BCB77,#4CAF50);box-shadow:0 6px 20px rgba(107,203,119,.4);}
+.btn-basketball{background:linear-gradient(135deg,var(--orange),#e65100);box-shadow:0 6px 20px rgba(255,140,66,.4);}
+.btn-baseball{background:linear-gradient(135deg,var(--blue),#00acc1);box-shadow:0 6px 20px rgba(78,205,196,.4);}
+.btn-tennis{background:linear-gradient(135deg,#AED581,#7CB342);box-shadow:0 6px 20px rgba(174,213,129,.4);}
+.btn-pingpong{background:linear-gradient(135deg,#A78BFA,#7C3AED);box-shadow:0 6px 20px rgba(168,139,250,.4);}
+.sport-instruction{font-size:.8rem;color:rgba(255,255,255,.45);text-align:center;margin-top:10px;letter-spacing:1px;}
+
+/* QUIZ SCREEN */
+#quizScreen{background:radial-gradient(ellipse at bottom,#12203a 0%,#060c14 100%);padding-top:30px;}
+.quiz-topbar{width:min(500px,94vw);display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.q-label{font-family:'Dela Gothic One',cursive;font-size:1.7rem;background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.score-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:.88rem;font-weight:700;color:var(--yellow);letter-spacing:1px;}
+
+.info-card{width:min(500px,94vw);background:linear-gradient(135deg,rgba(78,205,196,.1),rgba(255,107,157,.08));border:1px dashed rgba(78,205,196,.45);border-radius:16px;padding:15px 17px;margin-bottom:14px;display:none;}
+.info-card.visible{display:flex;flex-direction:column;align-items:center;gap:10px;animation:fadeIn .4s ease;}
+.info-card-img{width:100%;height:200px;min-width:unset;border-radius:10px;background:rgba(255,255,255,.07);border:2px dashed rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:2.4rem;overflow:hidden;}
+.info-card-img img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.info-card-text{font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.75;}
+.info-card-label{font-size:.7rem;letter-spacing:2px;color:var(--blue);font-weight:700;margin-bottom:4px;}
+.upload-hint{font-size:.7rem;color:rgba(255,255,255,.35);margin-top:5px;font-style:italic;}
+
+.quiz-card{width:min(500px,94vw);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:22px;padding:26px 22px;backdrop-filter:blur(12px);animation:slideUp .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.sport-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:4px 14px;font-size:.75rem;color:rgba(255,255,255,.55);letter-spacing:1px;margin-bottom:15px;}
+.question-text{font-size:1.02rem;font-weight:700;line-height:1.9;color:#fff;margin-bottom:22px;}
+
+.ox-container{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px;}
+.ox-btn{border:none;border-radius:18px;cursor:pointer;padding:18px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-family:'Noto Sans TC',sans-serif;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden;}
+.ox-btn:active:not(:disabled){transform:scale(.93);}
+.ox-btn:disabled{cursor:default;filter:brightness(.65);}
+.ox-symbol{font-size:2.8rem;line-height:1;font-weight:900;}
+.ox-sport-emoji{font-size:1.9rem;}
+.ox-label{font-size:.88rem;font-weight:900;letter-spacing:1px;}
+
+.ox-btn.circle-btn{background:linear-gradient(135deg,rgba(78,205,196,.18),rgba(78,205,196,.08));border:2px solid rgba(78,205,196,.5);color:var(--circle);}
+.ox-btn.circle-btn:hover:not(:disabled){transform:scale(1.05);box-shadow:0 8px 28px rgba(78,205,196,.4);border-color:var(--circle);}
+.ox-btn.cross-btn{background:linear-gradient(135deg,rgba(255,107,157,.18),rgba(255,107,157,.08));border:2px solid rgba(255,107,157,.5);color:var(--cross);}
+.ox-btn.cross-btn:hover:not(:disabled){transform:scale(1.05);box-shadow:0 8px 28px rgba(255,107,157,.4);border-color:var(--cross);}
+
+.ox-btn.chosen-correct{animation:correctPop .45s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 0 3px #6BCB77;border-color:#6BCB77!important;background:rgba(107,203,119,.25)!important;color:#6BCB77!important;}
+.ox-btn.chosen-wrong{animation:shakeAnim .4s ease;box-shadow:0 0 0 3px #FF6B6B;border-color:#FF6B6B!important;background:rgba(255,107,107,.25)!important;color:#FF6B6B!important;}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shakeAnim{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+
+.retry-hint{display:none;text-align:center;margin-top:12px;font-size:.88rem;color:var(--yellow);font-weight:700;letter-spacing:1px;animation:fadeIn .3s ease;padding:10px;background:rgba(255,230,109,.1);border-radius:10px;border:1px solid rgba(255,230,109,.25);}
+.retry-hint.visible{display:block;}
+
+.result-feedback{margin-top:16px;padding:14px 17px;border-radius:14px;font-size:.88rem;line-height:1.75;display:none;}
+.result-feedback.correct-fb{background:rgba(107,203,119,.13);border:1px solid rgba(107,203,119,.4);color:rgba(255,255,255,.9);display:block;animation:fadeIn .35s ease;}
+.fb-icon{font-size:1.3rem;margin-bottom:4px;display:block;}
+.fb-title{font-weight:900;font-size:.98rem;margin-bottom:4px;}
+.fb-body{color:rgba(255,255,255,.72);font-size:.85rem;}
+
+.next-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--blue),#00acc1);color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:1rem;font-weight:900;letter-spacing:2px;padding:15px;border-radius:14px;cursor:pointer;display:none;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 24px rgba(78,205,196,.4);}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(78,205,196,.5);}
+.next-btn.visible{display:block;animation:slideUp .3s ease;}
+
+/* RESULT SCREEN */
+#resultScreen{background:radial-gradient(ellipse at center,#16253e 0%,#07111e 100%);text-align:center;}
+.result-trophy{font-size:5rem;margin-bottom:18px;animation:trophyPop 1s ease;}
+@keyframes trophyPop{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.result-title{font-family:'Dela Gothic One',cursive;font-size:clamp(2.2rem,7vw,3.5rem);background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
+.result-stars{font-size:2rem;letter-spacing:8px;margin-bottom:14px;}
+.score-circle{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--pink) 0%,var(--blue) 100%);display:flex;align-items:center;justify-content:center;margin:8px auto 18px;}
+.score-inner{width:90px;height:90px;border-radius:50%;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-num{font-family:'Dela Gothic One',cursive;font-size:2rem;color:var(--yellow);line-height:1;}
+.score-lbl{font-size:.6rem;color:rgba(255,255,255,.45);letter-spacing:1px;}
+.result-msg{font-size:.97rem;color:rgba(255,255,255,.72);max-width:320px;margin:0 auto 28px;line-height:1.85;}
+.btn-replay{background:linear-gradient(135deg,var(--pink),#ff2d6f);color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:1rem;font-weight:900;letter-spacing:2px;padding:15px 50px;border-radius:50px;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 28px rgba(255,107,157,.4);}
+.btn-replay:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(255,107,157,.55);}
+.confetti-piece{position:fixed;pointer-events:none;z-index:100;animation:cFall linear forwards;}
+@keyframes cFall{0%{transform:translateY(-60px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div id="particles"></div>
+
+<!-- TITLE -->
+<div id="titleScreen" class="screen">
+  <div class="badge">🏛️ 財政部 稅務知識闖關</div>
+  <h1 class="game-title">租稅平權<br>知識GO</h1>
+  <p class="game-subtitle">線上闖關遊戲</p>
+  <div class="sport-icons">
+    <span class="sport-icon">🏹</span>
+    <span class="sport-icon">🏀</span>
+    <span class="sport-icon">⚾</span>
+    <span class="sport-icon">🎾</span>
+    <span class="sport-icon">🏓</span>
+  </div>
+  <button class="btn-start" onclick="startGame()">開始挑戰！</button>
+  <p class="rules-text">
+    完成運動動畫 → 解鎖知識題目<br>
+    用運動動作選擇 ○ 或 ✕ 作答<br>
+    答對才能前往下一關，共 5 題！
+  </p>
+</div>
+
+<!-- SPORT SCREEN -->
+<div id="sportScreen" class="screen hidden">
+  <div class="level-header">
+    <div class="level-num" id="levelNum">LEVEL 1 / 5</div>
+    <div class="level-title" id="levelTitle">🏹 射箭挑戰</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="sport-arena">
+
+    <!-- 0: ARCHERY -->
+    <div id="sg0">
+      <div class="sport-title">🏹 射箭挑戰</div>
+      <div class="game-canvas archery-bg">
+        <div class="target"><div class="target-inner"></div></div>
+        <div class="arrow-char" id="arrow">🏹</div>
+      </div>
+      <button class="tap-btn btn-archery" id="sb0" onclick="sportTap(0)">🎯 瞄準射擊！（連按蓄力）</button>
+      <p class="sport-instruction">連按按鈕讓箭矢飛向靶心！</p>
+    </div>
+
+    <!-- 1: BASKETBALL -->
+    <div id="sg1" class="hidden">
+      <div class="sport-title">🏀 籃球投籃</div>
+      <div class="game-canvas basketball-bg">
+        <div class="bball-floor"></div>
+        <div class="bball-hoop">🥅</div>
+        <div class="bball" id="bball">🏀</div>
+      </div>
+      <button class="tap-btn btn-basketball" id="sb1" onclick="sportTap(1)">🏀 投籃！（連按蓄力）</button>
+      <p class="sport-instruction">連按按鈕讓籃球飛進籃框！</p>
+    </div>
+
+    <!-- 2: BASEBALL nine-grid -->
+    <div id="sg2" class="hidden">
+      <div class="sport-title">⚾ 九宮格棒球</div>
+      <div class="game-canvas baseball-bg">
+        <div class="nine-grid" id="nineGrid">
+          <div class="grid-cell" id="gc0">1</div><div class="grid-cell" id="gc1">2</div><div class="grid-cell" id="gc2">3</div>
+          <div class="grid-cell" id="gc3">4</div><div class="grid-cell" id="gc4">5</div><div class="grid-cell" id="gc5">6</div>
+          <div class="grid-cell" id="gc6">7</div><div class="grid-cell" id="gc7">8</div><div class="grid-cell" id="gc8">9</div>
+        </div>
+        <div class="baseball-char" id="baseball">⚾</div>
+      </div>
+      <button class="tap-btn btn-baseball" id="sb2" onclick="sportTap(2)">⚾ 投球！（連按得分）</button>
+      <p class="sport-instruction">連按依序擊中九宮格所有格子！</p>
+    </div>
+
+    <!-- 3: TENNIS -->
+    <div id="sg3" class="hidden">
+      <div class="sport-title">🎾 網球對決</div>
+      <div class="game-canvas tennis-bg">
+        <div class="tennis-net"></div>
+        <div class="racket">🎾</div>
+        <div class="tennis-ball" id="tennisBall">🟡</div>
+      </div>
+      <button class="tap-btn btn-tennis" id="sb3" onclick="sportTap(3)">🎾 發球！（連按得分）</button>
+      <p class="sport-instruction">連按讓網球越過球網！</p>
+    </div>
+
+    <!-- 4: PING-PONG -->
+    <div id="sg4" class="hidden">
+      <div class="sport-title">🏓 乒乓球對決</div>
+      <div class="game-canvas pingpong-bg">
+        <div class="pp-table"></div>
+        <div class="pp-net"></div>
+        <div class="pp-paddle">🏓</div>
+        <div class="pp-ball" id="ppBall">🏐</div>
+      </div>
+      <button class="tap-btn btn-pingpong" id="sb4" onclick="sportTap(4)">🏓 揮拍！（連按得分）</button>
+      <p class="sport-instruction">連按讓乒乓球越過球桌！</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quizScreen" class="screen hidden">
+  <div class="quiz-topbar">
+    <div class="q-label" id="qLabel">Q1 / 5</div>
+    <div class="score-pill">🏅 <span id="scoreDisplay">0</span> 分</div>
+  </div>
+
+  <!-- Info card with image placeholder -->
+  <div class="info-card" id="infoCard">
+    <div class="info-card-img" id="infoImg">🖼️</div>
+    <div class="info-card-text">
+      <div class="info-card-label">📋 參考圖卡</div>
+      <div id="infoText"></div>
+      <div class="upload-hint">※ 可替換為實際圖卡圖片</div>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="sport-chip" id="sportChip"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="ox-container" id="oxContainer"></div>
+    <div class="retry-hint" id="retryHint">⚠️ 答錯了！請再試一次，一定要答對才能繼續！</div>
+    <div class="result-feedback" id="resultFeedback">
+      <span class="fb-icon" id="fbIcon"></span>
+      <div class="fb-title" id="fbTitle"></div>
+      <div class="fb-body" id="fbBody"></div>
+    </div>
+    <button class="next-btn" id="nextBtn" onclick="goNext()">下一關 →</button>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="resultScreen" class="screen hidden">
+  <div class="result-trophy" id="rTrophy">🏆</div>
+  <div class="result-title" id="rTitle">恭喜完賽！</div>
+  <div class="result-stars" id="rStars">⭐⭐⭐⭐⭐</div>
+  <div class="score-circle">
+    <div class="score-inner">
+      <div class="score-num" id="finalScore">100</div>
+      <div class="score-lbl">分</div>
+    </div>
+  </div>
+  <div class="result-msg" id="rMsg"></div>
+  <button class="btn-replay" onclick="replayGame()">🔄 再挑戰一次</button>
+</div>
+
+<script>
+// ==============================
+// DATA
+// correct: 'circle' = ○ (對/是)  |  'cross' = ✕ (錯/不會)
+// ==============================
+const QUESTIONS = [
+  {
+    text: "房屋是先生的，如果太太將戶籍遷入該屋，也能申請適用房屋稅及地價稅的自用住宅優惠稅率嗎？",
+    circleLabel: "○ 可以",
+    crossLabel:  "✕ 不可以",
+    correct: 'circle',
+    explanation: "房屋無出租、無營業，供本人、配偶或直系親屬實際居住使用，且在該屋辦竣戶籍登記，就能適用優惠稅率。不論登記在誰名下，配偶遷入戶籍後均可申請。",
+    hasCard: true,
+    cardText: "自用住宅條件：無出租、無營業，供本人、配偶或直系親屬居住，已辦竣戶籍登記即可申請房屋稅及地價稅優惠稅率。",
+    cardIcon: "🏠"
+  },
+  {
+    text: "爸爸是身障者且沒駕照，我跟爸爸雖然不在同一戶籍，但車籍地與爸爸的戶籍地相同，請問這台供爸爸出門使用的車，是否可以申請使用牌照稅免稅？",
+    circleLabel: "○ 是",
+    crossLabel:  "✕ 否",
+    correct: 'circle',
+    explanation: "115年增訂：因身心障礙情況致無駕駛執照者，其二親等內親屬所有、供該身障者使用之車輛，只要車籍地與該身障者戶籍地相同，就能申請免徵使用牌照稅。",
+    hasCard: true,
+    cardText: "115年新規：二親等內親屬之車輛，車籍地與身障者戶籍地相同，且確供身障者使用，即可申請使用牌照稅免稅。不須同一戶籍。",
+    cardIcon: "🚗"
+  },
+  {
+    text: "在辦理土地增值稅「一生一次」自用住宅優惠時，會因為性別而限制申請次數嗎？",
+    circleLabel: "○ 會",
+    crossLabel:  "✕ 不會",
+    correct: 'cross',
+    explanation: "「一生一次」土地增值稅自用住宅優惠，不論性別每人一生皆有一次適用機會，完全不受性別影響。",
+    hasCard: false,
+    cardText: "",
+    cardIcon: ""
+  },
+  {
+    text: "在法律規定下，女兒和兒子享有相同的遺產繼承權嗎？",
+    circleLabel: "○ 是",
+    crossLabel:  "✕ 否",
+    correct: 'circle',
+    explanation: "依民法規定，遺產繼承權不分男女老少皆平等。兒子與女兒同列第一順位繼承人，均分遺產，法律保障完全相同。",
+    hasCard: true,
+    cardText: "民法第1138條：第一順位繼承人為直系血親卑親屬（子女），不論性別皆享有相同繼承權利，按應繼分均等分配。",
+    cardIcon: "⚖️"
+  },
+  {
+    text: "父母贈與財產給子女時，贈與稅的免稅額度會因子女性別有所不同嗎？",
+    circleLabel: "○ 會",
+    crossLabel:  "✕ 不會",
+    correct: 'cross',
+    explanation: "贈與稅免稅額是以贈與人為計算基準（目前每年244萬元），受贈人（子女）的性別並不影響免稅額度，男女子女完全平等。",
+    hasCard: false,
+    cardText: "",
+    cardIcon: ""
+  }
+];
+
+const SPORTS = [
+  {id:'sg0',btnId:'sb0',name:'🏹 射箭挑戰',chip:'🏹 射箭關卡解鎖'},
+  {id:'sg1',btnId:'sb1',name:'🏀 籃球投籃',chip:'🏀 籃球關卡解鎖'},
+  {id:'sg2',btnId:'sb2',name:'⚾ 九宮格棒球',chip:'⚾ 棒球關卡解鎖'},
+  {id:'sg3',btnId:'sb3',name:'🎾 網球對決',chip:'🎾 網球關卡解鎖'},
+  {id:'sg4',btnId:'sb4',name:'🏓 乒乓球對決',chip:'🏓 乒乓球關卡解鎖'}
+];
+
+// O sport emoji per level (circle=○, cross=✕)
+const OX_EMOJIS=[
+  {circle:'🏹',cross:'🎯'},{circle:'🏀',cross:'🥅'},{circle:'⚾',cross:'🏏'},
+  {circle:'🎾',cross:'🏸'},{circle:'🏓',cross:'🎱'}
+];
+
+let currentLevel=0, score=0, sportProgress=0, answered=false, baseballHit=0;
+
+// Particles
+(function(){
+  const c=document.getElementById('particles');
+  const cols=['#FF6B9D','#4ECDC4','#FFE66D','#6BCB77','#FF8C42','#A78BFA'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div'); p.className='particle';
+    const sz=5+Math.random()*18;
+    p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${cols[i%cols.length]};animation-duration:${9+Math.random()*13}s;animation-delay:${Math.random()*9}s;`;
+    c.appendChild(p);
+  }
+})();
+
+function showScreen(id){
+  ['titleScreen','sportScreen','quizScreen','resultScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function startGame(){ currentLevel=0; score=0; document.getElementById('scoreDisplay').textContent='0'; showSportScreen(); }
+function replayGame(){ document.querySelectorAll('.confetti-piece').forEach(e=>e.remove()); startGame(); }
+
+// ===== SPORT =====
+function showSportScreen(){
+  showScreen('sportScreen');
+  const sp=SPORTS[currentLevel];
+  document.getElementById('levelNum').textContent=`LEVEL ${currentLevel+1} / 5`;
+  document.getElementById('levelTitle').textContent=sp.name;
+  document.getElementById('progressFill').style.width=`${(currentLevel/5)*100}%`;
+  SPORTS.forEach(s=>document.getElementById(s.id).classList.add('hidden'));
+  document.getElementById(sp.id).classList.remove('hidden');
+  sportProgress=0; baseballHit=0; answered=false;
+  resetSport();
+}
+
+function resetSport(){
+  const lv=currentLevel;
+  if(lv===0){const b=document.getElementById('sb0');b.disabled=false;b.textContent='🎯 瞄準射擊！（連按蓄力）';document.getElementById('arrow').style.left='12px';}
+  else if(lv===1){const b=document.getElementById('sb1');b.disabled=false;b.textContent='🏀 投籃！（連按蓄力）';const bl=document.getElementById('bball');bl.style.left='14px';bl.style.bottom='22px';}
+  else if(lv===2){const b=document.getElementById('sb2');b.disabled=false;b.textContent='⚾ 投球！（連按得分）';for(let i=0;i<9;i++)document.getElementById(`gc${i}`).className='grid-cell';}
+  else if(lv===3){const b=document.getElementById('sb3');b.disabled=false;b.textContent='🎾 發球！（連按得分）';const tb=document.getElementById('tennisBall');tb.style.left='10px';}
+  else if(lv===4){const b=document.getElementById('sb4');b.disabled=false;b.textContent='🏓 揮拍！（連按得分）';const pb=document.getElementById('ppBall');pb.style.left='14px';pb.style.bottom='34px';}
+}
+
+const GOAL=78;
+function sportTap(lv){
+  if(lv!==currentLevel) return;
+  if(lv===2){
+    if(baseballHit<9){document.getElementById(`gc${baseballHit}`).className='grid-cell hit';baseballHit++;sportProgress=Math.floor((baseballHit/9)*100);}
+  } else {
+    sportProgress=Math.min(sportProgress+9,100);
+  }
+  // animate
+  if(lv===0){
+    const w=document.getElementById('sg0').querySelector('.game-canvas').offsetWidth;
+    document.getElementById('arrow').style.left=Math.floor(12+(sportProgress/100)*(w-90))+'px';
+  } else if(lv===1){
+    const w=document.getElementById('sg1').querySelector('.game-canvas').offsetWidth;
+    const bl=document.getElementById('bball');
+    bl.style.left=Math.floor(14+(sportProgress/100)*(w-70))+'px';
+    bl.style.bottom=Math.floor(22+Math.sin((sportProgress/100)*Math.PI)*65)+'px';
+  } else if(lv===3){
+    const w=document.getElementById('sg3').querySelector('.game-canvas').offsetWidth;
+    document.getElementById('tennisBall').style.left=Math.floor(10+(sportProgress/100)*(w-60))+'px';
+  } else if(lv===4){
+    const w=document.getElementById('sg4').querySelector('.game-canvas').offsetWidth;
+    const pb=document.getElementById('ppBall');
+    pb.style.left=Math.floor(14+(sportProgress/100)*(w-60))+'px';
+    pb.style.bottom=Math.floor(34+Math.sin((sportProgress/100)*Math.PI)*28)+'px';
+  }
+  if(sportProgress>=GOAL) completeSport(lv);
+}
+
+function completeSport(lv){
+  const btn=document.getElementById(SPORTS[lv].btnId);
+  btn.disabled=true; btn.textContent='✅ 完成！解鎖題目中...';
+  setTimeout(()=>showQuizScreen(),650);
+}
+
+// ===== QUIZ =====
+function showQuizScreen(){
+  showScreen('quizScreen'); answered=false;
+  const q=QUESTIONS[currentLevel];
+  const sp=SPORTS[currentLevel];
+  document.getElementById('qLabel').textContent=`Q${currentLevel+1} / 5`;
+  document.getElementById('scoreDisplay').textContent=score;
+  document.getElementById('sportChip').textContent=sp.chip;
+  document.getElementById('questionText').textContent=q.text;
+
+  const card=document.getElementById('infoCard');
+  if(q.hasCard){
+    card.className='info-card visible';
+    document.getElementById('infoImg').innerHTML='<img src="images/card'+currentLevel+'.png" alt="參考圖卡" onerror="this.parentElement.innerHTML=\'<span style=\"font-size:2.5rem\">'+q.cardIcon+'</span>\'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">';
+    document.getElementById('infoText').textContent=q.cardText;
+  } else {
+    card.className='info-card';
+  }
+
+  document.getElementById('resultFeedback').className='result-feedback';
+  document.getElementById('retryHint').className='retry-hint';
+  document.getElementById('nextBtn').className='next-btn';
+  buildOX(q);
+}
+
+function buildOX(q){
+  const con=document.getElementById('oxContainer'); con.innerHTML='';
+  const em=OX_EMOJIS[currentLevel];
+
+  const cBtn=document.createElement('button');
+  cBtn.className='ox-btn circle-btn'; cBtn.id='cBtn';
+  cBtn.innerHTML=`<span class="ox-sport-emoji">${em.circle}</span><span class="ox-symbol">○</span><span class="ox-label">${q.circleLabel}</span>`;
+  cBtn.onclick=()=>answerOX('circle');
+
+  const xBtn=document.createElement('button');
+  xBtn.className='ox-btn cross-btn'; xBtn.id='xBtn';
+  xBtn.innerHTML=`<span class="ox-sport-emoji">${em.cross}</span><span class="ox-symbol">✕</span><span class="ox-label">${q.crossLabel}</span>`;
+  xBtn.onclick=()=>answerOX('cross');
+
+  con.appendChild(cBtn); con.appendChild(xBtn);
+}
+
+function answerOX(chosen){
+  const q=QUESTIONS[currentLevel];
+  const cBtn=document.getElementById('cBtn');
+  const xBtn=document.getElementById('xBtn');
+  const chosenBtn=chosen==='circle'?cBtn:xBtn;
+  const retryHint=document.getElementById('retryHint');
+  const fb=document.getElementById('resultFeedback');
+
+  if(chosen===q.correct){
+    // Correct!
+    answered=true;
+    cBtn.disabled=true; xBtn.disabled=true;
+    chosenBtn.classList.add('chosen-correct');
+    score+=20; document.getElementById('scoreDisplay').textContent=score;
+    fb.className='result-feedback correct-fb';
+    document.getElementById('fbIcon').textContent='✅';
+    document.getElementById('fbTitle').textContent='答對了！太棒了！';
+    document.getElementById('fbBody').textContent=q.explanation;
+    retryHint.className='retry-hint';
+    const nb=document.getElementById('nextBtn');
+    nb.className='next-btn visible';
+    nb.textContent=currentLevel<4?'下一關 →':'🏆 查看成績';
+  } else {
+    // Wrong — shake and retry
+    chosenBtn.classList.add('chosen-wrong');
+    retryHint.className='retry-hint visible';
+    fb.className='result-feedback';
+    setTimeout(()=>{ chosenBtn.classList.remove('chosen-wrong'); },700);
+  }
+}
+
+function goNext(){
+  currentLevel++;
+  if(currentLevel>=5) showResultScreen();
+  else showSportScreen();
+}
+
+// ===== RESULT =====
+function showResultScreen(){
+  showScreen('resultScreen');
+  document.getElementById('finalScore').textContent=score;
+  const stars=score===100?'⭐⭐⭐⭐⭐':score>=80?'⭐⭐⭐⭐':score>=60?'⭐⭐⭐':'⭐⭐';
+  document.getElementById('rStars').textContent=stars;
+  let title,trophy,msg;
+  if(score===100){title='完美滿分！';trophy='🏆';msg='你對租稅平權有深刻的認識！稅法保障每個人平等的權利，不分性別、不論身分，人人平等。';}
+  else if(score>=80){title='超棒表現！';trophy='🥇';msg='你已掌握租稅平權的核心精神！繼續學習，讓平等觀念更加深入生活。';}
+  else{title='繼續加油！';trophy='🎖️';msg='租稅平權是重要課題！透過學習，了解更多稅務與法律中的平等精神。';}
+  document.getElementById('rTitle').textContent=title;
+  document.getElementById('rTrophy').textContent=trophy;
+  document.getElementById('rMsg').textContent=msg;
+  if(score>=80) confetti();
+}
+
+function confetti(){
+  const cols=['#FF6B9D','#4ECDC4','#FFE66D','#6BCB77','#FF8C42','#A78BFA'];
+  for(let i=0;i<70;i++) setTimeout(()=>{
+    const c=document.createElement('div'); c.className='confetti-piece';
+    const sz=7+Math.random()*12;
+    c.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${1.4+Math.random()*2.2}s;`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  },i*40);
+}
+</script>
+</body>
+</html>
