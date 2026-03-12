@@ -112,13 +112,13 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 }
 .rules-box p{
   color:#fff;
-  font-size:.88rem;
-  line-height:2;
+  font-size:1.05rem;
+  line-height:2.1;
   font-weight:700;
 }
 .rules-box .rules-title{
-  font-size:.75rem;letter-spacing:3px;
-  color:var(--yellow);margin-bottom:6px;
+  font-size:.85rem;letter-spacing:3px;
+  color:var(--yellow);margin-bottom:8px;
 }
 
 /* ══ BADGE TRACKER ══ */
@@ -174,27 +174,30 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 .target-inner{width:22px;height:22px;border-radius:50%;background:#FFE66D;}
 .arrow-char{position:absolute;bottom:10px;left:12px;font-size:2rem;transition:left .5s ease-out;filter:drop-shadow(0 0 6px rgba(192,132,252,.9));}
 
-.basketball-bg{background:linear-gradient(180deg,#1a0a2a 0%,#100618 100%);border:2px solid rgba(255,107,157,.35);}
-.bball-floor{position:absolute;bottom:0;width:100%;height:16px;background:#5D2E0C;border-top:2px solid rgba(255,140,66,.4);}
-.bball-hoop{position:absolute;right:16px;top:14px;font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,107,157,.7));}
-.bball{position:absolute;bottom:20px;left:14px;font-size:2rem;transition:left .5s ease-out,bottom .5s ease-out;filter:drop-shadow(0 0 7px rgba(255,107,157,.6));}
+/* Cycling */
+.cycling-bg{background:linear-gradient(180deg,#1a0a2e 0%,#0f0618 100%);border:2px solid rgba(255,107,157,.35);}
+.cycle-road{position:absolute;bottom:0;width:100%;height:18px;background:linear-gradient(180deg,#3a3a4a,#22222e);border-top:2px solid rgba(255,107,157,.3);}
+.cycle-line{position:absolute;bottom:8px;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 14px,transparent 14px 26px);}
+.cycle-end{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,107,157,.7));}
+.cycle-char{position:absolute;bottom:18px;font-size:2.4rem;transition:left .6s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 0 8px rgba(255,107,157,.8));}
 
-.baseball-bg{background:linear-gradient(180deg,#0a1530 0%,#060e1e 100%);border:2px solid rgba(110,231,183,.3);}
-.nine-grid{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:88px;}
-.grid-cell{width:27px;height:27px;border-radius:4px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:rgba(255,255,255,.35);transition:all .25s;}
-.grid-cell.hit{background:rgba(110,231,183,.28);border-color:var(--mint);color:var(--mint);transform:scale(1.08);}
-.baseball-char{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 8px rgba(110,231,183,.8));}
+/* Running */
+.running-bg{background:linear-gradient(180deg,#0a1a10 0%,#061008 100%);border:2px solid rgba(110,231,183,.35);}
+.run-track{position:absolute;bottom:18px;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 18px,transparent 18px 30px);}
+.run-finish{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:2.4rem;filter:drop-shadow(0 0 10px rgba(110,231,183,.7));}
+.run-char{position:absolute;bottom:22px;font-size:2.4rem;transition:left .6s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 0 8px rgba(110,231,183,.8));}
 
-.tennis-bg{background:linear-gradient(180deg,#1e2a0a 0%,#111a05 100%);border:2px solid rgba(255,230,109,.3);}
-.tennis-net{position:absolute;left:50%;top:0;transform:translateX(-50%);width:4px;height:100%;background:repeating-linear-gradient(180deg,rgba(255,255,255,.5) 0 8px,transparent 8px 14px);}
-.tennis-ball{position:absolute;top:50%;left:10px;transform:translateY(-50%);font-size:2rem;transition:left .5s ease-out;filter:drop-shadow(0 0 7px rgba(255,230,109,.9));}
-.racket{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 8px rgba(255,230,109,.5));}
+/* Skating */
+.skating-bg{background:linear-gradient(180deg,#0a1e2e 0%,#061218 100%);border:2px solid rgba(147,197,253,.4);}
+.ice-surface{position:absolute;bottom:0;width:100%;height:22px;background:linear-gradient(180deg,rgba(147,197,253,.25),rgba(147,197,253,.1));border-top:2px solid rgba(147,197,253,.5);}
+.skate-char{position:absolute;left:12px;bottom:22px;font-size:2.2rem;transition:left .6s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 0 8px rgba(147,197,253,.8));}
+.skate-goal{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,230,109,.8));}
 
-.pingpong-bg{background:linear-gradient(180deg,#0a1a2a 0%,#060f18 100%);border:2px solid rgba(192,132,252,.4);}
-.pp-table{position:absolute;bottom:0;width:100%;height:28px;background:linear-gradient(180deg,#1565C0 0%,#0D47A1 100%);border-top:3px solid rgba(255,255,255,.7);}
-.pp-net{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:4px;height:20px;background:white;border-radius:2px;}
-.pp-ball{position:absolute;bottom:32px;left:14px;font-size:1.6rem;transition:left .5s ease-out,bottom .5s ease-out;filter:drop-shadow(0 0 6px rgba(192,132,252,.9));}
-.pp-paddle{position:absolute;right:12px;bottom:26px;font-size:2rem;filter:drop-shadow(0 0 8px rgba(192,132,252,.5));}
+/* Swimming */
+.swimming-bg{background:linear-gradient(180deg,#0a1535 0%,#060e22 100%);border:2px solid rgba(96,165,250,.4);}
+.swim-lane{position:absolute;top:50%;left:0;right:0;height:3px;background:rgba(255,255,255,.15);}
+.swim-char{position:absolute;top:50%;transform:translateY(-50%);font-size:2.4rem;transition:left .6s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 0 8px rgba(96,165,250,.9));}
+.swim-end{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,230,109,.8));}
 
 /* Single-tap button — big, satisfying */
 .tap-btn{
@@ -207,11 +210,10 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 .tap-btn:active{transform:scale(.95);}
 .tap-btn:disabled{background:rgba(255,255,255,.15)!important;box-shadow:none!important;cursor:default;color:rgba(255,255,255,.4)!important;}
 .btn-archery{background:linear-gradient(135deg,#C084FC,#9333ea);box-shadow:0 6px 22px rgba(192,132,252,.45);}
-.btn-basketball{background:linear-gradient(135deg,#FF6B9D,#e11d48);box-shadow:0 6px 22px rgba(255,107,157,.45);}
-.btn-baseball{background:linear-gradient(135deg,#6EE7B7,#059669);box-shadow:0 6px 22px rgba(110,231,183,.45);}
-.btn-tennis{background:linear-gradient(135deg,#FFE66D,#f59e0b);box-shadow:0 6px 22px rgba(255,230,109,.45);}
-.btn-pingpong{background:linear-gradient(135deg,#93C5FD,#3b82f6);box-shadow:0 6px 22px rgba(147,197,253,.45);}
-.sport-instruction{font-size:.8rem;color:rgba(255,255,255,.5);text-align:center;margin-top:9px;letter-spacing:1px;}
+.btn-cycling{background:linear-gradient(135deg,#FF6B9D,#e11d48);box-shadow:0 6px 22px rgba(255,107,157,.45);}
+.btn-running{background:linear-gradient(135deg,#6EE7B7,#059669);box-shadow:0 6px 22px rgba(110,231,183,.45);}
+.btn-skating{background:linear-gradient(135deg,#93C5FD,#3b82f6);box-shadow:0 6px 22px rgba(147,197,253,.45);}
+.btn-swimming{background:linear-gradient(135deg,#60A5FA,#1d4ed8);box-shadow:0 6px 22px rgba(96,165,250,.45);}
 
 /* ══ QUIZ SCREEN ══ */
 #quizScreen{background:radial-gradient(ellipse at bottom,#2D1040 0%,#1A0A2E 100%);}
@@ -269,12 +271,10 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 .question-text{font-size:1rem;font-weight:700;line-height:1.95;color:var(--white);margin-bottom:18px;}
 
 .ox-container{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px;}
-.ox-btn{border:none;border-radius:18px;cursor:pointer;padding:16px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-family:'MPLUS Rounded 1c',sans-serif;transition:transform .18s,box-shadow .18s;}
+.ox-btn{border:none;border-radius:18px;cursor:pointer;padding:20px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-family:'MPLUS Rounded 1c',sans-serif;transition:transform .18s,box-shadow .18s;}
 .ox-btn:active:not(:disabled){transform:scale(.91);}
 .ox-btn:disabled{cursor:default;filter:brightness(.58);}
-.ox-symbol{font-size:2.6rem;line-height:1;font-weight:900;}
-.ox-sport-emoji{font-size:1.8rem;}
-.ox-label{font-size:.85rem;font-weight:900;letter-spacing:1px;}
+.ox-label{font-size:1.1rem;font-weight:900;letter-spacing:1px;}
 .ox-btn.circle-btn{background:linear-gradient(135deg,rgba(110,231,183,.2),rgba(110,231,183,.06));border:2px solid rgba(110,231,183,.5);color:var(--mint);}
 .ox-btn.circle-btn:hover:not(:disabled){transform:scale(1.05);box-shadow:0 8px 26px rgba(110,231,183,.4);}
 .ox-btn.cross-btn{background:linear-gradient(135deg,rgba(255,107,157,.2),rgba(255,107,157,.06));border:2px solid rgba(255,107,157,.5);color:var(--rose);}
@@ -338,13 +338,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 <div id="floral-bg"></div>
 
 <!-- ✅ PERSISTENT HEADER — always visible -->
-<header id="siteHeader">
-  <span class="header-logo">🏛️</span>
-  <div>
-    <div class="header-text">彰化縣地方稅務局</div>
-    <div class="header-sub">租稅平權知識GO · 線上闖關遊戲</div>
-  </div>
-</header>
+<header id="siteHeader"><div class="header-text">彰化縣地方稅務局</div></header>
 
 <!-- Lightbox -->
 <div id="lightbox" onclick="closeLightbox()">
@@ -367,8 +361,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
   <div class="rules-box">
     <div class="rules-title">📋 遊戲說明</div>
     <p>
-      完成運動關卡 → 解鎖知識題目<br>
-      用 ○ 或 ✕ 選擇正確答案<br>
+      完成遊戲解鎖租稅知識<br>
       答對才能獲得職業徽章 🏅<br>
       集滿 3 枚徽章即可通關兌獎！
     </p>
@@ -395,61 +388,49 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
   <div class="sport-arena">
     <!-- ARCHERY -->
     <div id="sg0">
-      <div class="sport-title">🏹 射箭挑戰</div>
       <div class="game-canvas archery-bg">
         <div class="target"><div class="target-inner"></div></div>
         <div class="arrow-char" id="arrow">🏹</div>
       </div>
-      <button class="tap-btn btn-archery" id="sb0" onclick="sportTap(0)">🎯 按下發射！</button>
-      <p class="sport-instruction">按一下，讓箭矢飛向靶心！</p>
+      <button class="tap-btn btn-archery" id="sb0" onclick="sportTap(0)">🎯 點我發射！</button>
+      
     </div>
-    <!-- BASKETBALL -->
+    <!-- CYCLING -->
     <div id="sg1" class="hidden">
-      <div class="sport-title">🏀 籃球投籃</div>
-      <div class="game-canvas basketball-bg">
-        <div class="bball-floor"></div>
-        <div class="bball-hoop">🥅</div>
-        <div class="bball" id="bball">🏀</div>
+      <div class="game-canvas cycling-bg">
+        <div class="cycle-road"></div>
+        <div class="cycle-line"></div>
+        <div class="cycle-end">🏁</div>
+        <div class="cycle-char" id="cycleChar">🚴‍♀️</div>
       </div>
-      <button class="tap-btn btn-basketball" id="sb1" onclick="sportTap(1)">🏀 按下投籃！</button>
-      <p class="sport-instruction">按一下，讓籃球飛進籃框！</p>
+      <button class="tap-btn btn-cycling" id="sb1" onclick="sportTap(1)">🚴‍♀️ 點我騎乘！</button>
     </div>
-    <!-- BASEBALL -->
+    <!-- RUNNING -->
     <div id="sg2" class="hidden">
-      <div class="sport-title">⚾ 九宮格棒球</div>
-      <div class="game-canvas baseball-bg">
-        <div class="nine-grid" id="nineGrid">
-          <div class="grid-cell" id="gc0">1</div><div class="grid-cell" id="gc1">2</div><div class="grid-cell" id="gc2">3</div>
-          <div class="grid-cell" id="gc3">4</div><div class="grid-cell" id="gc4">5</div><div class="grid-cell" id="gc5">6</div>
-          <div class="grid-cell" id="gc6">7</div><div class="grid-cell" id="gc7">8</div><div class="grid-cell" id="gc8">9</div>
-        </div>
-        <div class="baseball-char" id="baseball">⚾</div>
+      <div class="game-canvas running-bg">
+        <div class="run-track"></div>
+        <div class="run-finish">🏁</div>
+        <div class="run-char" id="runChar">🏃‍♀️</div>
       </div>
-      <button class="tap-btn btn-baseball" id="sb2" onclick="sportTap(2)">⚾ 按下投球！</button>
-      <p class="sport-instruction">按一下，全壘打得分！</p>
+      <button class="tap-btn btn-running" id="sb2" onclick="sportTap(2)">🏃‍♀️ 點我衝刺！</button>
     </div>
-    <!-- TENNIS -->
+    <!-- SKATING -->
     <div id="sg3" class="hidden">
-      <div class="sport-title">🎾 網球對決</div>
-      <div class="game-canvas tennis-bg">
-        <div class="tennis-net"></div>
-        <div class="racket">🎾</div>
-        <div class="tennis-ball" id="tennisBall">🟡</div>
+      <div class="game-canvas skating-bg">
+        <div class="ice-surface"></div>
+        <div class="skate-char" id="skateChar">⛸️</div>
+        <div class="skate-goal">🥇</div>
       </div>
-      <button class="tap-btn btn-tennis" id="sb3" onclick="sportTap(3)">🎾 按下發球！</button>
-      <p class="sport-instruction">按一下，讓球越過球網！</p>
+      <button class="tap-btn btn-skating" id="sb3" onclick="sportTap(3)">⛸️ 點我滑行！</button>
     </div>
-    <!-- PING-PONG -->
+    <!-- SWIMMING -->
     <div id="sg4" class="hidden">
-      <div class="sport-title">🏓 乒乓球對決</div>
-      <div class="game-canvas pingpong-bg">
-        <div class="pp-table"></div>
-        <div class="pp-net"></div>
-        <div class="pp-paddle">🏓</div>
-        <div class="pp-ball" id="ppBall">🏐</div>
+      <div class="game-canvas swimming-bg">
+        <div class="swim-lane"></div>
+        <div class="swim-char" id="swimChar">🏊‍♀️</div>
+        <div class="swim-end">🏅</div>
       </div>
-      <button class="tap-btn btn-pingpong" id="sb4" onclick="sportTap(4)">🏓 按下揮拍！</button>
-      <p class="sport-instruction">按一下，讓球飛越球桌！</p>
+      <button class="tap-btn btn-swimming" id="sb4" onclick="sportTap(4)">🏊‍♀️ 點我游泳！</button>
     </div>
   </div>
 </div>
@@ -483,7 +464,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
       <div class="fb-title" id="fbTitle"></div>
       <div class="fb-body" id="fbBody"></div>
     </div>
-    <button class="next-btn" id="nextBtn" onclick="goNext()">下一關 →</button>
+    <button class="next-btn" id="nextBtn" onclick="goNext()">下一關</button>
   </div>
 </div>
 
@@ -494,7 +475,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
   <div class="complete-sub">集滿所有職業徽章！</div>
   <div class="earned-badges" id="earnedBadgesDisplay"></div>
   <div class="complete-msg">你對租稅平權有深刻的認識！<br>不分性別，人人享有平等的稅務權利。🌸</div>
-  <a class="btn-redeem" href="https://changtax19501128-del.github.io/tax-gam/%E9%80%9A%E7%89%88%E5%85%8C%E6%8F%9B%E5%8D%80.html" target="_blank">
+  <a class="btn-redeem" href="https://changtax19501128-del.github.io/tax-gam/redeem.html" target="_blank">
     🎁 前往兌換好禮！
   </a>
   <button class="btn-replay2" onclick="replayGame()">🔄 再玩一次</button>
@@ -510,7 +491,7 @@ const CAREER_BADGES=[
 const ALL_QUESTIONS=[
   {
     text:'房屋是先生的，如果太太將戶籍遷入該屋，也能申請適用房屋稅及地價稅的自用住宅優惠稅率嗎？',
-    circleLabel:'○ 是',crossLabel:'✕ 不是',correct:'circle',
+    circleLabel:'○ 可以',crossLabel:'✕ 不可以',correct:'circle',
     explanation:'房屋無出租、無營業，供本人、配偶或直系親屬實際居住使用，且在該屋辦竣戶籍登記，就能適用優惠稅率。不論登記在誰名下，配偶遷入戶籍後均可申請。',
     hasCard:true,cardImg:'images/card0.png',cardIcon:'🏠'
   },
@@ -541,15 +522,11 @@ const ALL_QUESTIONS=[
 ];
 
 const SPORTS_CONFIG=[
-  {id:'sg0',btnId:'sb0',name:'🏹 射箭挑戰',chip:'🏹 射箭關卡解鎖'},
-  {id:'sg1',btnId:'sb1',name:'🏀 籃球投籃',chip:'🏀 籃球關卡解鎖'},
-  {id:'sg2',btnId:'sb2',name:'⚾ 九宮格棒球',chip:'⚾ 棒球關卡解鎖'},
-  {id:'sg3',btnId:'sb3',name:'🎾 網球對決',chip:'🎾 網球關卡解鎖'},
-  {id:'sg4',btnId:'sb4',name:'🏓 乒乓球對決',chip:'🏓 乒乓球關卡解鎖'}
-];
-const OX_EMOJIS=[
-  {circle:'🏹',cross:'🎯'},{circle:'🏀',cross:'🥅'},
-  {circle:'⚾',cross:'🏏'},{circle:'🎾',cross:'🏸'},{circle:'🏓',cross:'🎱'}
+  {id:'sg0',btnId:'sb0',name:'🏹 射箭挑戰',chip:'🏹 射箭關卡解鎖',tapLabel:'🎯 點我射箭！'},
+  {id:'sg1',btnId:'sb1',name:'🚴‍♀️ 腳踏車挑戰',chip:'🚴‍♀️ 腳踏車關卡解鎖',tapLabel:'🚴‍♀️ 點我騎乘！'},
+  {id:'sg2',btnId:'sb2',name:'🏃‍♀️ 跑步衝刺',chip:'🏃‍♀️ 跑步關卡解鎖',tapLabel:'🏃‍♀️ 點我跑步！'},
+  {id:'sg3',btnId:'sb3',name:'⛸️ 溜冰滑行',chip:'⛸️ 溜冰關卡解鎖',tapLabel:'⛸️ 點我溜冰！'},
+  {id:'sg4',btnId:'sb4',name:'🏊‍♀️ 游泳挑戰',chip:'🏊‍♀️ 游泳關卡解鎖',tapLabel:'🏊‍♀️ 點我游泳！'}
 ];
 
 // ══ STATE ══
@@ -623,18 +600,26 @@ function resetSport(){
   const sp=selectedSports[currentLevel];
   const btn=document.getElementById(sp.btnId);
   btn.disabled=false;
-  // Reset visuals
+  btn.textContent=sp.tapLabel;
+  // sg1/sg2/sg4 move right→left, so start from right side
+  const getRTL=(id)=>{
+    const el=document.getElementById(id);
+    const canvas=document.getElementById(sp.id).querySelector('.game-canvas');
+    const cw=canvas?canvas.offsetWidth:320;
+    el.style.transition='none';
+    el.style.left=(cw-64)+'px';
+  };
   if(sp.id==='sg0'){document.getElementById('arrow').style.transition='none';document.getElementById('arrow').style.left='12px';}
-  else if(sp.id==='sg1'){const b=document.getElementById('bball');b.style.transition='none';b.style.left='14px';b.style.bottom='20px';}
-  else if(sp.id==='sg2'){for(let i=0;i<9;i++)document.getElementById(`gc${i}`).className='grid-cell';}
-  else if(sp.id==='sg3'){const t=document.getElementById('tennisBall');t.style.transition='none';t.style.left='10px';}
-  else if(sp.id==='sg4'){const p=document.getElementById('ppBall');p.style.transition='none';p.style.left='14px';p.style.bottom='32px';}
-  // Re-enable transitions after reset
+  else if(sp.id==='sg1') getRTL('cycleChar');
+  else if(sp.id==='sg2') getRTL('runChar');
+  else if(sp.id==='sg3'){const s=document.getElementById('skateChar');s.style.transition='none';s.style.left='12px';}
+  else if(sp.id==='sg4') getRTL('swimChar');
   setTimeout(()=>{
     if(sp.id==='sg0') document.getElementById('arrow').style.transition='left .5s ease-out';
-    else if(sp.id==='sg1'){const b=document.getElementById('bball');b.style.transition='left .5s ease-out,bottom .5s ease-out';}
-    else if(sp.id==='sg3') document.getElementById('tennisBall').style.transition='left .5s ease-out';
-    else if(sp.id==='sg4'){const p=document.getElementById('ppBall');p.style.transition='left .5s ease-out,bottom .5s ease-out';}
+    else if(sp.id==='sg1') document.getElementById('cycleChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
+    else if(sp.id==='sg2') document.getElementById('runChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
+    else if(sp.id==='sg3') document.getElementById('skateChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
+    else if(sp.id==='sg4') document.getElementById('swimChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
   },50);
 }
 
@@ -651,25 +636,17 @@ function sportTap(canvasIdx){
   if(sp.id==='sg0'){
     document.getElementById('arrow').style.left=(w-90)+'px';
   } else if(sp.id==='sg1'){
-    const b=document.getElementById('bball');
-    b.style.left=(w-70)+'px';
-    // arc: peak at mid, land at hoop
-    setTimeout(()=>{b.style.bottom='60px';},150);
-    setTimeout(()=>{b.style.bottom='20px';},320);
+    document.getElementById('cycleChar').style.left='12px';
   } else if(sp.id==='sg2'){
-    // light up all cells one by one
-    for(let i=0;i<9;i++) setTimeout(()=>document.getElementById(`gc${i}`).className='grid-cell hit',i*60);
+    document.getElementById('runChar').style.left='12px';
   } else if(sp.id==='sg3'){
-    document.getElementById('tennisBall').style.left=(w-60)+'px';
+    document.getElementById('skateChar').style.left=(w-60)+'px';
   } else if(sp.id==='sg4'){
-    const p=document.getElementById('ppBall');
-    p.style.left=(w-60)+'px';
-    setTimeout(()=>{p.style.bottom='52px';},150);
-    setTimeout(()=>{p.style.bottom='32px';},350);
+    document.getElementById('swimChar').style.left='12px';
   }
 
-  btn.textContent='✅ 完成！解鎖題目中...';
-  setTimeout(()=>showQuizScreen(), sp.id==='sg2' ? 700 : 650);
+  btn.textContent=sp.tapLabel;
+  setTimeout(()=>showQuizScreen(), 700);
 }
 
 // ══ QUIZ ══
@@ -698,17 +675,15 @@ function showQuizScreen(){
 
 function buildOX(q){
   const con=document.getElementById('oxContainer');con.innerHTML='';
-  const sportIdx=SPORTS_CONFIG.findIndex(s=>s.id===selectedSports[currentLevel].id);
-  const em=OX_EMOJIS[sportIdx];
 
   const cBtn=document.createElement('button');
   cBtn.className='ox-btn circle-btn';cBtn.id='cBtn';
-  cBtn.innerHTML=`<span class="ox-sport-emoji">${em.circle}</span><span class="ox-symbol">○</span><span class="ox-label">${q.circleLabel}</span>`;
+  cBtn.innerHTML=`<span class="ox-label">${q.circleLabel}</span>`;
   cBtn.onclick=()=>answerOX('circle');
 
   const xBtn=document.createElement('button');
   xBtn.className='ox-btn cross-btn';xBtn.id='xBtn';
-  xBtn.innerHTML=`<span class="ox-sport-emoji">${em.cross}</span><span class="ox-symbol">✕</span><span class="ox-label">${q.crossLabel}</span>`;
+  xBtn.innerHTML=`<span class="ox-label">${q.crossLabel}</span>`;
   xBtn.onclick=()=>answerOX('cross');
 
   con.appendChild(cBtn);con.appendChild(xBtn);
@@ -732,7 +707,7 @@ function answerOX(chosen){
     document.getElementById('retryHint').className='retry-hint';
     const nb=document.getElementById('nextBtn');
     nb.className='next-btn visible';
-    nb.textContent=currentLevel<2?'下一關 →':'🎉 查看通關結果！';
+    nb.textContent=currentLevel<2?'下一關':'🎉 查看通關結果！';
   } else {
     chosenBtn.classList.add('chosen-wrong');
     document.getElementById('retryHint').className='retry-hint visible';
