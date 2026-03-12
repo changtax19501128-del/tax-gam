@@ -29,11 +29,11 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
   border-bottom:1px solid rgba(255,107,157,.3);
   backdrop-filter:blur(16px);
   display:flex;align-items:center;justify-content:center;
-  padding:8px 16px;
+  padding:12px 16px;
   gap:8px;
 }
 .header-logo{font-size:1.3rem;}
-.header-text{font-size:.82rem;font-weight:900;letter-spacing:2px;color:var(--peach);}
+.header-text{font-size:1.45rem;font-weight:900;letter-spacing:3px;color:var(--peach);}
 .header-sub{font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:1px;margin-top:1px;}
 
 /* screens sit below header */
@@ -50,11 +50,11 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 #titleScreen{background:radial-gradient(ellipse at 50% 35%,#3D1560 0%,#1A0A2E 75%);}
 
 .flower-row{
-  display:flex;gap:10px;margin-bottom:14px;
+  display:flex;gap:8px;margin-bottom:8px;
   flex-wrap:wrap;justify-content:center;
 }
 .flower-item{
-  font-size:2.2rem;
+  font-size:1.1rem;
   animation:floatY 2.8s ease-in-out infinite;
   filter:drop-shadow(0 2px 8px rgba(255,107,157,.6));
   text-shadow:0 0 12px rgba(255,107,157,.8);
@@ -67,8 +67,8 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 
 .game-title{
   font-family:'MPLUS Rounded 1c',sans-serif;
-  font-size:clamp(2.2rem,8vw,3.6rem);
-  line-height:1.15;text-align:center;
+  font-size:clamp(2.8rem,10vw,4.4rem);
+  line-height:1.1;text-align:center;
   color:#fff;
   text-shadow:0 0 40px rgba(255,107,157,.8), 0 2px 0 rgba(0,0,0,.4);
   margin-bottom:4px;
@@ -78,10 +78,10 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 .game-title span.t2{color:#FF6B9D;}
 
 .game-subtitle{
-  font-size:.95rem;
+  font-size:clamp(1.5rem,5vw,2.2rem);
   background:linear-gradient(90deg,var(--peach),var(--lavender));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  letter-spacing:3px;margin-bottom:16px;text-align:center;
+  letter-spacing:2px;margin-bottom:16px;text-align:center;
   font-weight:900;
 }
 
@@ -108,17 +108,17 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
   border-radius:16px;
   padding:14px 20px;
   text-align:center;
-  max-width:320px;
+  max-width:360px;
 }
 .rules-box p{
   color:#fff;
-  font-size:1.05rem;
-  line-height:2.1;
+  font-size:1.2rem;
+  line-height:2.2;
   font-weight:700;
 }
 .rules-box .rules-title{
-  font-size:.85rem;letter-spacing:3px;
-  color:var(--yellow);margin-bottom:8px;
+  font-size:1rem;letter-spacing:3px;
+  color:var(--yellow);margin-bottom:10px;
 }
 
 /* ══ BADGE TRACKER ══ */
@@ -187,11 +187,12 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 .run-finish{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:2.4rem;filter:drop-shadow(0 0 10px rgba(110,231,183,.7));}
 .run-char{position:absolute;bottom:22px;font-size:2.4rem;transition:left .6s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 0 8px rgba(110,231,183,.8));}
 
-/* Skating */
-.skating-bg{background:linear-gradient(180deg,#0a1e2e 0%,#061218 100%);border:2px solid rgba(147,197,253,.4);}
-.ice-surface{position:absolute;bottom:0;width:100%;height:22px;background:linear-gradient(180deg,rgba(147,197,253,.25),rgba(147,197,253,.1));border-top:2px solid rgba(147,197,253,.5);}
-.skate-char{position:absolute;left:12px;bottom:22px;font-size:2.2rem;transition:left .6s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 0 8px rgba(147,197,253,.8));}
-.skate-goal{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,230,109,.8));}
+/* Surfing */
+.surfing-bg{background:linear-gradient(180deg,#0a1a35 0%,#061025 100%);border:2px solid rgba(96,165,250,.4);}
+.surf-wave{position:absolute;bottom:0;width:100%;height:32px;background:linear-gradient(180deg,rgba(96,165,250,.35),rgba(59,130,246,.2));border-top:2px solid rgba(147,197,253,.6);border-radius:50% 50% 0 0 / 20px 20px 0 0;}
+.surf-group{position:absolute;bottom:0;display:flex;flex-direction:column;align-items:center;transition:left .6s cubic-bezier(.25,.46,.45,.94);}
+.surf-goal{font-size:2.2rem;filter:drop-shadow(0 0 10px rgba(255,230,109,.9));margin-bottom:2px;}
+.surf-char{font-size:2.4rem;filter:drop-shadow(0 0 8px rgba(96,165,250,.9));margin-bottom:6px;}
 
 /* Swimming */
 .swimming-bg{background:linear-gradient(180deg,#0a1535 0%,#060e22 100%);border:2px solid rgba(96,165,250,.4);}
@@ -212,7 +213,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
 .btn-archery{background:linear-gradient(135deg,#C084FC,#9333ea);box-shadow:0 6px 22px rgba(192,132,252,.45);}
 .btn-cycling{background:linear-gradient(135deg,#FF6B9D,#e11d48);box-shadow:0 6px 22px rgba(255,107,157,.45);}
 .btn-running{background:linear-gradient(135deg,#6EE7B7,#059669);box-shadow:0 6px 22px rgba(110,231,183,.45);}
-.btn-skating{background:linear-gradient(135deg,#93C5FD,#3b82f6);box-shadow:0 6px 22px rgba(147,197,253,.45);}
+.btn-surfing{background:linear-gradient(135deg,#60A5FA,#2563eb);box-shadow:0 6px 22px rgba(96,165,250,.45);}
 .btn-swimming{background:linear-gradient(135deg,#60A5FA,#1d4ed8);box-shadow:0 6px 22px rgba(96,165,250,.45);}
 
 /* ══ QUIZ SCREEN ══ */
@@ -362,7 +363,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
     <div class="rules-title">📋 遊戲說明</div>
     <p>
       完成遊戲解鎖租稅知識<br>
-      答對才能獲得職業徽章 🏅<br>
+      答對才能獲得職業徽章<br>
       集滿 3 枚徽章即可通關兌獎！
     </p>
   </div>
@@ -392,7 +393,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
         <div class="target"><div class="target-inner"></div></div>
         <div class="arrow-char" id="arrow">🏹</div>
       </div>
-      <button class="tap-btn btn-archery" id="sb0" onclick="sportTap(0)">🎯 點我發射！</button>
+      <button class="tap-btn btn-archery" id="sb0" onclick="sportTap(0)">點我闖關</button>
       
     </div>
     <!-- CYCLING -->
@@ -403,7 +404,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
         <div class="cycle-end">🏁</div>
         <div class="cycle-char" id="cycleChar">🚴‍♀️</div>
       </div>
-      <button class="tap-btn btn-cycling" id="sb1" onclick="sportTap(1)">🚴‍♀️ 點我騎乘！</button>
+      <button class="tap-btn btn-cycling" id="sb1" onclick="sportTap(1)">點我闖關</button>
     </div>
     <!-- RUNNING -->
     <div id="sg2" class="hidden">
@@ -412,16 +413,18 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
         <div class="run-finish">🏁</div>
         <div class="run-char" id="runChar">🏃‍♀️</div>
       </div>
-      <button class="tap-btn btn-running" id="sb2" onclick="sportTap(2)">🏃‍♀️ 點我衝刺！</button>
+      <button class="tap-btn btn-running" id="sb2" onclick="sportTap(2)">點我闖關</button>
     </div>
     <!-- SKATING -->
     <div id="sg3" class="hidden">
-      <div class="game-canvas skating-bg">
-        <div class="ice-surface"></div>
-        <div class="skate-char" id="skateChar">⛸️</div>
-        <div class="skate-goal">🥇</div>
+      <div class="game-canvas surfing-bg">
+        <div class="surf-wave"></div>
+        <div class="surf-group" id="surfGroup">
+          <div class="surf-goal">🏄</div>
+          <div class="surf-char">🌊</div>
+        </div>
       </div>
-      <button class="tap-btn btn-skating" id="sb3" onclick="sportTap(3)">⛸️ 點我滑行！</button>
+      <button class="tap-btn btn-surfing" id="sb3" onclick="sportTap(3)">點我闖關</button>
     </div>
     <!-- SWIMMING -->
     <div id="sg4" class="hidden">
@@ -430,7 +433,7 @@ body{font-family:'MPLUS Rounded 1c','Noto Sans TC',sans-serif;background:var(--d
         <div class="swim-char" id="swimChar">🏊‍♀️</div>
         <div class="swim-end">🏅</div>
       </div>
-      <button class="tap-btn btn-swimming" id="sb4" onclick="sportTap(4)">🏊‍♀️ 點我游泳！</button>
+      <button class="tap-btn btn-swimming" id="sb4" onclick="sportTap(4)">點我闖關</button>
     </div>
   </div>
 </div>
@@ -492,41 +495,41 @@ const ALL_QUESTIONS=[
   {
     text:'房屋是先生的，如果太太將戶籍遷入該屋，也能申請適用房屋稅及地價稅的自用住宅優惠稅率嗎？',
     circleLabel:'○ 可以',crossLabel:'✕ 不可以',correct:'circle',
-    explanation:'房屋無出租、無營業，供本人、配偶或直系親屬實際居住使用，且在該屋辦竣戶籍登記，就能適用優惠稅率。不論登記在誰名下，配偶遷入戶籍後均可申請。',
+    explanation:'房屋無出租、無營業, 供本人、配偶或直系親屬實際居住使用，且在該屋辦竣戶籍登記,就能適用優惠稅率唷',
     hasCard:true,cardImg:'images/card0.png',cardIcon:'🏠'
   },
   {
     text:'爸爸是身障者且沒駕照，我跟爸爸雖然不在同一戶籍，但車籍地與爸爸的戶籍地相同，請問這台供爸爸出門使用的車，是否可以申請使用牌照稅免稅？',
     circleLabel:'○ 是',crossLabel:'✕ 否',correct:'circle',
-    explanation:'115年增訂：因身心障礙情況致無駕駛執照者，其二親等內親屬所有、供該身障者使用之車輛，只要車籍地與該身障者戶籍地相同，就能申請免徵使用牌照稅。',
+    explanation:'115年增訂因身心障礙情況，致無駕駛執照者，其二親等內親屬所有供該身障者使用之車輛，只要車籍地與該身障者戶籍地相同，就能申請免徵使用牌照稅。',
     hasCard:true,cardImg:'images/card1.png',cardIcon:'🚗'
   },
   {
     text:'在辦理土地增值稅「一生一次」自用住宅優惠時，會因為性別而限制申請次數嗎？',
     circleLabel:'○ 會',crossLabel:'✕ 不會',correct:'cross',
-    explanation:'「一生一次」土地增值稅自用住宅優惠，不論性別每人一生皆有一次適用機會，完全不受性別影響。',
+    explanation:'不論性別每人一生皆有一次適用機會',
     hasCard:true,cardImg:'images/card2.png',cardIcon:'🏡'
   },
   {
     text:'在法律規定下，女兒和兒子享有相同的遺產繼承權嗎？',
     circleLabel:'○ 是',crossLabel:'✕ 否',correct:'circle',
-    explanation:'依民法規定，遺產繼承權不分男女老少皆平等。兒子與女兒同列第一順位繼承人，均分遺產，法律保障完全相同。',
+    explanation:'民法規定，遺產繼承權不分男女老少皆平等',
     hasCard:true,cardImg:'images/card3.png',cardIcon:'⚖️'
   },
   {
     text:'父母贈與財產給子女時，贈與稅的免稅額度會因子女性別有所不同嗎？',
     circleLabel:'○ 會',crossLabel:'✕ 不會',correct:'cross',
-    explanation:'贈與稅免稅額是以贈與人為計算基準（目前每年244萬元），受贈人（子女）的性別並不影響免稅額度，男女子女完全平等。',
+    explanation:'贈與稅免稅額是以贈與人為計算基準，受贈人性別並不影響免稅額度',
     hasCard:true,cardImg:'images/card4.png',cardIcon:'🎁'
   }
 ];
 
 const SPORTS_CONFIG=[
-  {id:'sg0',btnId:'sb0',name:'🏹 射箭挑戰',chip:'🏹 射箭關卡解鎖',tapLabel:'🎯 點我射箭！'},
-  {id:'sg1',btnId:'sb1',name:'🚴‍♀️ 腳踏車挑戰',chip:'🚴‍♀️ 腳踏車關卡解鎖',tapLabel:'🚴‍♀️ 點我騎乘！'},
-  {id:'sg2',btnId:'sb2',name:'🏃‍♀️ 跑步衝刺',chip:'🏃‍♀️ 跑步關卡解鎖',tapLabel:'🏃‍♀️ 點我跑步！'},
-  {id:'sg3',btnId:'sb3',name:'⛸️ 溜冰滑行',chip:'⛸️ 溜冰關卡解鎖',tapLabel:'⛸️ 點我溜冰！'},
-  {id:'sg4',btnId:'sb4',name:'🏊‍♀️ 游泳挑戰',chip:'🏊‍♀️ 游泳關卡解鎖',tapLabel:'🏊‍♀️ 點我游泳！'}
+  {id:'sg0',btnId:'sb0',name:'🏹 射箭挑戰',chip:'🏹 射箭關卡解鎖',tapLabel:'點我闖關'},
+  {id:'sg1',btnId:'sb1',name:'🚴‍♀️ 腳踏車挑戰',chip:'🚴‍♀️ 腳踏車關卡解鎖',tapLabel:'點我闖關'},
+  {id:'sg2',btnId:'sb2',name:'🏃‍♀️ 跑步衝刺',chip:'🏃‍♀️ 跑步關卡解鎖',tapLabel:'點我闖關'},
+  {id:'sg3',btnId:'sb3',name:'🏄 衝浪挑戰',chip:'🏄 衝浪關卡解鎖',tapLabel:'點我闖關'},
+  {id:'sg4',btnId:'sb4',name:'🏊‍♀️ 游泳挑戰',chip:'🏊‍♀️ 游泳關卡解鎖',tapLabel:'點我闖關'}
 ];
 
 // ══ STATE ══
@@ -612,13 +615,13 @@ function resetSport(){
   if(sp.id==='sg0'){document.getElementById('arrow').style.transition='none';document.getElementById('arrow').style.left='12px';}
   else if(sp.id==='sg1') getRTL('cycleChar');
   else if(sp.id==='sg2') getRTL('runChar');
-  else if(sp.id==='sg3'){const s=document.getElementById('skateChar');s.style.transition='none';s.style.left='12px';}
+  else if(sp.id==='sg3') getRTL('surfGroup');
   else if(sp.id==='sg4') getRTL('swimChar');
   setTimeout(()=>{
     if(sp.id==='sg0') document.getElementById('arrow').style.transition='left .5s ease-out';
     else if(sp.id==='sg1') document.getElementById('cycleChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
     else if(sp.id==='sg2') document.getElementById('runChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
-    else if(sp.id==='sg3') document.getElementById('skateChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
+    else if(sp.id==='sg3') document.getElementById('surfGroup').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
     else if(sp.id==='sg4') document.getElementById('swimChar').style.transition='left .6s cubic-bezier(.25,.46,.45,.94)';
   },50);
 }
@@ -640,7 +643,7 @@ function sportTap(canvasIdx){
   } else if(sp.id==='sg2'){
     document.getElementById('runChar').style.left='12px';
   } else if(sp.id==='sg3'){
-    document.getElementById('skateChar').style.left=(w-60)+'px';
+    document.getElementById('surfGroup').style.left='12px';
   } else if(sp.id==='sg4'){
     document.getElementById('swimChar').style.left='12px';
   }
