@@ -105,4 +105,62 @@
 
         <div class="footer-apply-zone">
             <div class="apply-text">
-                如欲線上申請房屋適用自住住家用稅率，歡迎點
+                如欲線上申請房屋適用自住住家用稅率，歡迎點選 <a href="https://gov.tw/W68" target="_blank">https://gov.tw/W68</a>，省時省力又方便。
+            </div>
+            <div class="qrcode-box">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://gov.tw/W68" alt="QR">
+                <div class="qrcode-tip">掃描前往申請</div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="sendPostData()">提交問卷</button>
+    </form>
+</div>
+
+<div class="container success-screen" id="successScreen">
+    <div style="color: #0d47a1; margin-bottom: 20px;">
+        <svg style="width: 64px; height: 64px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    </div>
+    <h2 style="color: #0d47a1;">提交成功！</h2>
+    <p>感謝您的填寫與支持。</p>
+</div>
+
+<script>
+    // 已更新為您提供的 GS 網址
+    const POST_URL = "https://script.google.com/macros/s/AKfycbz4RrMiJdJfkUmEtx9qEjohwkfvw8__P-t1a_tWDjIMICaFReOC7irM7t-FIMFNgK2gpA/exec";
+
+    function sendPostData() {
+        let valid = true;
+        const data = {};
+        for(let i=1; i<=4; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            const card = document.getElementById('card-q'+i);
+            if(!selected) {
+                card.classList.add('error');
+                card.querySelector('.error-msg').style.display='block';
+                valid = false;
+            } else {
+                card.classList.remove('error');
+                card.querySelector('.error-msg').style.display='none';
+                data['q'+i] = selected.value;
+            }
+        }
+        if(!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+        const btn = document.querySelector('.btn-submit');
+        btn.innerText = "提交中...";
+        btn.disabled = true;
+
+        fetch(POST_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
+        .then(() => {
+            document.getElementById('mainForm').style.display = 'none';
+            document.getElementById('successScreen').style.display = 'block';
+        }).catch(() => {
+            alert("提交失敗，請檢查網路連線。");
+            btn.innerText = "提交問卷";
+            btn.disabled = false;
+        });
+    }
+</script>
+</body>
+</html>
