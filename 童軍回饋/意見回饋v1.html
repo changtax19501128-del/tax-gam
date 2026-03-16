@@ -31,7 +31,7 @@
         /* 標題與題目：黑色 */
         .form-title { font-size: 28px; margin: 0 0 10px 0; font-weight: bold; color: #0d47a1; }
         .form-desc { font-size: 14px; color: #5f6368; line-height: 1.6; }
-        .question-title { font-size: 18px; font-weight: 500; margin-bottom: 16px; line-height: 1.5; color: #202124; } /* 改為黑色 */
+        .question-title { font-size: 18px; font-weight: 500; margin-bottom: 16px; line-height: 1.5; color: #202124; }
         
         .option { display: flex; align-items: center; padding: 10px 0; cursor: pointer; border-radius: 4px; }
         .option:hover { background-color: #f1f8ff; }
@@ -49,14 +49,12 @@
         .qrcode-box img { width: 85px; height: 85px; display: block; border: 1px solid #e3f2fd; }
         .qrcode-tip { font-size: 11px; color: #666; margin-top: 4px; }
 
-        /* 按鈕：藍色 */
         .btn-submit {
             background-color: #0d47a1; color: white; border: none; padding: 14px;
             border-radius: 4px; font-size: 16px; font-weight: 500; cursor: pointer;
             width: 100%; margin-top: 20px; transition: 0.2s;
         }
-        .btn-submit:hover { background-color: #0a387c; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        
+        .btn-submit:hover { background-color: #0a387c; }
         .success-screen { display: none; text-align: center; background: white; padding: 60px 30px; border-radius: 8px; margin-top: 20px; }
         .required-star { color: #d93025; }
     </style>
@@ -79,14 +77,14 @@
         </div>
 
         <div class="card" id="card-q2">
-            <div class="question-title">2. 為配合促進房屋有效利用政策，將所有空置房屋出租作住家使用，且申報租賃所得達租金標準並依限提出申請，當期房屋就能適用何種稅率？ <span class="required-star">*</span></div>
+            <div class="question-title">2. 為配合促進房屋有效利用政策，將所有空置房屋出租作住家使用，且申報租賃所得達租金標準並依限提出申請，當期房屋就能適用＿＿＿＿稅率？ <span class="required-star">*</span></div>
             <label class="option"><input type="radio" name="q2" value="1.5%-2.4%"><span>1.5%-2.4%</span></label>
-            <label class="option"><input type="radio" name="q2" value="2.6%-4.8%"><span>2.6%-4.8%</span></label>
+            <label class="option"><input type="radio" name="q2" value="3.5%-4.8%"><span>3.5%-4.8%</span></label>
             <div class="error-msg">⚠️ 請選擇一個選項</div>
         </div>
 
         <div class="card" id="card-q3">
-            <div class="question-title">3. 以下何者為適用自住房屋稅率必備條件? <span class="required-star">*</span></div>
+            <div class="question-title">3. 以下何者為適用自住房屋稅率必備條件？ <span class="required-star">*</span></div>
             <label class="option"><input type="radio" name="q3" value="本人、配偶或直系親屬實際居住並辦竣戶籍登記"><span>本人、配偶或直系親屬實際居住並辦竣「戶籍登記」</span></label>
             <label class="option"><input type="radio" name="q3" value="房屋無出租或無營業使用"><span>房屋無出租或無營業使用</span></label>
             <label class="option"><input type="radio" name="q3" value="本人、配偶及未成年子女所有房屋限全國3戶以內"><span>本人、配偶及未成年子女所有房屋限全國3戶以內</span></label>
@@ -118,15 +116,11 @@
 </div>
 
 <div class="container success-screen" id="successScreen">
-    <div style="color: #0d47a1; margin-bottom: 20px;">
-        <svg style="width: 64px; height: 64px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-    </div>
     <h2 style="color: #0d47a1;">提交成功！</h2>
     <p>感謝您的填寫與支持。</p>
 </div>
 
 <script>
-    // 已更新為您提供的 GS 網址
     const POST_URL = "https://script.google.com/macros/s/AKfycbz4RrMiJdJfkUmEtx9qEjohwkfvw8__P-t1a_tWDjIMICaFReOC7irM7t-FIMFNgK2gpA/exec";
 
     function sendPostData() {
@@ -155,10 +149,6 @@
         .then(() => {
             document.getElementById('mainForm').style.display = 'none';
             document.getElementById('successScreen').style.display = 'block';
-        }).catch(() => {
-            alert("提交失敗，請檢查網路連線。");
-            btn.innerText = "提交問卷";
-            btn.disabled = false;
         });
     }
 </script>
