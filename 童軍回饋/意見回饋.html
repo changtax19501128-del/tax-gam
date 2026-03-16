@@ -5,137 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>童軍會講習問卷</title>
     <style>
-        /* 全局設定 - 穩重深綠色 */
+        /* 背景：淺綠色 */
         body {
             font-family: "Roboto", "Microsoft JhengHei", sans-serif;
             background-color: #f4f7f4;
-            margin: 0;
-            padding: 0;
-            color: #202124;
+            margin: 0; padding: 0; color: #202124;
         }
-
-        .container {
-            max-width: 770px;
-            margin: 0 auto;
-            padding-bottom: 60px;
-        }
-
-        .header-bar {
-            width: 100%;
-            height: 10px;
-            background-color: #1b5e20;
-            border-radius: 8px 8px 0 0;
-            margin-top: 12px;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 24px;
-            margin-top: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            margin-bottom: 12px;
-            border-left: 5px solid transparent;
-        }
-
-        .card.error {
-            border-left: 5px solid #d93025;
-            background-color: #fff8f8;
-        }
-
-        .error-msg {
-            color: #d93025;
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
-            font-weight: bold;
-        }
-
-        .form-title {
-            font-size: 28px;
-            margin: 0 0 10px 0;
-            font-weight: bold;
-            color: #1b5e20;
-        }
-
-        .form-desc {
-            font-size: 14px;
-            color: #5f6368;
-            line-height: 1.6;
-        }
-
-        .question-title {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            padding: 12px 0;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
+        .container { max-width: 770px; margin: 0 auto; padding-bottom: 40px; }
         
-        .option:hover {
-            background-color: #f1f8e9;
+        /* 裝飾條：深綠色 */
+        .header-bar { 
+            width: 100%; height: 10px; 
+            background-color: #1b5e20; 
+            border-radius: 8px 8px 0 0; margin-top: 12px; 
         }
 
-        .option input[type="radio"] {
-            margin-right: 12px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #1b5e20;
+        .card { 
+            background-color: #fff; border-radius: 8px; padding: 24px; 
+            margin-top: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); 
+            border-left: 5px solid transparent; 
         }
+        .card.error { border-left: 5px solid #d93025; background-color: #fff8f8; }
+        .error-msg { color: #d93025; font-size: 14px; margin-top: 10px; display: none; font-weight: bold; }
+        
+        /* 標題與題目：黑色 */
+        .form-title { font-size: 28px; margin: 0 0 10px 0; font-weight: bold; color: #1b5e20; }
+        .form-desc { font-size: 14px; color: #5f6368; line-height: 1.6; }
+        .question-title { font-size: 18px; font-weight: 500; margin-bottom: 16px; line-height: 1.5; color: #202124; }
+        
+        .option { display: flex; align-items: center; padding: 10px 0; cursor: pointer; border-radius: 4px; }
+        .option:hover { background-color: #f1f8e9; }
+        .option input[type="radio"] { margin-right: 12px; width: 18px; height: 18px; accent-color: #1b5e20; }
 
         .text-input {
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid #dadce0;
-            padding: 8px 0;
-            font-size: 16px;
-            outline: none;
-            transition: border-bottom 0.3s;
-            background: transparent;
+            width: 100%; border: none; border-bottom: 1px solid #dadce0;
+            padding: 8px 0; font-size: 16px; outline: none; background: transparent;
         }
+        .text-input:focus { border-bottom: 2px solid #1b5e20; }
 
-        .text-input:focus {
-            border-bottom: 2px solid #1b5e20;
-        }
-
+        /* 按鈕：深綠色 */
         .btn-submit {
-            background-color: #1b5e20;
-            color: white;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            margin-top: 20px;
+            background-color: #1b5e20; color: white; border: none; padding: 14px;
+            border-radius: 4px; font-size: 16px; font-weight: 500; cursor: pointer;
+            width: 100%; margin-top: 20px; transition: 0.2s;
         }
-
-        .btn-submit:hover {
-            background-color: #0d3d14;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .success-screen {
-            display: none;
-            text-align: center;
-            background: white;
-            padding: 50px 30px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        }
-
+        .btn-submit:hover { background-color: #0d3d14; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        .success-screen { display: none; text-align: center; background: white; padding: 60px 30px; border-radius: 8px; margin-top: 20px; }
         .required-star { color: #d93025; }
     </style>
 </head>
@@ -143,11 +59,10 @@
 
 <div class="container" id="mainForm">
     <div class="header-bar"></div>
-    
-    <form id="surveyForm" onsubmit="return false;">
+    <form id="preSurveyForm" onsubmit="return false;">
         <div class="card">
             <h1 class="form-title">童軍會講習問卷</h1>
-            <p class="form-desc">感謝您參加本次講習，請您依實際瞭解情況填答。<br><span class="required-star">* 必填</span></p>
+            <p class="form-desc">親愛的民眾您好：<br>感謝您參加本次講習。本問卷旨在瞭解您對相關政策的認識，請依實際情況填答。<br><span class="required-star">* 必填</span></p>
         </div>
 
         <div class="card" id="card-q1">
@@ -184,10 +99,8 @@
 
         <div class="card" id="card-q5">
             <div class="question-title">5. 您至今尚未提出房屋稅自住稅率申請的主要原因？ <span class="required-star">*</span></div>
-            <label class="option"><input type="radio" name="q5" value="今天才知有這個政策"><span>今天才知有這個政策，來不及申請</span></label>
-            <label class="option"><input type="radio" name="q5" value="資格不符無法申請"><span>資格不符無法申請(名下沒有房屋)</span></label>
-            <label class="option"><input type="radio" name="q5" value="申請流程不熟悉"><span>申請流程不熟悉</span></label>
-            <label class="option"><input type="radio" name="q5" value="有空會申請"><span>有空會申請</span></label>
+            <label class="option"><input type="radio" name="q5" value="今天才知有這個政策"><span>今天才知有這個政策</span></label>
+            <label class="option"><input type="radio" name="q5" value="不清楚申請流程"><span>不清楚申請流程</span></label>
             <label class="option"><input type="radio" name="q5" value="還在評估是否要申請"><span>還在評估是否要申請</span></label>
             <label class="option"><input type="radio" name="q5" value="其他" id="q5_other_radio"><span>其他：</span></label>
             <div style="padding-left: 32px;">
@@ -202,54 +115,39 @@
 
 <div class="container success-screen" id="successScreen">
     <div style="color: #1b5e20; margin-bottom: 20px;">
-        <svg style="width: 64px; height: 64px;" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
+        <svg style="width: 64px; height: 64px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
     </div>
     <h2 style="color: #1b5e20;">提交成功！</h2>
     <p>感謝您的參與，我們已收到您的回覆。</p>
 </div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwCGEWBBJtCbKRFdXomP6lyhk3Ats3ZgF1EmyMF2ZRLkJEsyvq3_KipMEjoVCHiqcw0w/exec";
+    // 前測專用的 GS 網址
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlLIOewo2kW_EY_UM-HOdldftNMl7cF2w1OvrWn_uc0zFkHA0tzgZGMif74GR_AndWrA/exec";
 
-    function validateForm() {
+    function submitSurvey() {
         let valid = true;
+        const data = {};
         for (let i = 1; i <= 5; i++) {
             const card = document.getElementById('card-q' + i);
-            const inputs = card.querySelectorAll('input[name="q' + i + '"]');
-            const isChecked = Array.from(inputs).some(input => input.checked);
-            const error = card.querySelector('.error-msg');
-            
-            if (!isChecked) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!selected) {
                 card.classList.add('error');
-                error.style.display = 'block';
+                card.querySelector('.error-msg').style.display = 'block';
                 valid = false;
             } else {
                 card.classList.remove('error');
-                error.style.display = 'none';
+                card.querySelector('.error-msg').style.display = 'none';
+                let val = selected.value;
+                if (i === 5 && val === "其他") {
+                    val = "其他: " + (document.getElementById('q5_other_text').value || "未填寫");
+                }
+                data['q' + i] = val;
             }
         }
-        return valid;
-    }
 
-    function submitSurvey() {
-        if (!validateForm()) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
+        if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
 
-        const data = {};
-        for (let i = 1; i <= 5; i++) {
-            let val = document.querySelector(`input[name="q${i}"]:checked`).value;
-            if (i === 5 && val === "其他") {
-                const otherText = document.getElementById('q5_other_text').value;
-                val = "其他: " + (otherText || "未填寫");
-            }
-            data['q' + i] = val;
-        }
-
-        // 提交按鈕變更狀態
         const btn = document.querySelector('.btn-submit');
         btn.innerText = "提交中...";
         btn.disabled = true;
@@ -257,18 +155,12 @@
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         }).then(() => {
             document.getElementById('mainForm').style.display = 'none';
             document.getElementById('successScreen').style.display = 'block';
-        }).catch(err => {
-            alert("提交發生錯誤，請稍後再試。");
-            btn.innerText = "再次提交";
-            btn.disabled = false;
         });
     }
 </script>
-
 </body>
 </html>
