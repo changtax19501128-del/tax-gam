@@ -5,56 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>童軍會講習問卷</title>
     <style>
+        /* 背景：淺藍色 */
         body {
             font-family: "Roboto", "Microsoft JhengHei", sans-serif;
-            background-color: #f9f1f0;
+            background-color: #e3f2fd;
             margin: 0; padding: 0; color: #202124;
         }
         .container { max-width: 770px; margin: 0 auto; padding-bottom: 40px; }
-        .header-bar { width: 100%; height: 10px; background-color: #1b5e20; border-radius: 8px 8px 0 0; margin-top: 12px; }
-        .card { background-color: #fff; border-radius: 8px; padding: 24px; margin-top: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); border-left: 5px solid transparent; }
+        
+        /* 裝飾條：深藍色 */
+        .header-bar { 
+            width: 100%; height: 10px; 
+            background-color: #0d47a1; 
+            border-radius: 8px 8px 0 0; margin-top: 12px; 
+        }
+
+        .card { 
+            background-color: #fff; border-radius: 8px; padding: 24px; 
+            margin-top: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); 
+            border-left: 5px solid transparent; 
+        }
         .card.error { border-left: 5px solid #d93025; background-color: #fff8f8; }
         .error-msg { color: #d93025; font-size: 14px; margin-top: 10px; display: none; font-weight: bold; }
-        .form-title { font-size: 28px; margin: 0 0 10px 0; font-weight: bold; color: #1b5e20; }
+        
+        /* 標題與題目：黑色 */
+        .form-title { font-size: 28px; margin: 0 0 10px 0; font-weight: bold; color: #0d47a1; }
         .form-desc { font-size: 14px; color: #5f6368; line-height: 1.6; }
-        .question-title { font-size: 18px; font-weight: 500; margin-bottom: 16px; line-height: 1.5; }
+        .question-title { font-size: 18px; font-weight: 500; margin-bottom: 16px; line-height: 1.5; color: #202124; } /* 改為黑色 */
+        
         .option { display: flex; align-items: center; padding: 10px 0; cursor: pointer; border-radius: 4px; }
-        .option:hover { background-color: #f1f8e9; }
-        .option input[type="radio"] { margin-right: 12px; width: 18px; height: 18px; accent-color: #1b5e20; }
+        .option:hover { background-color: #f1f8ff; }
+        .option input[type="radio"] { margin-right: 12px; width: 18px; height: 18px; accent-color: #0d47a1; }
 
-        /* 底部精簡版 QR Code 區域 */
+        /* 底部資訊區塊 */
         .footer-apply-zone {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #fff;
-            border-radius: 8px;
-            padding: 15px 24px;
-            margin-top: 12px;
-            border: 1px solid #dadce0;
+            display: flex; align-items: center; justify-content: space-between;
+            background: #fff; border-radius: 8px; padding: 15px 24px;
+            margin-top: 12px; border: 1px solid #bbdefb;
         }
-        .apply-text {
-            flex: 1;
-            font-size: 15px;
-            color: #1b5e20;
-            line-height: 1.6;
-            padding-right: 15px;
-        }
-        .apply-text a {
-            color: #1b5e20;
-            font-weight: bold;
-            text-decoration: underline;
-        }
+        .apply-text { flex: 1; font-size: 15px; color: #0d47a1; line-height: 1.6; padding-right: 15px; }
+        .apply-text a { color: #1565c0; font-weight: bold; text-decoration: underline; }
         .qrcode-box { text-align: center; }
-        .qrcode-box img { width: 85px; height: 85px; display: block; border: 1px solid #eee; }
+        .qrcode-box img { width: 85px; height: 85px; display: block; border: 1px solid #e3f2fd; }
         .qrcode-tip { font-size: 11px; color: #666; margin-top: 4px; }
 
+        /* 按鈕：藍色 */
         .btn-submit {
-            background-color: #1b5e20; color: white; border: none; padding: 14px;
+            background-color: #0d47a1; color: white; border: none; padding: 14px;
             border-radius: 4px; font-size: 16px; font-weight: 500; cursor: pointer;
             width: 100%; margin-top: 20px; transition: 0.2s;
         }
-        .btn-submit:hover { background-color: #0d3d14; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .btn-submit:hover { background-color: #0a387c; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
         .success-screen { display: none; text-align: center; background: white; padding: 60px 30px; border-radius: 8px; margin-top: 20px; }
         .required-star { color: #d93025; }
     </style>
@@ -103,65 +105,4 @@
 
         <div class="footer-apply-zone">
             <div class="apply-text">
-                如欲線上申請房屋適用自住住家用稅率，歡迎點選 <a href="https://gov.tw/W68" target="_blank">https://gov.tw/W68</a>，省時省力又方便。
-            </div>
-            <div class="qrcode-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://gov.tw/W68" alt="QR">
-                <div class="qrcode-tip">掃描前往申請</div>
-            </div>
-        </div>
-
-        <button type="button" class="btn-submit" onclick="sendPostData()">提交問卷</button>
-    </form>
-</div>
-
-<div class="container success-screen" id="successScreen">
-    <div style="color: #1b5e20; margin-bottom: 20px;">
-        <svg style="width: 64px; height: 64px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-    </div>
-    <h2 style="color: #1b5e20;">提交成功！</h2>
-    <p>感謝您的填寫與支持，祝您有愉快的一天。</p>
-</div>
-
-<script>
-    // 請替換為後測專用的 Google Script URL
-    const POST_URL = "https://script.google.com/macros/s/AKfycbz4RrMiJdJfkUmEtx9qEjohwkfvw8__P-t1a_tWDjIMICaFReOC7irM7t-FIMFNgK2gpA/exec";
-
-    function sendPostData() {
-        let valid = true;
-        const data = {};
-        for(let i=1; i<=4; i++) {
-            const selected = document.querySelector(`input[name="q${i}"]:checked`);
-            const card = document.getElementById('card-q'+i);
-            if(!selected) {
-                card.classList.add('error');
-                card.querySelector('.error-msg').style.display='block';
-                valid = false;
-            } else {
-                card.classList.remove('error');
-                card.querySelector('.error-msg').style.display='none';
-                data['q'+i] = selected.value;
-            }
-        }
-        if(!valid) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        const btn = document.querySelector('.btn-submit');
-        btn.innerText = "提交中...";
-        btn.disabled = true;
-
-        fetch(POST_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
-        .then(() => {
-            document.getElementById('mainForm').style.display = 'none';
-            document.getElementById('successScreen').style.display = 'block';
-        }).catch(() => {
-            alert("提交失敗，請檢查網路連線。");
-            btn.innerText = "提交問卷";
-            btn.disabled = false;
-        });
-    }
-</script>
-</body>
-</html>
+                如欲線上申請房屋適用自住住家用稅率，歡迎點
