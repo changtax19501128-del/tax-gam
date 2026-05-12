@@ -232,6 +232,17 @@ function showSuccessScreen(scene) {
     }).setOrigin(0.5);
     passtime.setDepth(4);
 
+ // 在過關框中添加 Google表單
+    let button1 = scene.add.text(scene.sys.game.config.width / 2, scene.sys.game.config.height / 2 , 'Google表單', {
+        fontSize: '50px',
+        color: '#fff',
+        fontFamily: 'Arial, sans-serif',
+        backgroundColor: '#FFDAB9', // 按钮背景色
+        padding: { x: 20, y: 10 }, // 按钮内边距
+    }).setOrigin(0.5);
+    button1.setDepth(5);
+    button1.setStroke('#000000', 3);
+    
     // 添加按钮的交互事件
     button1.setInteractive();
     button1.on('pointerdown', () => {
