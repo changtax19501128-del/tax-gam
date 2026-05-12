@@ -37,7 +37,7 @@ function startGame(scene) {
 function createBasketballScene(scene) {
     //顯示答對題數
     let corrSize = Math.min(scene.sys.game.config.width, scene.sys.game.config.height) * 0.05;  // 根據畫面大小調整字體大小
-    correctAnswersText = scene.add.text(scene.sys.game.config.width / 7, scene.sys.game.config.height / 7, '答對題數: 0/5題', {
+    correctAnswersText = scene.add.text(scene.sys.game.config.width / 7, scene.sys.game.config.height / 7, '答對題數: 0/3題', {
         //fontSize: '30px',
         fontSize: corrSize + 'px',
         fill: '#fff',
@@ -149,7 +149,7 @@ function throwBasketball(scene, hoop) {
                     duration: 500,
                     onComplete: () => {
                         correctAnswers++;
-                        correctAnswersText.setText(`答對題數: ${correctAnswers}/5題`);
+                        correctAnswersText.setText(`答對題數: ${correctAnswers}/3題`);
                         checkGameStatus(scene);  // 檢查遊戲是否結束
                     }
                 });
@@ -216,7 +216,7 @@ function showSuccessScreen(scene) {
     scene.graphics1.fillStyle(0x4169E1, 1);
     scene.graphics1.fillRect(scene.sys.game.config.width / 2 - 250, scene.sys.game.config.height / 2 - 175, 500, 350);
     scene.graphics1.setDepth(3);
-    let successText = scene.add.text(scene.sys.game.config.width / 2, scene.sys.game.config.height / 2 - 130, '恭喜過關!(請截圖)', {
+    let successText = scene.add.text(scene.sys.game.config.width / 2, scene.sys.game.config.height / 2 - 130, '恭喜過關!', {
         fontSize: '42px',
         fill: '#fff',
         align: 'center',
@@ -231,16 +231,6 @@ function showSuccessScreen(scene) {
         fontFamily: 'Arial, sans-serif'
     }).setOrigin(0.5);
     passtime.setDepth(4);
-    // 在過關框中添加 Google表單
-    let button1 = scene.add.text(scene.sys.game.config.width / 2, scene.sys.game.config.height / 2 , 'Google表單', {
-        fontSize: '50px',
-        color: '#fff',
-        fontFamily: 'Arial, sans-serif',
-        backgroundColor: '#FFDAB9', // 按钮背景色
-        padding: { x: 20, y: 10 }, // 按钮内边距
-    }).setOrigin(0.5);
-    button1.setDepth(5);
-    button1.setStroke('#000000', 3);
 
     // 添加按钮的交互事件
     button1.setInteractive();
