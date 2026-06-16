@@ -338,17 +338,22 @@
                 alert('🎉 兌換成功！謝謝您參與稅務大冒險，祝您玩得愉快！');
                 
                 // --- 傳送通關紀錄至 Google Apps Script ---
-                const scriptURL = 'https://script.google.com/macros/s/AKfycby4-eEo001TMzG0e9DkqzboSVQD4R1pTZgygtvsXwFRCvflEGo0pFuhjnoh3f7gEtDY/exec'; // ★ 將這裡替換成您部署出來的 Web App URL
-                if (scriptURL !== '請替換成您的_APPS_SCRIPT_網址') {
-                    // 將前端設備的通關時間傳送至後端
-                    const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
-                    fetch(scriptURL + "?action=logTime&time=" + timeString, { mode: 'no-cors' })
-                        .catch(err => console.error('連線紀錄失敗:', err));
-                }
+                const scriptURL = 'https://script.google.com/macros/s/AKfycby4-eEo001TMzG0e9DkqzboSVQD4R1pTZgygtvsXwFRCvflEGo0pFuhjnoh3f7gEtDY/exec';
+                
+                // 將前端設備的通關時間傳送至後端
+                const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
+                fetch(scriptURL + "?time=" + timeString, { mode: 'no-cors' })
+                    .then(() => {
+                        // ★ 確保資料送出後，才執行清空與重新載入
+                        document.getElementById('passcode').value = '';
+                        location.reload(); // 兌換完後自動重置遊戲給下一位
+                    })
+                    .catch(err => {
+                        console.error('連線紀錄失敗:', err);
+                        document.getElementById('passcode').value = '';
+                        location.reload();
+                    });
                 // ------------------------------------------
-
-                document.getElementById('passcode').value = '';
-                location.reload(); // 兌換完後自動重置遊戲給下一位
             } else {
                 alert('❌ 通行碼錯誤！請確認您是現場工作人員。');
                 document.getElementById('passcode').value = '';
