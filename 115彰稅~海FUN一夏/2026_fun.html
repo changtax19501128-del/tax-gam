@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026彰稅~海FUN一夏活動</title>
+    <style>
+        /* ================= 基礎設定與字體 ================= */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Noto+Sans+TC:wght@500;700;900&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            /* 預留背景圖位置：您可以將 url() 內的圖片換成您自己的背景圖 */
+            /* background-image: url('您的背景圖網址.jpg'); */
+            /* background-size: cover; */
+            background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%); /* 預設水系漸層背景 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 防止視窗出現捲軸 */
+            position: relative;
+        }
+
+        /* 背景裝飾：氣泡動畫 */
+        .bubbles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: rise float infinite ease-in;
+        }
+        @keyframes rise {
+            0% { bottom: -50px; transform: translateX(0); }
+            50% { transform: translateX(20px); }
+            100% { bottom: 110vh; transform: translateX(-20px); }
+        }
+
+        /* ================= 遊戲主容器 ================= */
+        .game-container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2), inset 0 0 0 8px rgba(255, 255, 255, 0.5);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border: 4px solid #fff;
+        }
+
+        /* 隱藏區塊 */
+        .hidden { display: none !important; }
+
+        /* ================= 圖片/圖文佔位區塊 ================= */
+        .image-placeholder {
+            width: 100%;
+            height: 160px;
+            background: #e0f7fa;
+            border: 3px dashed #26c6da;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #00838f;
+            font-weight: 700;
+            font-size: 1.1rem;
+            overflow: hidden;
+            position: relative;
+        }
+        /* 如果您要放真圖片，可以在HTML直接放入 img 標籤，並套用以下設定 */
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ================= 排版與文字 ================= */
+        h1 { color: #0277bd; font-size: 2.2rem; margin-bottom: 10px; text-shadow: 2px 2px 0px #e1f5fe; line-height: 1.3; }
+        h2 { color: #ff9800; font-size: 1.6rem; margin-bottom: 15px; }
+        p { color: #455a64; font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; }
+        
+        .emoji-icon { font-size: 4rem; margin-bottom: 10px; animation: bounce 2s infinite; display: inline-block; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ================= 按鈕設計 ================= */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 0px rgba(0,0,0,0.15);
+        }
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary { background: #ff9800; color: white; } /* 橘色主題鈕 */
+        .btn-primary:hover { background: #fb8c00; }
+        
+        .btn-option { background: #29b6f6; color: white; border: 2px solid #039be5; } /* 水藍色選項 */
+        .btn-option:hover { background: #03a9f4; }
+
+        .btn-admin { background: #4caf50; color: white; } /* 綠色工作人員鈕 */
+
+        /* ================= 進度條 ================= */
+        .progress-bar-container {
+            width: 100%;
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #ffeb3b;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ================= 輸入框 ================= */
+        input[type="number"], input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 3px solid #b3e5fc;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        input:focus { border-color: #29b6f6; }
+
+    </style>
+</head>
+<body>
+
+    <!-- 背景氣泡動畫產生區 -->
+    <div class="bubbles" id="bubbles-container"></div>
+
+    <div class="game-container">
+        
+        <!-- ================= 1. 遊戲首頁 ================= -->
+        <div id="screen-start">
+            <div class="emoji-icon">☀️🌊☁️</div>
+            <h1>2026彰稅~<br>海FUN一夏活動</h1>
+            
+            <!-- 圖片佔位區：放入主視覺圖 -->
+            <div class="image-placeholder" style="border: none; background: transparent; height: auto; aspect-ratio: 1672 / 941;">
+                <!-- 註：副檔名請依據您的實際圖檔修改，例如 .jpg 或 .png -->
+                <img src="水上樂園首頁.jpg" alt="2026彰稅~海FUN一夏活動主視覺" onerror="this.onerror=null; this.src='https://placehold.co/1672x941/e0f7fa/00838f?text=水上樂園首頁圖檔';">
+            </div>
+
+            <p style="font-size: 1.4rem; color: #0277bd; font-weight: bold; line-height: 1.6;">通過 4 道稅務關卡，學習稅務知識，<br>領取宣導品吧！</p>
+            <button class="btn btn-primary" onclick="startGame()">開始挑戰</button>
+        </div>
+
+        <!-- ================= 2. 遊戲答題區 ================= -->
+        <div id="screen-game" class="hidden">
+            <!-- 進度條 -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="game-progress"></div>
+            </div>
+
+            <div class="emoji-icon" id="q-emoji">🏄‍♂️</div>
+            <h2 id="q-title">關卡標題</h2>
+
+            <!-- 圖片佔位區：可放入各關卡的實際設備照片，例如SUP板的照片 -->
+            <div class="image-placeholder">
+                [ 預留區塊：可放入活動設備對應照片 ]
+                <!-- 範例：<img id="q-image" src="" alt="關卡圖片"> -->
+            </div>
+
+            <p id="q-text" style="font-size: 1.25rem; font-weight: bold; color: #01579b;">題目內容</p>
+            
+            <div id="options-container">
+                <!-- 選項按鈕由 JS 動態生成 -->
+            </div>
+        </div>
+
+        <!-- ================= 3. 遊戲結束 / 兌換區 ================= -->
+        <div id="screen-end" class="hidden">
+            <div class="emoji-icon">🏆🎁🎉</div>
+            <h1>闖關大成功！</h1>
+            
+            <div class="image-placeholder" style="background:#fff9c4; border-color:#fbc02d; color:#f57f17;">
+                [ 預留區塊：可放過關慶祝圖或宣導品照片 ]
+            </div>
+
+            <p style="font-size: 1.4rem; font-weight: bold; color: #d84315;">請至稅務局攤位兌換獎品</p>
+            
+            <input type="number" id="passcode" placeholder="工作人員專用密碼" pattern="[0-9]*">
+            <button class="btn btn-admin" onclick="checkPass()">✅ 確認兌換</button>
+            <button class="btn btn-option" onclick="location.reload()" style="margin-top: 10px; background:#90a4ae; border-color:#78909c;">重新開始</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ================= 背景氣泡動畫生成 =================
+        const bubblesContainer = document.getElementById('bubbles-container');
+        for (let i = 0; i < 15; i++) {
+            let bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            let size = Math.random() * 40 + 10; // 10px ~ 50px
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.animationDuration = (Math.random() * 3 + 4) + 's'; // 4s ~ 7s
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            bubblesContainer.appendChild(bubble);
+        }
+
+        // ================= 題庫設定 (對應您的4個關卡) =================
+        const questions = [
+            {
+                emoji: "🏄‍♂️",
+                title: "第 1 關：SUP 立槳板",
+                text: "房屋稅差別稅率2.0上路囉！請問對於「非自住」的住家用房屋，法定稅率最高調升至多少呢？",
+                options: ["3.6%", "4.8%", "10%"],
+                answerIndex: 1
+            },
+            {
+                emoji: "🛶",
+                title: "第 2 關：雙人獨木舟",
+                text: "使用「統一發票兌獎 App」並設定領獎帳戶，除了獎金自動匯入不漏接外，還有什麼好處？",
+                options: ["可以換取雙倍獎金", "免扣千分之四的印花稅！", "中獎機率變高"],
+                answerIndex: 1
+            },
+            {
+                emoji: "🐉🚣‍♂️",
+                title: "第 3 關：龍舟板競技",
+                text: "稅務有分國稅與地方稅，請問下列哪一個屬於我們地方稅務局負責的「地方稅」呢？",
+                options: ["綜合所得稅", "營業稅", "房屋稅、地價稅、使用牌照稅"],
+                answerIndex: 2
+            },
+            {
+                emoji: "🚴‍♂️💦",
+                title: "第 4 關：水上自行車",
+                text: "為了減輕繳稅負擔，民眾在申報所得稅時，可以善用哪種方式合法「節稅」呢？",
+                options: ["把錢藏在床底下", "善用各項「列舉扣除額」及「特別扣除額」", "假裝忘記申報"],
+                answerIndex: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // ================= 遊戲邏輯 =================
+        function switchScreen(screenId) {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-end').classList.add('hidden');
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startGame() {
+            currentQuestionIndex = 0;
+            switchScreen('screen-game');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('q-emoji').innerText = q.emoji;
+            document.getElementById('q-title').innerText = q.title;
+            document.getElementById('q-text').innerText = q.text;
+            
+            // 更新進度條
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('game-progress').style.width = progress + '%';
+
+            // 生成選項按鈕
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = ''; // 清空舊選項
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const correctIndex = questions[currentQuestionIndex].answerIndex;
+            
+            if (selectedIndex === correctIndex) {
+                // 答對了
+                alert('✨ 答對了！太厲害啦！準備進入下一關 💦');
+                currentQuestionIndex++;
+                
+                if (currentQuestionIndex < questions.length) {
+                    renderQuestion();
+                } else {
+                    // 全數通關
+                    document.getElementById('game-progress').style.width = '100%';
+                    setTimeout(() => {
+                        switchScreen('screen-end');
+                    }, 500);
+                }
+            } else {
+                // 答錯了
+                alert('Oops！不對喔，再試一次看看！💡');
+            }
+        }
+
+        function checkPass() {
+            const passInput = document.getElementById('passcode').value;
+            if (passInput === '123') {
+                alert('🎉 兌換成功！謝謝您參與稅務大冒險，祝您玩得愉快！');
+                
+                // --- 傳送通關紀錄至 Google Apps Script ---
+                const scriptURL = 'https://script.google.com/macros/s/AKfycby4-eEo001TMzG0e9DkqzboSVQD4R1pTZgygtvsXwFRCvflEGo0pFuhjnoh3f7gEtDY/exec'; // ★ 將這裡替換成您部署出來的 Web App URL
+                if (scriptURL !== '請替換成您的_APPS_SCRIPT_網址') {
+                    // 將前端設備的通關時間傳送至後端
+                    const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
+                    fetch(scriptURL + "?action=logTime&time=" + timeString, { mode: 'no-cors' })
+                        .catch(err => console.error('連線紀錄失敗:', err));
+                }
+                // ------------------------------------------
+
+                document.getElementById('passcode').value = '';
+                location.reload(); // 兌換完後自動重置遊戲給下一位
+            } else {
+                alert('❌ 通行碼錯誤！請確認您是現場工作人員。');
+                document.getElementById('passcode').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
