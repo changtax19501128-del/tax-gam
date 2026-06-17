@@ -208,10 +208,6 @@
         <div id="screen-end" class="hidden">
             <div class="emoji-icon">🏆🎁🎉</div>
             <h1>闖關大成功！</h1>
-            
-            <div class="image-placeholder" style="background:#fff9c4; border-color:#fbc02d; color:#f57f17;">
-                [ 預留區塊：可放過關慶祝圖或宣導品照片 ]
-            </div>
 
             <p style="font-size: 1.4rem; font-weight: bold; color: #d84315;">請至稅務局攤位兌換獎品</p>
             
@@ -238,42 +234,43 @@
         }
 
         // ================= 題庫設定 (對應您的4個關卡) =================
-        const questions = [
+       const questions = [
             {
                 emoji: "🏄‍♂️",
                 title: "第 1 關：SUP 立槳板",
                 image: "q1.jpg", // ★ 在這裡填入第1關圖片的檔名
-                text: "房屋稅差別稅率2.0上路囉！請問對於「非自住」的住家用房屋，法定稅率最高調升至多少呢？",
-                options: ["3.6%", "4.8%", "10%"],
+                text: "小美載著行動不便的爸爸去八卦山看風景，如果身心障礙的爸爸名下沒有車，但貼心的女兒想用自己的車載爸爸，這輛車「最高」可以享有幾排氣量（cc）以下的免稅優待呢？",
+                options: ["1,800 cc", "2,400 cc", "3,000 cc"],
                 answerIndex: 1
             },
             {
                 emoji: "🛶",
                 title: "第 2 關：雙人獨木舟",
                 image: "q2.jpg", // ★ 在這裡填入第2關圖片的檔名
-                text: "使用「統一發票兌獎 App」並設定領獎帳戶，除了獎金自動匯入不漏接外，還有什麼好處？",
-                options: ["可以換取雙倍獎金", "免扣千分之四的印花稅！", "中獎機率變高"],
-                answerIndex: 1
+                text: "稅務局提醒大家地價稅自用住宅用地優惠稅率（2‰）與一般稅率相差高達 5倍！錯過這天，今年的節稅風景就只能變明年了。請問這個絕對不能忘記的「地價稅黃金限期截止日」是哪一天呢？",
+                options: [" 9 月 22 日(秋分前夕！)", "中秋節當天(一邊吃月餅一邊申辦)", " 11 月 30 日(地價稅開徵最後一天)"],
+                answerIndex: 0
             },
             {
                 emoji: "🐉🚣‍♂️",
                 title: "第 3 關：龍舟板競技",
                 image: "q3.jpg", // ★ 在這裡填入第3關圖片的檔名
-                text: "稅務有分國稅與地方稅，請問下列哪一個屬於我們地方稅務局負責的「地方稅」呢？",
-                options: ["綜合所得稅", "營業稅", "房屋稅、地價稅、使用牌照稅"],
-                answerIndex: 2
+                text: "財政部統一發票兌獎APP 的神仙功能。只要在 APP 裡設定好，不管是在家睡覺、還是在外吃午餐，發票中獎時獎金都會自動轉入你的帳戶，連千分之四的印花稅都省下來！請問這是什麼功能？",
+                options: ["發票變身成現金的「財富自由咒語」", "綁定隨身載具與設定「中獎獎金自動匯款帳戶」", "自動幫你打電話給財政部長通知中獎"],
+                answerIndex: 1
             },
             {
                 emoji: "🚴‍♂️💦",
                 title: "第 4 關：水上自行車",
                 image: "q4.jpg", // ★ 在這裡填入第4關圖片的檔名
-                text: "為了減輕繳稅負擔，民眾在申報所得稅時，可以善用哪種方式合法「節稅」呢？",
-                options: ["把錢藏在床底下", "善用各項「列舉扣除額」及「特別扣除額」", "假裝忘記申報"],
-                answerIndex: 1
+                text: "「手機條碼儲存雲端發票」有超多好處。請問下列哪一個不是使用雲端發票的隱藏版優點？",
+                options: ["環保愛地球，少砍幾棵樹，綠意留給山林", "就算不小心把手機摔壞，發票一樣好好地存在<br>雲端不會不見", "掃描條碼後，手機會自動吐出彰化在地黑咖啡"],
+                answerIndex: 2
             }
         ];
 
         let currentQuestionIndex = 0;
+
 
         // ================= 遊戲邏輯 =================
         function switchScreen(screenId) {
@@ -309,7 +306,7 @@
             q.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn btn-option';
-                btn.innerText = opt;
+                btn.innerHTML = opt; // ★ 已修改為 innerHTML 以支援 <br> 換行標籤
                 btn.onclick = () => checkAnswer(index);
                 optionsContainer.appendChild(btn);
             });
