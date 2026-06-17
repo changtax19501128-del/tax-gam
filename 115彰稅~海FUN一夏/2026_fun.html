@@ -192,10 +192,9 @@
             <div class="emoji-icon" id="q-emoji">🏄‍♂️</div>
             <h2 id="q-title">關卡標題</h2>
 
-            <!-- 圖片佔位區：可放入各關卡的實際設備照片，例如SUP板的照片 -->
-            <div class="image-placeholder">
-                [ 預留區塊：可放入活動設備對應照片 ]
-                <!-- 範例：<img id="q-image" src="" alt="關卡圖片"> -->
+            <!-- 關卡圖片顯示區 -->
+            <div class="image-placeholder" style="height: auto; aspect-ratio: 16/9; background: transparent; border: none; padding: 0;">
+                <img id="q-image" src="" alt="關卡圖片" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onerror="this.onerror=null; this.src='https://placehold.co/800x450/e0f7fa/00838f?text=關卡圖片';">
             </div>
 
             <p id="q-text" style="font-size: 1.25rem; font-weight: bold; color: #01579b;">題目內容</p>
@@ -243,6 +242,7 @@
             {
                 emoji: "🏄‍♂️",
                 title: "第 1 關：SUP 立槳板",
+                image: "q1.jpg", // ★ 在這裡填入第1關圖片的檔名
                 text: "房屋稅差別稅率2.0上路囉！請問對於「非自住」的住家用房屋，法定稅率最高調升至多少呢？",
                 options: ["3.6%", "4.8%", "10%"],
                 answerIndex: 1
@@ -250,6 +250,7 @@
             {
                 emoji: "🛶",
                 title: "第 2 關：雙人獨木舟",
+                image: "q2.jpg", // ★ 在這裡填入第2關圖片的檔名
                 text: "使用「統一發票兌獎 App」並設定領獎帳戶，除了獎金自動匯入不漏接外，還有什麼好處？",
                 options: ["可以換取雙倍獎金", "免扣千分之四的印花稅！", "中獎機率變高"],
                 answerIndex: 1
@@ -257,6 +258,7 @@
             {
                 emoji: "🐉🚣‍♂️",
                 title: "第 3 關：龍舟板競技",
+                image: "q3.jpg", // ★ 在這裡填入第3關圖片的檔名
                 text: "稅務有分國稅與地方稅，請問下列哪一個屬於我們地方稅務局負責的「地方稅」呢？",
                 options: ["綜合所得稅", "營業稅", "房屋稅、地價稅、使用牌照稅"],
                 answerIndex: 2
@@ -264,6 +266,7 @@
             {
                 emoji: "🚴‍♂️💦",
                 title: "第 4 關：水上自行車",
+                image: "q4.jpg", // ★ 在這裡填入第4關圖片的檔名
                 text: "為了減輕繳稅負擔，民眾在申報所得稅時，可以善用哪種方式合法「節稅」呢？",
                 options: ["把錢藏在床底下", "善用各項「列舉扣除額」及「特別扣除額」", "假裝忘記申報"],
                 answerIndex: 1
@@ -291,6 +294,9 @@
             document.getElementById('q-emoji').innerText = q.emoji;
             document.getElementById('q-title').innerText = q.title;
             document.getElementById('q-text').innerText = q.text;
+            
+            // ★ 更新關卡圖片
+            document.getElementById('q-image').src = q.image;
             
             // 更新進度條
             const progress = ((currentQuestionIndex) / questions.length) * 100;
