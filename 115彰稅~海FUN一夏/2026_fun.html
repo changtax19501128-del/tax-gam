@@ -14,44 +14,23 @@
             padding: 0;
             font-family: 'Nunito', 'Noto Sans TC', sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            /* 預留背景圖位置：您可以將 url() 內的圖片換成您自己的背景圖 */
-            /* background-image: url('您的背景圖網址.jpg'); */
-            /* background-size: cover; */
             background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%); /* 預設水系漸層背景 */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* 防止視窗出現捲軸 */
+            overflow-y: auto; /* 允許手機版在內容較多時正常上下滾動 */
+            padding: 20px 10px;
             position: relative;
-        }
-
-        /* 背景裝飾：氣泡動畫 */
-        .bubbles {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-        .bubble {
-            position: absolute;
-            bottom: -50px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            animation: rise float infinite ease-in;
-        }
-        @keyframes rise {
-            0% { bottom: -50px; transform: translateX(0); }
-            50% { transform: translateX(20px); }
-            100% { bottom: 110vh; transform: translateX(-20px); }
         }
 
         /* ================= 遊戲主容器 ================= */
         .game-container {
-            width: 90%;
+            width: 100%;
             max-width: 500px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
@@ -62,6 +41,7 @@
             z-index: 10;
             backdrop-filter: blur(10px);
             border: 4px solid #fff;
+            margin: auto;
         }
 
         /* 隱藏區塊 */
@@ -84,7 +64,6 @@
             overflow: hidden;
             position: relative;
         }
-        /* 如果您要放真圖片，可以在HTML直接放入 img 標籤，並套用以下設定 */
         .image-placeholder img {
             width: 100%;
             height: 100%;
@@ -162,9 +141,6 @@
 </head>
 <body>
 
-    <!-- 背景氣泡動畫產生區 -->
-    <div class="bubbles" id="bubbles-container"></div>
-
     <div class="game-container">
         
         <!-- ================= 1. 遊戲首頁 ================= -->
@@ -174,7 +150,6 @@
             
             <!-- 圖片佔位區：放入主視覺圖 -->
             <div class="image-placeholder" style="border: none; background: transparent; height: auto; aspect-ratio: 1672 / 941;">
-                <!-- 註：副檔名請依據您的實際圖檔修改，例如 .jpg 或 .png -->
                 <img src="水上樂園首頁.jpg" alt="2026彰稅~海FUN一夏活動主視覺" onerror="this.onerror=null; this.src='https://placehold.co/1672x941/e0f7fa/00838f?text=水上樂園首頁圖檔';">
             </div>
 
@@ -219,26 +194,12 @@
     </div>
 
     <script>
-        // ================= 背景氣泡動畫生成 =================
-        const bubblesContainer = document.getElementById('bubbles-container');
-        for (let i = 0; i < 15; i++) {
-            let bubble = document.createElement('div');
-            bubble.className = 'bubble';
-            let size = Math.random() * 40 + 10; // 10px ~ 50px
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-            bubble.style.left = Math.random() * 100 + 'vw';
-            bubble.style.animationDuration = (Math.random() * 3 + 4) + 's'; // 4s ~ 7s
-            bubble.style.animationDelay = Math.random() * 5 + 's';
-            bubblesContainer.appendChild(bubble);
-        }
-
         // ================= 題庫設定 (對應您的4個關卡) =================
-       const questions = [
+        const questions = [
             {
                 emoji: "🏄‍♂️",
                 title: "第 1 關：SUP 立槳板",
-                image: "q1.jpg", // ★ 在這裡填入第1關圖片的檔名
+                image: "q1.jpg", 
                 text: "小美載著行動不便的爸爸去八卦山看風景，如果身心障礙的爸爸名下沒有車，但貼心的女兒想用自己的車載爸爸，這輛車「最高」可以享有幾排氣量（cc）以下的免稅優待呢？",
                 options: ["1,800 cc", "2,400 cc", "3,000 cc"],
                 answerIndex: 1
@@ -246,7 +207,7 @@
             {
                 emoji: "🛶",
                 title: "第 2 關：雙人獨木舟",
-                image: "q2.jpg", // ★ 在這裡填入第2關圖片的檔名
+                image: "q2.jpg", 
                 text: "稅務局提醒大家地價稅自用住宅用地優惠稅率（2‰）與一般稅率相差高達 5倍！錯過這天，今年的節稅風景就只能變明年了。請問這個絕對不能忘記的「地價稅黃金限期截止日」是哪一天呢？",
                 options: [" 9 月 22 日(秋分前夕！)", "中秋節當天(一邊吃月餅一邊申辦)", " 11 月 30 日(地價稅開徵最後一天)"],
                 answerIndex: 0
@@ -254,7 +215,7 @@
             {
                 emoji: "🐉🚣‍♂️",
                 title: "第 3 關：龍舟板競技",
-                image: "q3.jpg", // ★ 在這裡填入第3關圖片的檔名
+                image: "q3.jpg", 
                 text: "財政部統一發票兌獎APP 的神仙功能。只要在 APP 裡設定好，不管是在家睡覺、還是在外吃午餐，發票中獎時獎金都會自動轉入你的帳戶，連千分之四的印花稅都省下來！請問這是什麼功能？",
                 options: ["發票變身成現金的「財富自由咒語」", "綁定隨身載具與設定「中獎獎金自動匯款帳戶」", "自動幫你打電話給財政部長通知中獎"],
                 answerIndex: 1
@@ -262,7 +223,7 @@
             {
                 emoji: "🚴‍♂️💦",
                 title: "第 4 關：水上自行車",
-                image: "q4.jpg", // ★ 在這裡填入第4關圖片的檔名
+                image: "q4.jpg", 
                 text: "「手機條碼儲存雲端發票」有超多好處。請問下列哪一個不是使用雲端發票的隱藏版優點？",
                 options: ["環保愛地球，少砍幾棵樹，綠意留給山林", "就算不小心把手機摔壞，發票一樣好好地存在<br>雲端不會不見", "掃描條碼後，手機會自動吐出彰化在地黑咖啡"],
                 answerIndex: 2
@@ -270,7 +231,6 @@
         ];
 
         let currentQuestionIndex = 0;
-
 
         // ================= 遊戲邏輯 =================
         function switchScreen(screenId) {
@@ -292,7 +252,7 @@
             document.getElementById('q-title').innerText = q.title;
             document.getElementById('q-text').innerText = q.text;
             
-            // ★ 更新關卡圖片
+            // 更新關卡圖片
             document.getElementById('q-image').src = q.image;
             
             // 更新進度條
@@ -306,7 +266,7 @@
             q.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn btn-option';
-                btn.innerHTML = opt; // ★ 已修改為 innerHTML 以支援 <br> 換行標籤
+                btn.innerHTML = opt; // 支援 HTML 標籤（如 <br>）
                 btn.onclick = () => checkAnswer(index);
                 optionsContainer.appendChild(btn);
             });
@@ -316,21 +276,18 @@
             const correctIndex = questions[currentQuestionIndex].answerIndex;
             
             if (selectedIndex === correctIndex) {
-                // 答對了
                 alert('✨ 答對了！太厲害啦！準備進入下一關 💦');
                 currentQuestionIndex++;
                 
                 if (currentQuestionIndex < questions.length) {
                     renderQuestion();
                 } else {
-                    // 全數通關
                     document.getElementById('game-progress').style.width = '100%';
                     setTimeout(() => {
                         switchScreen('screen-end');
                     }, 500);
                 }
             } else {
-                // 答錯了
                 alert('Oops！不對喔，再試一次看看！💡');
             }
         }
@@ -343,13 +300,11 @@
                 // --- 傳送通關紀錄至 Google Apps Script ---
                 const scriptURL = 'https://script.google.com/macros/s/AKfycby4-eEo001TMzG0e9DkqzboSVQD4R1pTZgygtvsXwFRCvflEGo0pFuhjnoh3f7gEtDY/exec';
                 
-                // 將前端設備的通關時間傳送至後端
                 const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
                 fetch(scriptURL + "?time=" + timeString, { mode: 'no-cors' })
                     .then(() => {
-                        // ★ 確保資料送出後，才執行清空與重新載入
                         document.getElementById('passcode').value = '';
-                        location.reload(); // 兌換完後自動重置遊戲給下一位
+                        location.reload(); // 兌換完後自動重置遊戲
                     })
                     .catch(err => {
                         console.error('連線紀錄失敗:', err);
