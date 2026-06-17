@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2026彰稅~海FUN一夏活動</title>
     <style>
-        /* ================= 基礎設定與字體 ================= */
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Noto+Sans+TC:wght@500;700;900&display=swap');
         
         * {
@@ -18,12 +17,12 @@
         }
 
         body {
-            background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%); /* 預設水系漸層背景 */
+            background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%); /* 舒適的水系漸層背景 */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: auto; /* 允許手機版在內容較多時正常上下滾動 */
+            overflow-y: auto; /* 允許在行動裝置螢幕不夠高時自由上下捲動 */
             padding: 20px 10px;
             position: relative;
         }
@@ -148,12 +147,12 @@
             <div class="emoji-icon">☀️🌊☁️</div>
             <h1>2026彰稅~<br>海FUN一夏活動</h1>
             
-            <!-- 圖片佔位區：放入主視覺圖 -->
+            <!-- 圖片佔位區：放入主視覺圖 (1672 * 941 高畫質比例) -->
             <div class="image-placeholder" style="border: none; background: transparent; height: auto; aspect-ratio: 1672 / 941;">
                 <img src="水上樂園首頁.jpg" alt="2026彰稅~海FUN一夏活動主視覺" onerror="this.onerror=null; this.src='https://placehold.co/1672x941/e0f7fa/00838f?text=水上樂園首頁圖檔';">
             </div>
 
-            <p style="font-size: 1.4rem; color: #0277bd; font-weight: bold; line-height: 1.6;">通過 4 道稅務關卡<br>學習稅務知識<br>領取宣導品吧！</p>
+            <p style="font-size: 1.4rem; color: #0277bd; font-weight: bold; line-height: 1.6;">通過 4 道稅務關卡，學習稅務知識，<br>領取宣導品吧！</p>
             <button class="btn btn-primary" onclick="startGame()">開始挑戰</button>
         </div>
 
@@ -167,7 +166,7 @@
             <div class="emoji-icon" id="q-emoji">🏄‍♂️</div>
             <h2 id="q-title">關卡標題</h2>
 
-            <!-- 關卡圖片顯示區 -->
+            <!-- 關卡圖片顯示區 (16:9比例) -->
             <div class="image-placeholder" style="height: auto; aspect-ratio: 16/9; background: transparent; border: none; padding: 0;">
                 <img id="q-image" src="" alt="關卡圖片" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onerror="this.onerror=null; this.src='https://placehold.co/800x450/e0f7fa/00838f?text=關卡圖片';">
             </div>
@@ -294,17 +293,31 @@
 
         function checkPass() {
             const passInput = document.getElementById('passcode').value;
-            if (passInput === '123') {
-                alert('🎉 兌換成功！謝謝您參與稅務大冒險，祝您玩得愉快！');
+            let locationName = '';
+
+            // 判斷三個據點的通行碼
+            if (passInput === '6666') {
+                locationName = '總局';
+            } else if (passInput === '7777') {
+                locationName = '員林';
+            } else if (passInput === '8888') {
+                locationName = '北斗';
+            }
+
+            if (locationName !== '') {
+                alert(`🎉 兌換成功（${locationName}）！謝謝您參與稅務大冒險，祝您玩得愉快！`);
                 
-                // --- 傳送通關紀錄至 Google Apps Script ---
+                // --- 傳送通關紀錄與活動據點至 Google Apps Script ---
                 const scriptURL = 'https://script.google.com/macros/s/AKfycby4-eEo001TMzG0e9DkqzboSVQD4R1pTZgygtvsXwFRCvflEGo0pFuhjnoh3f7gEtDY/exec';
                 
                 const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
-                fetch(scriptURL + "?time=" + timeString, { mode: 'no-cors' })
+                const locString = encodeURIComponent(locationName);
+                
+                // 同時發送時間及活動據點資料
+                fetch(`${scriptURL}?time=${timeString}&location=${locString}`, { mode: 'no-cors' })
                     .then(() => {
                         document.getElementById('passcode').value = '';
-                        location.reload(); // 兌換完後自動重置遊戲
+                        location.reload(); // 兌換完後自動重置遊戲給下一位
                     })
                     .catch(err => {
                         console.error('連線紀錄失敗:', err);
