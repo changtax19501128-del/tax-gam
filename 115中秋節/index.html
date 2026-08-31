@@ -109,4 +109,100 @@
             font-size: 1.8rem;
             padding: 12px;
             width: 80%;
-            text-align:
+            text-align: center;
+            border-radius: 10px;
+            border: 2px solid #aaa;
+            margin-bottom: 15px;
+        }
+
+        .success-msg {
+            display: none;
+            color: #32CD32;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="screen-start" class="screen active">
+            <h1>歡迎來到<br>彰稅小遊戲</h1>
+            <p>點擊下方按鈕開始挑戰<br>完成即可兌換宣導品喔</p>
+            <button class="btn-start" onclick="startGame()">開始互動 🐾</button>
+        </div>
+
+        <div id="screen-question" class="screen">
+            <h2 id="question-text">題目載入中...</h2>
+            <div class="options-container">
+                <button class="btn-option" onclick="checkAnswer(true)">⭕ 是</button>
+                <button class="btn-option" onclick="checkAnswer(false)">❌ 否</button>
+            </div>
+        </div>
+
+        <div id="screen-end" class="screen">
+            <h1>恭喜完成任務</h1>
+            <p>請將手機交給工作人員</p>
+            <div class="staff-area">
+                <div id="passcode-box">
+                    <p style="font-size: 1.2rem; color: #888; margin-bottom: 10px;">工作人員請輸入通行碼</p>
+                    <input type="password" id="passcode-input" placeholder="輸入密碼" maxlength="4">
+                    <button class="btn-confirm" onclick="verifyPasscode()">確認兌換</button>
+                </div>
+                <div id="success-message" class="success-msg">🎁 兌換成功！</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { text: "1. 身心障礙者每人限免徵1輛車的使用牌照稅", correctAnswer: true },
+            { text: "2. 申請「異動即時通」後，可以收到不動產異動通知", correctAnswer: true }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startGame() {
+            currentQuestionIndex = 0;
+            loadQuestion();
+            showScreen('screen-question');
+        }
+
+        function loadQuestion() {
+            document.getElementById('question-text').innerText = questions[currentQuestionIndex].text;
+        }
+
+        function checkAnswer(userChoice) {
+            if (userChoice === questions[currentQuestionIndex].correctAnswer) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    showScreen('screen-end');
+                }
+            } else {
+                alert("哎呀，答錯囉！請再試一次看看 🌟");
+            }
+        }
+
+        function verifyPasscode() {
+            const inputVal = document.getElementById('passcode-input').value;
+            if (inputVal === "6666") {
+                document.getElementById('passcode-box').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            } else {
+                alert("通行碼錯誤，請重新輸入。");
+                document.getElementById('passcode-input').value = "";
+            }
+        }
+    </script>
+</body>
+</html>
