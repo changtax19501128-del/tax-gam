@@ -2,9 +2,8 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- 確保手機版不會被意外縮放，鎖定比例 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>可愛動物互動問答</title>
+    <title>彰稅小遊戲</title>
     <style>
         /* 基礎設定 */
         body {
@@ -23,13 +22,13 @@
             color: #333;
         }
 
-        /* 手機版主容器，加寬並減少邊距 */
+        /* 手機版主容器 */
         #game-container {
             background-color: rgba(255, 255, 255, 0.92);
             border-radius: 25px;
             padding: 30px 20px;
             width: 90%;
-            max-width: 450px; /* 針對手機的極限寬度 */
+            max-width: 450px;
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             border: 4px solid #FFB6C1;
@@ -74,16 +73,20 @@
         /* 選項按鈕設定 */
         .options-container {
             display: flex;
-            flex-direction: column; /* 上下排列 */
+            flex-direction: column;
             gap: 15px;
         }
+        
+        /* 方法一修正：圖片 100% 貼合且不裁切 */
         .btn-option {
             background-image: url('button_bg.png'); 
-            background-color: #FFDAB9; 
-            background-size: cover;
+            background-color: transparent; /* 改為透明底，防止遮擋邊緣 */
+            background-size: 100% 100%; /* 強制完整放入，不裁切圖案 */
             background-position: center;
+            background-repeat: no-repeat;
             color: #444;
-            margin: 0; /* 由 gap 控制間距 */
+            margin: 0; 
+            box-shadow: none; /* 若有背景圖邊緣，可取消預設陰影讓邊界更自然 */
         }
 
         /* 工作人員輸入區 */
@@ -109,6 +112,8 @@
             font-size: 2.5rem;
             font-weight: bold;
             margin-top: 20px;
+            text-align: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -116,9 +121,9 @@
     <div id="game-container">
         <!-- 畫面 1：開始畫面 -->
         <div id="screen-start" class="screen active">
-            <h1>🐾 歡迎來到<br>互動小問答 🐾</h1>
+            <h1>歡迎來到<br>彰稅小遊戲</h1>
             <p>點擊下方按鈕開始挑戰，完成即可兌換宣導品喔！</p>
-            <button class="btn-start" onclick="startGame()">開始互動 🚀</button>
+            <button class="btn-start" onclick="startGame()">開始互動 🐾</button>
         </div>
 
         <!-- 畫面 2：問答畫面 -->
@@ -132,7 +137,7 @@
 
         <!-- 畫面 3：互動結束 (工作人員畫面) -->
         <div id="screen-end" class="screen">
-            <h1>🎉 恭喜完成<br>所有題目！ 🎉</h1>
+            <h1>恭喜完成<br>所有題目</h1>
             <p>請將手機交給工作人員</p>
             <div class="staff-area">
                 <p style="font-size: 1.2rem; color: #888; margin-bottom: 10px;">工作人員請輸入通行碼</p>
