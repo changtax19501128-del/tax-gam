@@ -77,16 +77,15 @@
             gap: 15px;
         }
         
-        /* 方法一修正：圖片 100% 貼合且不裁切 */
         .btn-option {
             background-image: url('button_bg.png'); 
-            background-color: transparent; /* 改為透明底，防止遮擋邊緣 */
-            background-size: 100% 100%; /* 強制完整放入，不裁切圖案 */
+            background-color: transparent;
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             color: #444;
             margin: 0; 
-            box-shadow: none; /* 若有背景圖邊緣，可取消預設陰影讓邊界更自然 */
+            box-shadow: none;
         }
 
         /* 工作人員輸入區 */
@@ -119,14 +118,12 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- 畫面 1：開始畫面 -->
         <div id="screen-start" class="screen active">
             <h1>歡迎來到<br>彰稅小遊戲</h1>
-            <p>點擊下方按鈕開始挑戰，完成即可兌換宣導品喔！</p>
+            <p>點擊下方按鈕開始挑戰<br>完成即可兌換宣導品喔</p>
             <button class="btn-start" onclick="startGame()">開始互動 🐾</button>
         </div>
 
-        <!-- 畫面 2：問答畫面 -->
         <div id="screen-question" class="screen">
             <h2 id="question-text">題目載入中...</h2>
             <div class="options-container">
@@ -135,7 +132,6 @@
             </div>
         </div>
 
-        <!-- 畫面 3：互動結束 (工作人員畫面) -->
         <div id="screen-end" class="screen">
             <h1>恭喜完成<br>所有題目</h1>
             <p>請將手機交給工作人員</p>
@@ -149,9 +145,10 @@
     </div>
 
     <script>
+        // 題目文字結尾已移除句號
         const questions = [
-            { text: "1. 身心障礙者每人限免徵1輛車的使用牌照稅。", correctAnswer: true },
-            { text: "2. 申請「異動即時通」後，可以收到不動產異動通知。", correctAnswer: true }
+            { text: "1. 身心障礙者每人限免徵1輛車的使用牌照稅", correctAnswer: true },
+            { text: "2. 申請「異動即時通」後，可以收到不動產異動通知", correctAnswer: true }
         ];
 
         let currentQuestionIndex = 0;
