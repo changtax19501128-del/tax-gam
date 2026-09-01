@@ -132,7 +132,7 @@
         <div id="screen-start" class="screen active">
             <h1>歡迎來到<br>彰稅小遊戲</h1>
             <p>點擊下方按鈕開始挑戰<br>完成即可兌換宣導品喔</p>
-            <button class="btn-start" onclick="startGame()">開始挑戰 🐾</button>
+            <button class="btn-start" onclick="startGame()">開始互動 🐾</button>
         </div>
 
         <div id="screen-question" class="screen">
@@ -195,12 +195,36 @@
 
         function verifyPasscode() {
             const inputVal = document.getElementById('passcode-input').value;
-            if (inputVal === "6666") {
+            let locationName = '';
+
+            // 判斷三個據點的通行碼
+            if (inputVal === '6666') {
+                locationName = '總局';
+            } else if (inputVal === '7777') {
+                locationName = '員林';
+            } else if (inputVal === '8888') {
+                locationName = '北斗';
+            }
+
+            if (locationName !== '') {
+                // 隱藏輸入框並顯示統一的「兌換成功！」文字（不顯示據點名稱）
+                const successMsg = document.getElementById('success-message');
+                successMsg.innerText = '🎁 兌換成功！';
                 document.getElementById('passcode-box').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
+                successMsg.style.display = 'block';
+
+                // 背景傳送通關時間與對應據點資料至 Google Apps Script
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbz7-Z0SuEvLvOt-v0ST5PP3ex5PPRfLFA6i04nnJzl_SkHytokIpo3qIfNl2QFpLbBP/exec';
+                const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
+                const locString = encodeURIComponent(locationName);
+
+                fetch(`${scriptURL}?time=${timeString}&location=${locString}`, { mode: 'no-cors' })
+                    .catch(err => {
+                        console.error('連線紀錄失敗:', err);
+                    });
             } else {
-                alert("通行碼錯誤，請重新輸入。");
-                document.getElementById('passcode-input').value = "";
+                alert('❌ 通行碼錯誤！請確認您是現場工作人員。');
+                document.getElementById('passcode-input').value = '';
             }
         }
     </script>
