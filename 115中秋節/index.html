@@ -129,12 +129,14 @@
 </head>
 <body>
     <div id="game-container">
+        <!-- 畫面 1：開始畫面 -->
         <div id="screen-start" class="screen active">
             <h1>歡迎來到<br>彰稅小遊戲</h1>
             <p>點擊下方按鈕開始挑戰<br>完成即可兌換宣導品喔</p>
             <button class="btn-start" onclick="startGame()">開始互動 🐾</button>
         </div>
 
+        <!-- 畫面 2：問答畫面 -->
         <div id="screen-question" class="screen">
             <h2 id="question-text">題目載入中...</h2>
             <div class="options-container">
@@ -143,6 +145,7 @@
             </div>
         </div>
 
+        <!-- 畫面 3：互動結束 (工作人員畫面) -->
         <div id="screen-end" class="screen">
             <h1>恭喜完成任務</h1>
             <p>請將手機交給工作人員</p>
@@ -164,6 +167,7 @@
         ];
 
         let currentQuestionIndex = 0;
+        let isSubmitting = false; // 新增：防止重複送出的防護鎖
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
@@ -172,6 +176,7 @@
 
         function startGame() {
             currentQuestionIndex = 0;
+            isSubmitting = false; // 重置鎖定狀態
             loadQuestion();
             showScreen('screen-question');
         }
@@ -194,6 +199,9 @@
         }
 
         function verifyPasscode() {
+            // 如果已經在處理中，直接攔截第二次點擊
+            if (isSubmitting) return;
+
             const inputVal = document.getElementById('passcode-input').value;
             let locationName = '';
 
@@ -207,7 +215,9 @@
             }
 
             if (locationName !== '') {
-                // 隱藏輸入框並顯示統一的「兌換成功！」文字（不顯示據點名稱）
+                isSubmitting = true; // 立即開啟防護鎖
+
+                // 隱藏輸入區並顯示兌換成功
                 const successMsg = document.getElementById('success-message');
                 successMsg.innerText = '🎁 兌換成功！';
                 document.getElementById('passcode-box').style.display = 'none';
