@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>彰稅小遊戲</title>
+    <style>
+        /* 基礎設定 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-image: url('main_bg.jpg'); 
+            background-color: #FFF2CC;
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* 手機版主容器 */
+        #game-container {
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: 25px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 4px solid #FFB6C1;
+            box-sizing: border-box;
+        }
+
+        /* 隱藏/顯示控制 */
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 手機版字體設定 */
+        h1 { font-size: 2.2rem; margin-bottom: 20px; color: #FF7F50; line-height: 1.3; }
+        
+        /* 題目字體加大，提升閱讀舒適度 */
+        h2 { 
+            font-size: 2.2rem; 
+            margin-bottom: 25px; 
+            line-height: 1.4; 
+            font-weight: bold; 
+            color: #222;
+        }
+        
+        p { font-size: 1.4rem; line-height: 1.5; margin-bottom: 25px; }
+
+        /* 按鈕基礎樣式 */
+        button {
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 20px;
+            margin: 10px 0;
+            width: 100%;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        button:active { transform: translateY(4px); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+
+        .btn-start, .btn-confirm {
+            background-color: #87CEFA;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* 選項按鈕設定 */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn-option {
+            background-image: url('button_bg.png'); 
+            background-color: transparent;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #444;
+            margin: 0; 
+            box-shadow: none;
+        }
+
+        /* 工作人員輸入區 */
+        .staff-area {
+            margin-top: 30px;
+            padding: 20px 15px;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            border: 2px dashed #ccc;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #passcode-box {
+            width: 100%;
+        }
+
+        input[type="password"] {
+            font-size: 1.8rem;
+            padding: 12px;
+            width: 80%;
+            text-align: center;
+            border-radius: 10px;
+            border: 2px solid #aaa;
+            margin-bottom: 15px;
+        }
+
+        .success-msg {
+            display: none;
+            color: #32CD32;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- 畫面 1：開始畫面 -->
+        <div id="screen-start" class="screen active">
+            <h1>歡迎來到<br>彰稅小遊戲</h1>
+            <p>點擊下方按鈕開始挑戰<br>完成即可兌換宣導品喔</p>
+            <button class="btn-start" onclick="startGame()">開始互動 🐾</button>
+        </div>
+
+        <!-- 畫面 2：問答畫面 -->
+        <div id="screen-question" class="screen">
+            <h2 id="question-text">題目載入中...</h2>
+            <div class="options-container">
+                <button class="btn-option" onclick="checkAnswer(true)">⭕ 是</button>
+                <button class="btn-option" onclick="checkAnswer(false)">❌ 否</button>
+            </div>
+        </div>
+
+        <!-- 畫面 3：互動結束 (工作人員畫面) -->
+        <div id="screen-end" class="screen">
+            <h1>恭喜完成任務</h1>
+            <p>請將手機交給工作人員</p>
+            <div class="staff-area">
+                <div id="passcode-box">
+                    <p style="font-size: 1.2rem; color: #888; margin-bottom: 10px;">工作人員請輸入通行碼</p>
+                    <input type="password" id="passcode-input" placeholder="輸入密碼" maxlength="4">
+                    <button class="btn-confirm" onclick="verifyPasscode()">確認兌換</button>
+                </div>
+                <div id="success-message" class="success-msg">🎁 兌換成功！</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 精簡優化後的題目（無末端標點符號，答案皆為「是」）
+        const questions = [
+            { text: "1. 繳稅方式很多種，銀行、便利商店(3萬元以下)、ATM、行動支付或線上繳稅網站，都可以繳納稅款？", correctAnswer: true },
+            { text: "2. 申辦「稅籍異動即時通」服務,名下不動產移轉會收到通知,方便又安心？", correctAnswer: true }
+        ];
+
+        let currentQuestionIndex = 0;
+        let isSubmitting = false; // 防重複送出鎖定旗標
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startGame() {
+            currentQuestionIndex = 0;
+            isSubmitting = false;
+            loadQuestion();
+            showScreen('screen-question');
+        }
+
+        function loadQuestion() {
+            document.getElementById('question-text').innerText = questions[currentQuestionIndex].text;
+        }
+
+        function checkAnswer(userChoice) {
+            if (userChoice === questions[currentQuestionIndex].correctAnswer) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    showScreen('screen-end');
+                }
+            } else {
+                alert("哎呀，答錯囉！請再試一次看看 🌟");
+            }
+        }
+
+        function verifyPasscode() {
+            if (isSubmitting) return; // 攔截重複點擊
+
+            const inputVal = document.getElementById('passcode-input').value;
+            let locationName = '';
+
+            if (inputVal === '6666') {
+                locationName = '總局';
+            } else if (inputVal === '7777') {
+                locationName = '員林';
+            } else if (inputVal === '8888') {
+                locationName = '北斗';
+            }
+
+            if (locationName !== '') {
+                isSubmitting = true;
+
+                const successMsg = document.getElementById('success-message');
+                successMsg.innerText = '🎁 兌換成功！';
+                document.getElementById('passcode-box').style.display = 'none';
+                successMsg.style.display = 'block';
+
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbz7-Z0SuEvLvOt-v0ST5PP3ex5PPRfLFA6i04nnJzl_SkHytokIpo3qIfNl2QFpLbBP/exec';
+                const timeString = encodeURIComponent(new Date().toLocaleString('zh-TW'));
+                const locString = encodeURIComponent(locationName);
+
+                fetch(`${scriptURL}?time=${timeString}&location=${locString}`, { mode: 'no-cors' })
+                    .catch(err => {
+                        console.error('連線紀錄失敗:', err);
+                    });
+            } else {
+                alert('❌ 通行碼錯誤！請確認您是現場工作人員。');
+                document.getElementById('passcode-input').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
