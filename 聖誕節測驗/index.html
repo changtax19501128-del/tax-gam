@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>校園稅務問答挑戰</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-image:
+                linear-gradient(rgba(10, 45, 30, 0.25), rgba(10, 45, 30, 0.25)),
+                url('main_bg.jpg');
+            background-color: #164B36;
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* 雪花效果 */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                radial-gradient(3px 3px at 20px 30px, #fff 98%, transparent),
+                radial-gradient(2px 2px at 100px 150px, #fff 98%, transparent),
+                radial-gradient(3px 3px at 180px 80px, #fff 98%, transparent),
+                radial-gradient(2px 2px at 250px 200px, #fff 98%, transparent);
+            background-size: 300px 300px;
+            animation: snowfall 12s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes snowfall {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 100px 300px;
+            }
+        }
+
+        /* 遊戲主容器 */
+        #game-container {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            border: 5px solid #C62828;
+            outline: 3px solid #D9B65D;
+            outline-offset: 3px;
+        }
+
+        /* 畫面切換 */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 文字設定 */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #B71C1C;
+            line-height: 1.4;
+            font-weight: 900;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-weight: bold;
+            color: #174C35;
+        }
+
+        p {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .christmas-subtitle {
+            color: #26734D;
+            font-weight: bold;
+        }
+
+        /* 按鈕設定 */
+        button {
+            font-family: inherit;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 18px;
+            margin: 10px 0;
+            width: 100%;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        button:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:focus-visible {
+            outline: 3px solid #D9B65D;
+            outline-offset: 3px;
+        }
+
+        /* 開始及重新挑戰按鈕 */
+        .btn-start,
+        .btn-restart {
+            background: linear-gradient(135deg, #C62828, #8E1717);
+            color: white;
+            border: 2px solid #E5C16C;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 題目區 */
+        .question-progress {
+            display: inline-block;
+            background-color: #E6F1E9;
+            color: #1B6743;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-option {
+            background-image: url('button_bg.png');
+            background-color: #F7F1E5;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            margin: 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #D8C69B;
+            font-size: 1.45rem;
+            line-height: 1.5;
+            text-align: center;
+            min-height: 75px;
+        }
+
+        .btn-option:hover {
+            filter: brightness(1.05);
+        }
+
+        /* 完成畫面 */
+        .success-area {
+            padding: 20px 10px;
+            background: linear-gradient(135deg, #FFF9E8, #FCE8E8);
+            border-radius: 20px;
+            border: 2px dashed #C99B43;
+            margin: 20px 0;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .success-title {
+            color: #B71C1C;
+            font-size: 2.1rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .success-text {
+            color: #225B3D;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .end-note {
+            color: #777;
+            font-size: 1rem;
+            margin-top: 15px;
+        }
+
+        /* 小螢幕微調 */
+        @media (max-width: 380px) {
+            #game-container {
+                padding: 25px 15px;
+            }
+
+            h1 {
+                font-size: 1.9rem;
+            }
+
+            h2 {
+                font-size: 1.65rem;
+            }
+
+            button {
+                font-size: 1.6rem;
+            }
+
+            .btn-option {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="game-container">
+
+        <!-- 畫面 1：開始畫面 -->
+        <div id="screen-start" class="screen active">
+
+            <h1>校園稅務問答挑戰</h1>
+
+            <p class="christmas-subtitle">
+                歡迎來到冬季校園限定活動!!
+            </p>
+
+            <p>
+                一起挑戰稅務小知識
+            </p>
+
+            <button class="btn-start" onclick="startGame()">
+                開始挑戰 🎄
+            </button>
+
+        </div>
+
+
+        <!-- 畫面 2：問答畫面 -->
+        <div id="screen-question" class="screen">
+
+            <div class="question-progress" id="question-progress">
+                第一題
+            </div>
+
+            <h2 id="question-text">
+                題目載入中...
+            </h2>
+
+            <div class="options-container">
+
+                <button
+                    class="btn-option"
+                    id="option-o"
+                    onclick="checkAnswer(true)">
+                    O 選項
+                </button>
+
+                <button
+                    class="btn-option"
+                    id="option-x"
+                    onclick="checkAnswer(false)">
+                    X 選項
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- 畫面 3：完成畫面 -->
+        <div id="screen-end" class="screen">
+
+            <h1>🎉 恭喜完成任務！</h1>
+
+            <div class="success-area">
+
+                <div class="success-icon">🎅🎁</div>
+
+                <div class="success-title">
+                    挑戰成功！
+                </div>
+
+                <p class="success-text">
+                    你已經完成所有稅務問答囉！
+                </p>
+
+                <p>
+                    祝福大家健康快樂<br>
+                    考試高分
+                </p>
+
+            </div>
+
+            <button class="btn-restart" onclick="startGame()">
+                再玩一次 🔄
+            </button>
+
+            <p class="end-note">
+                彰化縣地方稅務局 敬祝
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* =========================
+           題目設定
+           true  = O 正確
+           false = X 正確
+        ========================= */
+
+const questions = [
+    {
+        title: "第一題",
+        text: "政府應基於法律規定向人民課稅，不得隨意課稅。",
+        optionO: "不得隨意課稅",
+        optionX: "缺錢的時候可以加稅",
+        correctAnswer: true
+    },
+    {
+        title: "第二題",
+        text: "國家的主要財政收入來源為規費收入？",
+        optionO: "規費收入",
+        optionX: "稅捐收入",
+        correctAnswer: false
+    },
+    {
+        title: "第三題",
+        text: "使用牌照稅、房屋稅及地價稅都是屬於地方稅嗎？",
+        optionO: "都是地方稅",
+        optionX: "都是國稅",
+        correctAnswer: true
+    }
+];
+
+
+        /* =========================
+           遊戲控制
+        ========================= */
+
+        let currentQuestionIndex = 0;
+
+
+        // 切換畫面
+        function showScreen(screenId) {
+
+            document.querySelectorAll('.screen').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            document.getElementById(screenId).classList.add('active');
+
+        }
+
+
+        // 開始遊戲／重新挑戰
+        function startGame() {
+
+            currentQuestionIndex = 0;
+
+            loadQuestion();
+
+            showScreen('screen-question');
+
+        }
+
+
+        // 載入題目
+        function loadQuestion() {
+
+            const question = questions[currentQuestionIndex];
+
+            // 題目文字
+            document.getElementById('question-text').innerText =
+                question.text;
+
+            // 題數進度
+            document.getElementById('question-progress').innerText =
+                `${question.title}／共 ${questions.length} 題`;
+
+            // 更新 O、X 選項文字
+            document.getElementById('option-o').innerText =
+                question.optionO;
+
+            document.getElementById('option-x').innerText =
+                question.optionX;
+
+        }
+
+
+        // 判斷答案
+        function checkAnswer(userChoice) {
+
+            const correctAnswer =
+                questions[currentQuestionIndex].correctAnswer;
+
+            if (userChoice === correctAnswer) {
+
+                currentQuestionIndex++;
+
+                // 還有下一題
+                if (currentQuestionIndex < questions.length) {
+
+                    loadQuestion();
+
+                } else {
+
+                    // 三題全部答對，進入完成畫面
+                    showScreen('screen-end');
+
+                }
+
+            } else {
+
+                alert("哎呀，答錯囉！請再試一次看看 🎄");
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
