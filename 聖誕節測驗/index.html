@@ -1,359 +1,357 @@
-
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>校園稅務問答挑戰</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>校園稅務問答挑戰</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            padding: 20px 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-image:
-                linear-gradient(rgba(10, 45, 30, 0.25), rgba(10, 45, 30, 0.25)),
-                url('main_bg.jpg');
-            background-color: #164B36;
-            background-size: cover;
-            background-position: center top;
-            background-attachment: fixed;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
-        }
 
-        /* 雪花效果 */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            background-image:
-                radial-gradient(3px 3px at 20px 30px, #fff 98%, transparent),
-                radial-gradient(2px 2px at 100px 150px, #fff 98%, transparent),
-                radial-gradient(3px 3px at 180px 80px, #fff 98%, transparent),
-                radial-gradient(2px 2px at 250px 200px, #fff 98%, transparent);
-            background-size: 300px 300px;
-            animation: snowfall 12s linear infinite;
-            opacity: 0.6;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Microsoft JhengHei", sans-serif;
+    color: #fff;
 
-        @keyframes snowfall {
-            from {
-                background-position: 0 0;
-            }
-            to {
-                background-position: 100px 300px;
-            }
-        }
+    /* 整張背景圖片加上中偏暗藍色濾色 */
+    background-color: #12394d;
 
-        /* 遊戲主容器 */
-        #game-container {
-            position: relative;
-            z-index: 1;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            padding: 30px 20px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-            border: 5px solid #C62828;
-            outline: 3px solid #D9B65D;
-            outline-offset: 3px;
-        }
+    background-image:
+        linear-gradient(
+            rgba(28, 65, 100, 0.58),
+            rgba(18, 48, 79, 0.58)
+        ),
+        url("main_bg.jpg");
 
-        /* 畫面切換 */
-        .screen {
-            display: none;
-        }
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 
-        .screen.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
 
-        /* 文字設定 */
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            color: #B71C1C;
-            line-height: 1.4;
-            font-weight: 900;
-        }
+/* 雪花效果 */
 
-        h2 {
-            font-size: 1.9rem;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            font-weight: bold;
-            color: #174C35;
-        }
+.snow {
+    position: fixed;
+    top: -30px;
+    color: #ffffff;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.98;
+    font-weight: bold;
 
-        p {
-            font-size: 1.35rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
+    text-shadow:
+        0 0 5px #ffffff,
+        0 0 10px #d9f4ff,
+        0 0 16px #a9e6ff;
 
-        .christmas-subtitle {
-            color: #26734D;
-            font-weight: bold;
-        }
+    animation: snowfall linear infinite;
+}
 
-        /* 按鈕設定 */
-        button {
-            font-family: inherit;
-            font-size: 1.8rem;
-            font-weight: bold;
-            padding: 18px;
-            margin: 10px 0;
-            width: 100%;
-            border: none;
-            border-radius: 18px;
-            cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-            transition: transform 0.1s, filter 0.2s;
-        }
 
-        button:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+@keyframes snowfall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
 
-        button:focus-visible {
-            outline: 3px solid #D9B65D;
-            outline-offset: 3px;
-        }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
 
-        /* 開始及重新挑戰按鈕 */
-        .btn-start,
-        .btn-restart {
-            background: linear-gradient(135deg, #C62828, #8E1717);
-            color: white;
-            border: 2px solid #E5C16C;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
+/* 遊戲主面板 */
+.container {
+    width: 100%;
+    max-width: 720px;
+    min-height: 480px;
+    padding: 35px 25px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
 
-        /* 題目區 */
-        .question-progress {
-            display: inline-block;
-            background-color: #E6F1E9;
-            color: #1B6743;
-            border-radius: 30px;
-            padding: 8px 20px;
-            font-size: 1.15rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+    border: 3px solid #e8c879;
+    border-radius: 28px;
 
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    background: rgba(12, 48, 63, .92);
+    box-shadow: 0 12px 35px rgba(0,0,0,.35);
+}
 
-        .btn-option {
-            background-image: url('button_bg.png');
-            background-color: #F7F1E5;
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #333;
-            margin: 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border: 2px solid #D8C69B;
-            font-size: 1.45rem;
-            line-height: 1.5;
-            text-align: center;
-            min-height: 75px;
-        }
+h1 {
+    color: #ffe39a;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.4;
+    margin: 15px 0 25px;
+    text-shadow: 2px 3px 4px rgba(0,0,0,.4);
+}
 
-        .btn-option:hover {
-            filter: brightness(1.05);
-        }
+h2 {
+    color: #ffe39a;
+    font-size: 28px;
+    margin: 10px 0 20px;
+}
 
-        /* 完成畫面 */
-        .success-area {
-            padding: 20px 10px;
-            background: linear-gradient(135deg, #FFF9E8, #FCE8E8);
-            border-radius: 20px;
-            border: 2px dashed #C99B43;
-            margin: 20px 0;
-        }
+.subtitle {
+    font-size: 22px;
+    line-height: 1.8;
+    margin: 15px 0;
+}
 
-        .success-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
+.decoration {
+    font-size: 42px;
+    margin: 8px 0;
+}
 
-        .success-title {
-            color: #B71C1C;
-            font-size: 2.1rem;
-            font-weight: 900;
-            margin-bottom: 15px;
-        }
+/* 畫面切換 */
+.screen {
+    display: none;
+}
 
-        .success-text {
-            color: #225B3D;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+.screen.active {
+    display: block;
+}
 
-        .end-note {
-            color: #777;
-            font-size: 1rem;
-            margin-top: 15px;
-        }
+/* 開始及重新遊玩按鈕 */
+.primary-btn {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 16px 48px;
 
-        /* 小螢幕微調 */
-        @media (max-width: 380px) {
-            #game-container {
-                padding: 25px 15px;
-            }
+    border: 3px solid #fff0bd;
+    border-radius: 50px;
 
-            h1 {
-                font-size: 1.9rem;
-            }
+    background: linear-gradient(135deg, #c83e36, #9e2428);
+    color: white;
 
-            h2 {
-                font-size: 1.65rem;
-            }
+    font-size: 23px;
+    font-weight: bold;
+    cursor: pointer;
 
-            button {
-                font-size: 1.6rem;
-            }
+    box-shadow: 0 5px 0 #681b20;
+    transition: .2s;
+}
 
-            .btn-option {
-                font-size: 1.25rem;
-            }
-        }
-    </style>
+.primary-btn:hover {
+    transform: translateY(-3px);
+}
+
+.primary-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #681b20;
+}
+
+/* 題目進度 */
+.progress {
+    font-size: 19px;
+    color: #d9edff;
+    margin-bottom: 15px;
+}
+
+/* 題目文字 */
+.question-text {
+    min-height: 115px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: clamp(22px, 4vw, 29px);
+    line-height: 1.65;
+    font-weight: bold;
+
+    padding: 15px 5px;
+}
+
+/* 選項排列 */
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 520px;
+    margin: 15px auto 0;
+}
+
+/* 選項按鈕 */
+
+.option-btn {
+    width: 100%;
+    min-height: 76px;
+    padding: 15px 20px;
+
+    border: 3px solid #f8e6b3;
+    border-radius: 18px;
+
+    /* 完全使用原始按鈕圖片 */
+    background-image: url("button_bg.png");
+    background-color: transparent;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    /* 深色文字 */
+    color: #102d43;
+
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.5;
+
+    text-shadow: 0 1px 1px rgba(255,255,255,.45);
+
+    cursor: pointer;
+    box-shadow: 0 5px 0 #234967;
+    transition: .2s;
+}
+
+.option-btn:hover {
+    transform: translateY(-2px);
+}
+
+.option-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #234967;
+}
+
+
+/* 完成畫面 */
+.end-message {
+    font-size: clamp(25px, 5vw, 34px);
+    line-height: 1.8;
+    color: #ffe39a;
+    font-weight: bold;
+    margin: 25px 0;
+}
+
+/* 手機版 */
+@media (max-width: 480px) {
+
+    body {
+        padding: 12px;
+        background-attachment: scroll;
+    }
+
+    .container {
+        padding: 25px 16px;
+        min-height: 430px;
+        border-radius: 20px;
+    }
+
+    .subtitle {
+        font-size: 19px;
+    }
+
+    .option-btn {
+        min-height: 68px;
+        font-size: 19px;
+    }
+
+    .primary-btn {
+        font-size: 20px;
+        padding: 14px 38px;
+    }
+}
+
+</style>
 </head>
 
 <body>
 
-    <div id="game-container">
+<div class="container">
 
-        <!-- 畫面 1：開始畫面 -->
-        <div id="screen-start" class="screen active">
+    <!-- 開始畫面 -->
+    <section id="startScreen" class="screen active">
 
-            <h1>校園稅務問答挑戰</h1>
+        <div class="decoration">❄️ 🎄 ❄️</div>
 
-            <p class="christmas-subtitle">
-                歡迎來到冬季校園限定活動!!
-            </p>
+        <h1>校園稅務問答挑戰</h1>
 
-            <p>
-                一起挑戰稅務小知識
-            </p>
+        <div class="subtitle">
+            歡迎來到冬季校園限定活動!!<br>
+            一起挑戰稅務小知識
+        </div>
 
-            <button class="btn-start" onclick="startGame()">
-                開始挑戰 🎄
+        <button class="primary-btn" onclick="startGame()">
+            開始挑戰
+        </button>
+
+    </section>
+
+
+    <!-- 問答畫面 -->
+    <section id="questionScreen" class="screen">
+
+        <div class="decoration">🎄 ❄️</div>
+
+        <div class="progress" id="progressText">
+            第 1 題 / 共 3 題
+        </div>
+
+        <h2 id="questionTitle">第一題</h2>
+
+        <div class="question-text" id="questionText"></div>
+
+        <div class="options">
+
+            <button class="option-btn" id="optionO"
+                onclick="checkAnswer(true)">
+            </button>
+
+            <button class="option-btn" id="optionX"
+                onclick="checkAnswer(false)">
             </button>
 
         </div>
 
+    </section>
 
-        <!-- 畫面 2：問答畫面 -->
-        <div id="screen-question" class="screen">
 
-            <div class="question-progress" id="question-progress">
-                第一題
-            </div>
+    <!-- 完成畫面 -->
+    <section id="endScreen" class="screen">
 
-            <h2 id="question-text">
-                題目載入中...
-            </h2>
+        <div class="decoration">🎅 🎄 🎁</div>
 
-            <div class="options-container">
+        <h1>恭喜完成挑戰！</h1>
 
-                <button
-                    class="btn-option"
-                    id="option-o"
-                    onclick="checkAnswer(true)">
-                    O 選項
-                </button>
-
-                <button
-                    class="btn-option"
-                    id="option-x"
-                    onclick="checkAnswer(false)">
-                    X 選項
-                </button>
-
-            </div>
-
+        <div class="end-message">
+            祝福大家健康快樂<br>
+            考試高分
         </div>
 
+        <button class="primary-btn" onclick="restartGame()">
+            再玩一次
+        </button>
 
-        <!-- 畫面 3：完成畫面 -->
-        <div id="screen-end" class="screen">
+    </section>
 
-            <h1>🎉 恭喜完成任務！</h1>
-
-            <div class="success-area">
-
-                <div class="success-icon">🎅🎁</div>
-
-                <div class="success-title">
-                    挑戰成功！
-                </div>
-
-                <p class="success-text">
-                    你已經完成所有稅務問答囉！
-                </p>
-
-                <p>
-                    祝福大家健康快樂<br>
-                    考試高分
-                </p>
-
-            </div>
-
-            <button class="btn-restart" onclick="startGame()">
-                再玩一次 🔄
-            </button>
-
-            <p class="end-note">
-                彰化縣地方稅務局 敬祝
-            </p>
-
-        </div>
-
-    </div>
+</div>
 
 
-    <script>
+<script>
 
-        /* =========================
-           題目設定
-           true  = O 正確
-           false = X 正確
-        ========================= */
+// =====================================
+// Google Apps Script 最新網址
+// =====================================
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxm24pA4uDxfDeiOx68t_U3YMrf-2jmbVTUW9S8cpFd77qwNa5UFlq7nmJaTkZBvSJz/exec";
+
+
+// =====================================
+// 題目設定
+// true = 第一個選項正確
+// false = 第二個選項正確
+// =====================================
 
 const questions = [
+
     {
         title: "第一題",
         text: "政府應基於法律規定向人民課稅，不得隨意課稅。",
@@ -361,6 +359,7 @@ const questions = [
         optionX: "缺錢的時候可以加稅",
         correctAnswer: true
     },
+
     {
         title: "第二題",
         text: "國家的主要財政收入來源為規費收入？",
@@ -368,6 +367,7 @@ const questions = [
         optionX: "稅捐收入",
         correctAnswer: false
     },
+
     {
         title: "第三題",
         text: "使用牌照稅、房屋稅及地價稅都是屬於地方稅嗎？",
@@ -375,94 +375,200 @@ const questions = [
         optionX: "都是國稅",
         correctAnswer: true
     }
+
 ];
 
 
-        /* =========================
-           遊戲控制
-        ========================= */
+// =====================================
+// 遊戲變數
+// =====================================
 
-        let currentQuestionIndex = 0;
-
-
-        // 切換畫面
-        function showScreen(screenId) {
-
-            document.querySelectorAll('.screen').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            document.getElementById(screenId).classList.add('active');
-
-        }
+let currentQuestionIndex = 0;
+let isSubmitting = false;
+let hasSubmitted = false;
 
 
-        // 開始遊戲／重新挑戰
-        function startGame() {
+// =====================================
+// 畫面切換
+// =====================================
 
-            currentQuestionIndex = 0;
+function showScreen(screenId) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(screenId).classList.add("active");
+
+}
+
+
+// =====================================
+// 開始遊戲
+// =====================================
+
+function startGame() {
+
+    currentQuestionIndex = 0;
+    isSubmitting = false;
+    hasSubmitted = false;
+
+    showScreen("questionScreen");
+
+    loadQuestion();
+
+}
+
+
+// =====================================
+// 顯示題目
+// =====================================
+
+function loadQuestion() {
+
+    const question = questions[currentQuestionIndex];
+
+    document.getElementById("progressText").textContent =
+        `第 ${currentQuestionIndex + 1} 題 / 共 ${questions.length} 題`;
+
+    document.getElementById("questionTitle").textContent =
+        question.title;
+
+    document.getElementById("questionText").textContent =
+        question.text;
+
+    document.getElementById("optionO").textContent =
+        question.optionO;
+
+    document.getElementById("optionX").textContent =
+        question.optionX;
+
+}
+
+
+// =====================================
+// 判斷答案
+// =====================================
+
+function checkAnswer(isO) {
+
+    if (isSubmitting) return;
+
+    const question = questions[currentQuestionIndex];
+
+    if (isO === question.correctAnswer) {
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
 
             loadQuestion();
 
-            showScreen('screen-question');
+        } else {
+
+            finishGame();
 
         }
 
+    } else {
 
-        // 載入題目
-        function loadQuestion() {
+        alert("答案不正確，再試一次喔！");
 
-            const question = questions[currentQuestionIndex];
+    }
 
-            // 題目文字
-            document.getElementById('question-text').innerText =
-                question.text;
-
-            // 題數進度
-            document.getElementById('question-progress').innerText =
-                `${question.title}／共 ${questions.length} 題`;
-
-            // 更新 O、X 選項文字
-            document.getElementById('option-o').innerText =
-                question.optionO;
-
-            document.getElementById('option-x').innerText =
-                question.optionX;
-
-        }
+}
 
 
-        // 判斷答案
-        function checkAnswer(userChoice) {
+// =====================================
+// 完成遊戲並傳送資料
+// =====================================
 
-            const correctAnswer =
-                questions[currentQuestionIndex].correctAnswer;
+function finishGame() {
 
-            if (userChoice === correctAnswer) {
+    showScreen("endScreen");
 
-                currentQuestionIndex++;
+    if (hasSubmitted) return;
 
-                // 還有下一題
-                if (currentQuestionIndex < questions.length) {
+    hasSubmitted = true;
+    isSubmitting = true;
 
-                    loadQuestion();
+    // 僅傳送完成訊息，不記錄答案
+    fetch(SCRIPT_URL, {
 
-                } else {
+        method: "POST",
 
-                    // 三題全部答對，進入完成畫面
-                    showScreen('screen-end');
+        mode: "no-cors",
 
-                }
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
 
-            } else {
+        body: JSON.stringify({
+            completed: true
+        })
 
-                alert("哎呀，答錯囉！請再試一次看看 🎄");
+    })
+    .catch(error => {
 
-            }
+        console.error("資料傳送失敗：", error);
 
-        }
+    })
+    .finally(() => {
 
-    </script>
+        isSubmitting = false;
+
+    });
+
+}
+
+
+// =====================================
+// 重新開始
+// =====================================
+
+function restartGame() {
+
+    currentQuestionIndex = 0;
+    isSubmitting = false;
+    hasSubmitted = false;
+
+    showScreen("startScreen");
+
+}
+
+
+// =====================================
+// 雪花動畫
+// =====================================
+
+function createSnow() {
+
+    const snow = document.createElement("div");
+
+    snow.className = "snow";
+    snow.textContent = "❄";
+
+    snow.style.left = Math.random() * 100 + "vw";
+
+    // 加大雪花尺寸，提升辨識度
+    snow.style.fontSize =
+        (18 + Math.random() * 20) + "px";
+
+    snow.style.animationDuration =
+        (5 + Math.random() * 8) + "s";
+
+    document.body.appendChild(snow);
+
+    setTimeout(() => {
+        snow.remove();
+    }, 14000);
+
+}
+
+// 增加雪花數量
+setInterval(createSnow, 180);
+
+</script>
 
 </body>
 </html>
