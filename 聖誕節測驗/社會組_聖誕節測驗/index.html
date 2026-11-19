@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>稅務問答挑戰</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Microsoft JhengHei", sans-serif;
+    color: #fff;
+
+    /* 整張背景圖片加上中偏暗藍色濾色 */
+    background-color: #12394d;
+
+    background-image:
+        linear-gradient(
+            rgba(28, 65, 100, 0.58),
+            rgba(18, 48, 79, 0.58)
+        ),
+        url("main_bg.jpg");
+
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+
+/* 雪花效果 */
+
+.snow {
+    position: fixed;
+    top: -30px;
+    color: #ffffff;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.98;
+    font-weight: bold;
+
+    text-shadow:
+        0 0 5px #ffffff,
+        0 0 10px #d9f4ff,
+        0 0 16px #a9e6ff;
+
+    animation: snowfall linear infinite;
+}
+
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+/* 遊戲主面板 */
+.container {
+    width: 100%;
+    max-width: 720px;
+    min-height: 480px;
+    padding: 35px 25px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+
+    border: 3px solid #e8c879;
+    border-radius: 28px;
+
+    background: rgba(12, 48, 63, .92);
+    box-shadow: 0 12px 35px rgba(0,0,0,.35);
+}
+
+h1 {
+    color: #ffe39a;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.4;
+    margin: 15px 0 25px;
+    text-shadow: 2px 3px 4px rgba(0,0,0,.4);
+}
+
+h2 {
+    color: #ffe39a;
+    font-size: 28px;
+    margin: 10px 0 20px;
+}
+
+.subtitle {
+    font-size: 22px;
+    line-height: 1.8;
+    margin: 15px 0;
+}
+
+.decoration {
+    font-size: 42px;
+    margin: 8px 0;
+}
+
+/* 畫面切換 */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* 開始及重新遊玩按鈕 */
+.primary-btn {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 16px 48px;
+
+    border: 3px solid #fff0bd;
+    border-radius: 50px;
+
+    background: linear-gradient(135deg, #c83e36, #9e2428);
+    color: white;
+
+    font-size: 23px;
+    font-weight: bold;
+    cursor: pointer;
+
+    box-shadow: 0 5px 0 #681b20;
+    transition: .2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+}
+
+.primary-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #681b20;
+}
+
+/* 題目進度 */
+.progress {
+    font-size: 19px;
+    color: #d9edff;
+    margin-bottom: 15px;
+}
+
+/* 題目文字 */
+.question-text {
+    min-height: 115px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: clamp(22px, 4vw, 29px);
+    line-height: 1.65;
+    font-weight: bold;
+
+    padding: 15px 5px;
+}
+
+/* 選項排列 */
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 520px;
+    margin: 15px auto 0;
+}
+
+/* 選項按鈕 */
+
+.option-btn {
+    width: 100%;
+    min-height: 76px;
+    padding: 15px 20px;
+
+    border: 3px solid #f8e6b3;
+    border-radius: 18px;
+
+    /* 完全使用原始按鈕圖片 */
+    background-image: url("button_bg.png");
+    background-color: transparent;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    /* 深色文字 */
+    color: #102d43;
+
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.5;
+
+    text-shadow: 0 1px 1px rgba(255,255,255,.45);
+
+    cursor: pointer;
+    box-shadow: 0 5px 0 #234967;
+    transition: .2s;
+}
+
+.option-btn:hover {
+    transform: translateY(-2px);
+}
+
+.option-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #234967;
+}
+
+
+/* 完成畫面 */
+.end-message {
+    font-size: clamp(25px, 5vw, 34px);
+    line-height: 1.8;
+    color: #ffe39a;
+    font-weight: bold;
+    margin: 25px 0;
+}
+
+/* 手機版 */
+@media (max-width: 480px) {
+
+    body {
+        padding: 12px;
+        background-attachment: scroll;
+    }
+
+    .container {
+        padding: 25px 16px;
+        min-height: 430px;
+        border-radius: 20px;
+    }
+
+    .subtitle {
+        font-size: 19px;
+    }
+
+    .option-btn {
+        min-height: 68px;
+        font-size: 19px;
+    }
+
+    .primary-btn {
+        font-size: 20px;
+        padding: 14px 38px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 開始畫面 -->
+    <section id="startScreen" class="screen active">
+
+        <div class="decoration">❄️ 🎄 ❄️</div>
+
+        <h1>稅務問答挑戰</h1>
+
+        <div class="subtitle">
+            歡迎來到限定活動!!<br>
+            一起挑戰稅務小知識
+        </div>
+
+        <button class="primary-btn" onclick="startGame()">
+            開始挑戰
+        </button>
+
+    </section>
+
+
+    <!-- 問答畫面 -->
+    <section id="questionScreen" class="screen">
+
+        <div class="decoration">🎄 ❄️</div>
+
+        <div class="progress" id="progressText">
+            第 1 題 / 共 3 題
+        </div>
+
+        <h2 id="questionTitle">第一題</h2>
+
+        <div class="question-text" id="questionText"></div>
+
+        <div class="options">
+
+            <button class="option-btn" id="optionO"
+                onclick="checkAnswer(true)">
+            </button>
+
+            <button class="option-btn" id="optionX"
+                onclick="checkAnswer(false)">
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- 完成畫面 -->
+    <section id="endScreen" class="screen">
+
+        <div class="decoration">🎅 🎄 🎁</div>
+
+        <h1>恭喜完成挑戰！</h1>
+
+        <div class="end-message">
+            祝福大家健康快樂<br>            
+        </div>
+
+        <button class="primary-btn" onclick="restartGame()">
+            再玩一次
+        </button>
+
+    </section>
+
+</div>
+
+
+<script>
+
+// =====================================
+// Google Apps Script 最新網址
+// =====================================
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxm24pA4uDxfDeiOx68t_U3YMrf-2jmbVTUW9S8cpFd77qwNa5UFlq7nmJaTkZBvSJz/exec";
+
+
+// =====================================
+// 題目設定
+// true = 第一個選項正確
+// false = 第二個選項正確
+// =====================================
+
+const questions = [
+
+    {
+        title: "第一題",
+        text: "政府應基於法律規定向人民課稅，不得隨意課稅。",
+        optionO: "不得隨意課稅",
+        optionX: "缺錢的時候可以加稅",
+        correctAnswer: true
+    },
+
+    {
+        title: "第二題",
+        text: "國家的主要財政收入來源為規費收入？",
+        optionO: "規費收入",
+        optionX: "稅捐收入",
+        correctAnswer: false
+    },
+
+    {
+        title: "第三題",
+        text: "使用牌照稅、房屋稅及地價稅都是屬於地方稅嗎？",
+        optionO: "都是地方稅",
+        optionX: "都是國稅",
+        correctAnswer: true
+    }
+
+];
+
+
+// =====================================
+// 遊戲變數
+// =====================================
+
+let currentQuestionIndex = 0;
+let isSubmitting = false;
+let hasSubmitted = false;
+
+
+// =====================================
+// 畫面切換
+// =====================================
+
+function showScreen(screenId) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(screenId).classList.add("active");
+
+}
+
+
+// =====================================
+// 開始遊戲
+// =====================================
+
+function startGame() {
+
+    currentQuestionIndex = 0;
+    isSubmitting = false;
+    hasSubmitted = false;
+
+    showScreen("questionScreen");
+
+    loadQuestion();
+
+}
+
+
+// =====================================
+// 顯示題目
+// =====================================
+
+function loadQuestion() {
+
+    const question = questions[currentQuestionIndex];
+
+    document.getElementById("progressText").textContent =
+        `第 ${currentQuestionIndex + 1} 題 / 共 ${questions.length} 題`;
+
+    document.getElementById("questionTitle").textContent =
+        question.title;
+
+    document.getElementById("questionText").textContent =
+        question.text;
+
+    document.getElementById("optionO").textContent =
+        question.optionO;
+
+    document.getElementById("optionX").textContent =
+        question.optionX;
+
+}
+
+
+// =====================================
+// 判斷答案
+// =====================================
+
+function checkAnswer(isO) {
+
+    if (isSubmitting) return;
+
+    const question = questions[currentQuestionIndex];
+
+    if (isO === question.correctAnswer) {
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+
+            loadQuestion();
+
+        } else {
+
+            finishGame();
+
+        }
+
+    } else {
+
+        alert("答案不正確，再試一次喔！");
+
+    }
+
+}
+
+
+// =====================================
+// 完成遊戲並傳送資料
+// =====================================
+
+function finishGame() {
+
+    showScreen("endScreen");
+
+    if (hasSubmitted) return;
+
+    hasSubmitted = true;
+    isSubmitting = true;
+
+    // 僅傳送完成訊息，不記錄答案
+    fetch(SCRIPT_URL, {
+
+        method: "POST",
+
+        mode: "no-cors",
+
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify({
+            completed: true
+        })
+
+    })
+    .catch(error => {
+
+        console.error("資料傳送失敗：", error);
+
+    })
+    .finally(() => {
+
+        isSubmitting = false;
+
+    });
+
+}
+
+
+// =====================================
+// 重新開始
+// =====================================
+
+function restartGame() {
+
+    currentQuestionIndex = 0;
+    isSubmitting = false;
+    hasSubmitted = false;
+
+    showScreen("startScreen");
+
+}
+
+
+// =====================================
+// 雪花動畫
+// =====================================
+
+function createSnow() {
+
+    const snow = document.createElement("div");
+
+    snow.className = "snow";
+    snow.textContent = "❄";
+
+    snow.style.left = Math.random() * 100 + "vw";
+
+    // 加大雪花尺寸，提升辨識度
+    snow.style.fontSize =
+        (18 + Math.random() * 20) + "px";
+
+    snow.style.animationDuration =
+        (5 + Math.random() * 8) + "s";
+
+    document.body.appendChild(snow);
+
+    setTimeout(() => {
+        snow.remove();
+    }, 14000);
+
+}
+
+// 增加雪花數量
+setInterval(createSnow, 180);
+
+</script>
+
+</body>
+</html>
